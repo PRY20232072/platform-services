@@ -1,5 +1,5 @@
 var express = require('express');
-var routes = require('./routes/index');
+var allergyRouter = require('./routes/allergyRouter');
 
 var app = express();
 
@@ -9,4 +9,7 @@ app.listen(3000, function () {
     console.log("Server running on port 3000");
 });
 
-app.use("/", routes);
+app.get("/", (req, res) => {
+    res.send("Hello World");
+});
+app.use("/allergyRouter", allergyRouter);
