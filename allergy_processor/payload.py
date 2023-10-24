@@ -18,10 +18,10 @@ class AllergyPayload(object):
 
         # check for required fields
         if payload['action'] not in AllergyTransactionAction.__members__:
-            raise InvalidTransaction("Invalid Allergy Transaction Action: {}".format(
+            raise InvalidTransaction("Invalid Allergy Transactlfion Action: {}".format(
                 payload['action']))
 
-        self._action = AllergyTransactionAction[payload['action']]
+        self._action = payload['action']
 
         if not payload['allergy_id']:
             raise InvalidTransaction("Allergy ID is required")
@@ -40,7 +40,7 @@ class AllergyPayload(object):
         self._last_occurrence = None
         self._allergy_notes = None
 
-        if self._action == AllergyTransactionAction.CREATE or self._action == AllergyTransactionAction.UPDATE:
+        if self._action == AllergyTransactionAction.CREATE.name or self._action == AllergyTransactionAction.UPDATE.name:
             if not payload['patient_id']:
                 raise InvalidTransaction("Patient ID is required")
 
@@ -175,12 +175,12 @@ class AllergyPayload(object):
 
     @property
     def is_create(self):
-        return self._action == AllergyTransactionAction.CREATE
+        return self._action == AllergyTransactionAction.CREATE.name
 
     @property
     def is_update(self):
-        return self._action == AllergyTransactionAction.UPDATE
+        return self._action == AllergyTransactionAction.UPDATE.name
 
     @property
     def is_delete(self):
-        return self._action == AllergyTransactionAction.DELETE
+        return self._action == AllergyTransactionAction.DELETE.name

@@ -10,7 +10,7 @@ class AllergyState:
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
         allergyRegistry = self._load_allergy(allergy.allergy_id)
-
+        # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is None:
             print(f"save_allergy: {allergy.allergy_id}")
             address = helper.make_address(allergy.allergy_id)
@@ -21,7 +21,7 @@ class AllergyState:
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
         allergyRegistry = self._load_allergy(allergy.allergy_id)
-
+        # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is not None:
             print(f"update_allergy: {allergy.allergy_id}")
             address = helper.make_address(allergy.allergy_id)
@@ -32,7 +32,7 @@ class AllergyState:
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
         allergyRegistry = self._load_allergy(allergy.allergy_id)
-
+        # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is not None:
             print(f"delete_allergy: {allergy.allergy_id}")
             address = helper.make_address(allergy.allergy_id)
@@ -46,7 +46,8 @@ class AllergyState:
         if state_entries:
             try:
                 allergy = Allergy()
-                return allergy.parse_from_json(state_entries[0].data.decode())
+                allergy.parse_from_json(state_entries[0].data.decode())
+                return allergy
             except ValueError:
                 return None
         else:

@@ -21,6 +21,7 @@ class Allergy(object):
 
     def parse_from_json(self, jsonString):
         allergy = json.loads(jsonString)
+        # print("allergy from json: ", allergy)
         self._patient_id = allergy['patient_id']
         self._allergy_id = allergy['allergy_id']
         self._participant_id = allergy['participant_id']

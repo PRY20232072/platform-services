@@ -16,7 +16,7 @@ class AllergyTransactionHandler(TransactionHandler):
 
     @property
     def family_versions(self):
-        return helper.TP_FAMILY_VERSION
+        return [helper.TP_FAMILY_VERSION]
 
     @property
     def namespaces(self):
@@ -28,12 +28,12 @@ class AllergyTransactionHandler(TransactionHandler):
         allergy_payload = AllergyPayload(transaction.payload)
         allergy_state = AllergyState(context)
 
-        if allergy_payload.is_create():
-            allergy_state.save_allergy(allergy_state)
-        elif allergy_payload.is_update():
-            allergy_state.update_allergy(allergy_state)
-        elif allergy_payload.is_delete():
-            allergy_state.delete_allergy(allergy_state)
+        if allergy_payload.is_create:
+            allergy_state.save_allergy(allergy_payload)
+        elif allergy_payload.is_update:
+            allergy_state.update_allergy(allergy_payload)
+        elif allergy_payload.is_delete:
+            allergy_state.delete_allergy(allergy_payload)
         else:
             raise InvalidTransaction(
                 'Unhandled action: {}'.format(allergy_payload.action))
