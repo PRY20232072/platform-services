@@ -2,14 +2,16 @@ const { createHash } = require('crypto')
 const { CryptoFactory, createContext } = require('sawtooth-sdk/signing')
 const protobuf = require('sawtooth-sdk/protobuf')
 const fs = require('fs')
-const fetch = require('node-fetch')
 const { Secp256k1PrivateKey } = require('sawtooth-sdk/signing/secp256k1')
 const { TextEncoder, TextDecoder } = require('text-encoding/lib/encoding')
-const { get } = require('http')
 const { Constants } = require('./Constants');
+const { InfuraIPFSClient } = require('./InfuraIPFSClient');
+const axios = require('axios');
 
 class CommonClient {
     constructor(TP_NAME, TP_CODE, TP_VERSION) { 
+        this.infuraIPFSClient = new InfuraIPFSClient();
+
         const context = createContext('secp256k1');
         const privateKey = context.newRandomPrivateKey();
 
@@ -20,35 +22,41 @@ class CommonClient {
         this.TP_CODE = TP_CODE;
         this.TP_VERSION = TP_VERSION;
 
-        // console.log("CommonClient | TP_NAME: " + this.TP_NAME);
-        // console.log("CommonClient | TP_CODE: " + this.TP_CODE);
+        this.blockchainClient = axios.create({
+            baseURL: Constants.SAWTOOTH_REST_API_URL,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            }
+        });
     }
 
+    //HELPER FUNCTIONS
     hash(identifier) {
         return createHash('sha512').update(identifier).digest('hex');
     }
 
-    getAddress(address) {
+    getAddress(identifier) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
-        var addr = this.hash(address).substring(0, 62);
+        var addr = this.hash(identifier).substring(0, 62);
         return pref + this.TP_CODE + addr;
     }
-
+    
     getAddressList() {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
         return pref + this.TP_CODE;
     }
-
-    wrap_and_send(identifier, payload) {
-        var enc = new TextEncoder('utf8');
-        var payloadBytes = enc.encode(payload);
-
-        var txnHeaderBytes = this.make_txn_header_bytes(identifier, payloadBytes);
-        var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
-
-        return this.send_request('/batches', txnBytes);
+    
+    async getRegistry(address) {
+        var data = await this.fetchFromBlockchain('/state/' + address);
+        return data;
     }
 
+    async getRegistryList(address) {
+        var data = await this.fetchFromBlockchain('/state?address=' + address);
+        return data;
+    }
+    
     make_txn_header_bytes(identifier, payloadBytes) {
         var address = this.getAddress(identifier);
 
@@ -103,46 +111,166 @@ class CommonClient {
         return Buffer.from(encoded, 'base64').toString();
     }
 
-    send_request(suffix, data) {
+    async fetchFromBlockchain(suffix) {
         const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
-        if (data === null) {
-            return fetch(URL, {
-                    method: 'GET'
-                })
-                .then((response) => response.json())
-                .then((responseJson) => {
-                    var data = responseJson.data;
+        var res = await this.blockchainClient.get(URL)
+            .then((response) => {
+                var data = response.data.data;
 
-                    //validate if the response is array or object
-                    if (data instanceof Array) {
-                        var response = [];
-                        for (var i = 0; i < data.length; i++) {
-                            var item = data[i];
-                            var decoded = this.base64_decode(item.data);
-                            response.push(JSON.parse(decoded));
-                        }
-                        return response;
+                var res = {
+                    error: false,
+                    data: null
+                };
+                if (data instanceof Array) {
+                    res.data = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var decoded = this.base64_decode(item.data);
+                        res.data.push(JSON.parse(decoded));
                     }
-                    else {
-                        var decoded = this.base64_decode(data);
-                        return JSON.parse(decoded);
-                    }
-                });
-        }
-        else {
-            return fetch(URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/octet-stream'
-                    },
-                    body: data
-                })
-                .then((response) => response.json())
-                .then((responseJson) => {
+                }
+                else {
+                    var decoded = this.base64_decode(data);
+                    res.data = JSON.parse(decoded);
+                }
 
-                    return responseJson;
-                });
+                return res;
+            })
+            .catch((error) => {
+                console.error(error);
+                var res = {
+                    error: true,
+                    data: null
+                };
+                return res;
+            });
+        return res;
+    }
+
+    async saveDataInBlockchain(suffix, data) {
+        const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
+        var response = {
+            error: true,
+            data: null
+        };
+
+        await this.blockchainClient.post(URL, data, {
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                }
+            })
+            .then((res) => {
+                response.data = res.data;
+                response.error = false;
+            })
+            .catch((error) => {
+                console.error(error)
+            });
+
+        return response;
+    }
+
+    async wrap_and_send(identifier, payload) {
+        var enc = new TextEncoder('utf8');
+
+        //TODO: encrypt payload
+
+        var response = await this.infuraIPFSClient.add(payload);
+
+        if (response.error) {
+            return response;
         }
+
+        //send object to blockchain like a string
+        var new_payload = JSON.stringify({
+            allergy_id: identifier,
+            ipfs_hash: response.hash,
+            action: payload.action
+        });
+
+        var payloadBytes = enc.encode(new_payload);
+
+        var txnHeaderBytes = this.make_txn_header_bytes(identifier, payloadBytes);
+        var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
+
+        response = await this.saveDataInBlockchain('/batches', txnBytes);
+        
+        //TODO: validate if response has info
+
+        return response;
+    }
+
+    async get_from_ipfs(ipfs_hash) {
+        var response  = await this.infuraIPFSClient.cat(ipfs_hash);
+        return response;
+    }
+    // END OF HELPER FUNCTIONS
+
+    async getByIdentifier(identifier) {
+        var address = this.getAddress(identifier);
+
+        var registry = await this.getRegistry(address);
+
+        if (registry.error) {
+            return registry;
+        }
+
+        registry = registry.data;
+        var info = await this.get_from_ipfs(registry.ipfs_hash);
+
+        if (info.error) {
+            return info;
+        }
+
+        return info;
+    }
+
+    async getList() {
+        var response = {
+            error: true,
+            data: null
+        }
+
+        var address = this.getAddressList();
+
+        var registries = await this.getRegistryList(address);
+
+        if (registries.error) {
+            return registries;
+        }
+
+        var allergyList = [];
+        registries = registries.data;
+        for (var i = 0; i < registries.length; i++) {
+            var registry = registries[i];
+            var info = await this.get_from_ipfs(registry.ipfs_hash);
+            if (info.error) {
+                return response;
+            }
+            allergyList.push(info.data);
+        }
+        response.error = false;
+        response.data = allergyList;
+
+        return allergyList;
+    }
+
+    async deleteRegistry(identifier, payload) {
+        var address = this.getAddress(identifier);
+        var registry = await this.getRegistry(address);
+
+        if (registry.error) {
+            return registry;
+        }
+
+        registry = registry.data;
+        var ipfsResponse = await this.infuraIPFSClient.rm(registry.ipfs_hash);
+        
+        if (ipfsResponse == undefined) {
+            return response;
+        }
+
+        return await this.wrap_and_send(identifier, payload);
     }
 }
 

@@ -10,36 +10,24 @@ class AllergyClient extends CommonClient {
         );
     }
 
-    getAllergy(identifier) {
-        var address = this.getAddress(identifier);
-        return this.send_request('/state/' + address, null);
-    }
-
-    getAllergyList() {
-        var address = this.getAddressList();
-        return this.send_request('/state?address=' + address, null);
-    }
-
-    createAllergy(identifier, payload) {
-        console.log("createAllergy | payload: " + JSON.stringify(payload));
+    async createAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_CREATE;
-        return this.wrap_and_send(identifier, JSON.stringify(payload));
+        return await this.wrap_and_send(identifier, payload);
     }
 
-    updateAllergy(identifier, payload) {
-        console.log("updateAllergy | payload: " + JSON.stringify(payload));
+    async updateAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_UPDATE;
-        return this.wrap_and_send(identifier, JSON.stringify(payload));
+        return await this.wrap_and_send(identifier, payload);
     }
 
-    deleteAllergy(identifier) {
-        console.log("deleteAllergy | identifier: " + identifier);
+    async deleteAllergy(identifier) {
         var payload = {};
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_DELETE;
-        return this.wrap_and_send(identifier, JSON.stringify(payload));
+
+        return await this.deleteRegistry(identifier, payload);
     }
 }
 

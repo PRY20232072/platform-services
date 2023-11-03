@@ -4,39 +4,65 @@ const { AllergyClient } = require('../clients/allergy/AllergyClient');
 
 const client = new AllergyClient();
 
-router.get('/', function (req, res) {
-    client.getAllergyList().then(function (allergy) {
-        console.log("Allergies: " + JSON.stringify(allergy));
-        res.send(allergy);
+router.get('/', async function (req, res) {
+    await client.getList().then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
     });
 });
 
-router.get('/:identifier', function (req, res) {
+router.get('/:identifier', async function (req, res) {
     var identifier = req.params.identifier;
-    client.getAllergy(identifier).then(function (allergy) {
-        console.log("Allergy: " + JSON.stringify(allergy));
-        res.send(allergy);
+    await client.getByIdentifier(identifier).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
     });
 });
 
-router.post('/', function (req, res) {
+router.post('/', async function (req, res) {
     var identifier = req.body.identifier;
     var payload = req.body.payload;
-    client.createAllergy(identifier, payload);
-    res.send('Allergy transaction submitted');
+    await client.createAllergy(identifier, payload).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
+    });
 });
 
-router.put('/', function (req, res) {
+router.put('/', async function (req, res) {
     var identifier = req.body.identifier;
     var payload = req.body.payload;
-    client.updateAllergy(identifier, payload);
-    res.send('Allergy transaction submitted');
+    await client.updateAllergy(identifier, payload).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
+    });
 });
 
-router.delete('/:identifier', function (req, res) {
+router.delete('/:identifier', async function (req, res) {
     var identifier = req.params.identifier;
-    client.deleteAllergy(identifier);
-    res.send('Allergy transaction submitted');
+    await client.deleteAllergy(identifier).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
+    });
 });
 
 module.exports = router;
