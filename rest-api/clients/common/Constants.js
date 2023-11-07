@@ -4,6 +4,11 @@ class Constants {
     static ALLERGY_REGISTRY_TP_CODE = '01';
     static ALLERGY_REGISTRY_TP_VERSION = '1.0';
 
+    //PATIENT REGISTRY FAMILY
+    static PATIENT_REGISTRY_TP_NAME = 'patient-processor';
+    static PATIENT_REGISTRY_TP_CODE = '02';
+    static PATIENT_REGISTRY_TP_VERSION = '1.0';
+
     //SAWTOOTH REST API
     static SAWTOOTH_REST_API_URL = 'http://localhost:8008';
 
