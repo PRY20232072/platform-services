@@ -2,7 +2,7 @@
 import json
 
 from sawtooth_sdk.processor.exceptions import InvalidTransaction
-from models.enums import AllergyType, AllergyCategory, AllergyCriticality, AllergySeverity, ClinicalStatus, VerificationStatus, AllergyTransactionAction
+from models.enums import AllergyTransactionAction
 
 class AllergyPayload(object):
     def __init__(self, payload):

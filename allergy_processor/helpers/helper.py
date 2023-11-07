@@ -10,5 +10,5 @@ def _hash(identifier):
 def get_namespace_prefix():
     return _hash(TP_NAME)[:6]
 
-def make_address(name):
-    return get_namespace_prefix() + ALLERGY_REGISTRY_CODE + _hash(name)[:62]
+def make_address(identifier):
+    return get_namespace_prefix() + ALLERGY_REGISTRY_CODE + _hash(identifier)[:62]
