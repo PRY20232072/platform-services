@@ -1,12 +1,12 @@
 from sawtooth_sdk.processor.exceptions import InvalidTransaction
 from sawtooth_sdk.processor.handler import TransactionHandler
 
-from payload import AllergyPayload
+from payload import PatientPayload
 from helpers import helper
-from state import AllergyState
+from state import PatientState
 
 
-class AllergyTransactionHandler(TransactionHandler):
+class PatientTransactionHandler(TransactionHandler):
     def __init__(self):
         pass
 
@@ -16,7 +16,7 @@ class AllergyTransactionHandler(TransactionHandler):
 
     @property
     def family_versions(self):
-        return helper.TP_FAMILY_VERSION
+        return [helper.TP_FAMILY_VERSION]
 
     @property
     def namespaces(self):
@@ -25,15 +25,15 @@ class AllergyTransactionHandler(TransactionHandler):
     def apply(self, transaction, context):
         print(f"Payload: {transaction.payload.decode()}")
 
-        allergy_payload = AllergyPayload(transaction.payload)
-        allergy_state = AllergyState(context)
+        patient_payload = PatientPayload(transaction.payload)
+        patient_state = PatientState(context)
 
-        if allergy_payload.is_create():
-            allergy_state.save_allergy(allergy_state)
-        elif allergy_payload.is_update():
-            allergy_state.update_allergy(allergy_state)
-        elif allergy_payload.is_delete():
-            allergy_state.delete_allergy(allergy_state)
+        if patient_payload.is_create:
+            patient_state.save_patient(patient_payload)
+        elif patient_payload.is_update:
+            patient_state.update_patient(patient_payload)
+        elif patient_payload.is_delete:
+            patient_state.delete_patient(patient_payload)
         else:
             raise InvalidTransaction(
-                'Unhandled action: {}'.format(allergy_payload.action))
+                'Unhandled action: {}'.format(patient_payload.action))
