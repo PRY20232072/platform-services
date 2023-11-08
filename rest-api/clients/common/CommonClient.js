@@ -3,7 +3,6 @@ const { CryptoFactory, createContext } = require('sawtooth-sdk/signing')
 const protobuf = require('sawtooth-sdk/protobuf')
 const fs = require('fs')
 const { Secp256k1PrivateKey } = require('sawtooth-sdk/signing/secp256k1')
-const { TextEncoder, TextDecoder } = require('text-encoding/lib/encoding')
 const { Constants } = require('./Constants');
 const { InfuraIPFSClient } = require('./InfuraIPFSClient');
 const axios = require('axios');
@@ -35,12 +34,6 @@ class CommonClient {
     hash(identifier) {
         return createHash('sha512').update(identifier).digest('hex');
     }
-
-    getAddress(identifier) {
-        var pref = this.hash(this.TP_NAME).substring(0, 6);
-        var addr = this.hash(identifier).substring(0, 62);
-        return pref + this.TP_CODE + addr;
-    }
     
     getAddressList() {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
@@ -57,8 +50,8 @@ class CommonClient {
         return data;
     }
     
-    make_txn_header_bytes(identifier, payloadBytes) {
-        var address = this.getAddress(identifier);
+    make_txn_header_bytes(payloadBytes, address) {
+        // var address = this.getAddress(identifier);
 
         const transactionHeaderBytes = protobuf.TransactionHeader.encode({
             familyName: this.TP_NAME,
@@ -170,45 +163,13 @@ class CommonClient {
         return response;
     }
 
-    async wrap_and_send(identifier, payload) {
-        var enc = new TextEncoder('utf8');
-
-        //TODO: encrypt payload
-
-        var response = await this.infuraIPFSClient.add(payload);
-
-        if (response.error) {
-            return response;
-        }
-
-        //send object to blockchain like a string
-        var new_payload = JSON.stringify({
-            allergy_id: identifier,
-            ipfs_hash: response.hash,
-            action: payload.action
-        });
-
-        var payloadBytes = enc.encode(new_payload);
-
-        var txnHeaderBytes = this.make_txn_header_bytes(identifier, payloadBytes);
-        var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
-
-        response = await this.saveDataInBlockchain('/batches', txnBytes);
-        
-        //TODO: validate if response has info
-
-        return response;
-    }
-
     async get_from_ipfs(ipfs_hash) {
         var response  = await this.infuraIPFSClient.cat(ipfs_hash);
         return response;
     }
     // END OF HELPER FUNCTIONS
 
-    async getByIdentifier(identifier) {
-        var address = this.getAddress(identifier);
-
+    async getByIdentifier(address) {
         var registry = await this.getRegistry(address);
 
         if (registry.error) {
@@ -225,13 +186,11 @@ class CommonClient {
         return info;
     }
 
-    async getList() {
+    async getList(address) {
         var response = {
             error: true,
             data: null
         }
-
-        var address = this.getAddressList();
 
         var registries = await this.getRegistryList(address);
 
@@ -253,24 +212,6 @@ class CommonClient {
         response.data = allergyList;
 
         return allergyList;
-    }
-
-    async deleteRegistry(identifier, payload) {
-        var address = this.getAddress(identifier);
-        var registry = await this.getRegistry(address);
-
-        if (registry.error) {
-            return registry;
-        }
-
-        registry = registry.data;
-        var ipfsResponse = await this.infuraIPFSClient.rm(registry.ipfs_hash);
-        
-        if (ipfsResponse == undefined) {
-            return response;
-        }
-
-        return await this.wrap_and_send(identifier, payload);
     }
 }
 
