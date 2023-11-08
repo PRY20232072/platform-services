@@ -24,6 +24,11 @@ class AllergyPayload(object):
         
         self._allergy_id = payload['allergy_id']
 
+        if not payload['patient_id']:
+            raise InvalidTransaction("Patient ID is required")
+        
+        self._patient_id = payload['patient_id']
+
         if not payload['ipfs_hash']:
             raise InvalidTransaction("IPFS Hash is required")
         
@@ -32,6 +37,10 @@ class AllergyPayload(object):
     @property
     def allergy_id(self):
         return self._allergy_id
+    
+    @property
+    def patient_id(self):
+        return self._patient_id
     
     @property
     def ipfs_hash(self):

@@ -9,38 +9,45 @@ class AllergyState:
     def save_allergy(self, allergyPayload):
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_registry(allergy.allergy_id)
+        allergyRegistry = self._load_registry(
+            patient_id=allergy.patient_id, identifier=allergy.allergy_id)
         # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is None:
             print(f"save_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
+            address = helper.make_address(
+                patiend_id=allergy.patient_id, identifier=allergy.allergy_id)
             state_data = allergy.serialize_to_json().encode()
             self._context.set_state({address: state_data}, timeout=3)
 
     def update_allergy(self, allergyPayload):
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_registry(allergy.allergy_id)
+        allergyRegistry = self._load_registry(
+            patient_id=allergy.patient_id, identifier=allergy.allergy_id)
         # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is not None:
             print(f"update_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
+            address = helper.make_address(
+                patiend_id=allergy.patient_id, identifier=allergy.allergy_id)
             state_data = allergy.serialize_to_json().encode()
             self._context.set_state({address: state_data}, timeout=3)
 
     def delete_allergy(self, allergyPayload):
         allergy = Allergy()
         allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_registry(allergy.allergy_id)
+        allergyRegistry = self._load_registry(
+            patient_id=allergy.patient_id, identifier=allergy.allergy_id)
         # print(f"allergyRegistry found: {allergyRegistry}")
         if allergyRegistry is not None:
             print(f"delete_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
+            address = helper.make_address(
+                patiend_id=allergy.patient_id, identifier=allergy.allergy_id)
             self._context.delete_state([address], timeout=3)
 
-    def _load_registry(self, identifier):
+    def _load_registry(self, patient_id, identifier):
         print(f"get_allergy: {identifier}")
-        address = helper.make_address(identifier)
+        address = helper.make_address(
+            patiend_id=patient_id, identifier=identifier)
         state_entries = self._context.get_state([address], timeout=3)
         print(f"state_entries: {state_entries}")
         if state_entries:
