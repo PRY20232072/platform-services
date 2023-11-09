@@ -10,8 +10,11 @@ def _hash(identifier):
 def get_namespace_prefix():
     return _hash(TP_NAME)[:6]
 
+def make_address(identifier):
+    return get_namespace_prefix() + CONSENT_CODE + _hash(identifier)[:22]
+
 def make_address_patient_professional(patient_id, professional_id):
-    return get_namespace_prefix() + CONSENT_CODE + _hash(patient_id)[:31] + _hash(professional_id)[:31]
+    return get_namespace_prefix() + CONSENT_CODE + _hash(patient_id)[:22] + _hash(professional_id)[:40]
 
 def make_address_professional_patient(professional_id, patient_id):
-    return get_namespace_prefix() + CONSENT_CODE + _hash(professional_id)[:31] + _hash(patient_id)[:31]
+    return get_namespace_prefix() + CONSENT_CODE + _hash(professional_id)[:22] + _hash(patient_id)[:40]
