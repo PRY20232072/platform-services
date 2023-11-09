@@ -45,7 +45,6 @@ class AllergyClient extends CommonClient {
 
         var payloadBytes = enc.encode(new_payload);
 
-        // var txnHeaderBytes = this.make_txn_header_bytes(identifier, payloadBytes);
         var txnHeaderBytes = this.make_txn_header_bytes(payloadBytes, address);
         var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
 

@@ -5,7 +5,8 @@ const { PatientClient } = require('../clients/patient/PatientClient');
 const client = new PatientClient();
 
 router.get('/', async function (req, res) {
-    await client.getList().then(function (response) {
+    var address = client.getAddressList();
+    await client.getList(address).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -17,7 +18,8 @@ router.get('/', async function (req, res) {
 
 router.get('/:identifier', async function (req, res) {
     var identifier = req.params.identifier;
-    await client.getByIdentifier(identifier).then(function (response) {
+    var address = client.getAddress(identifier);
+    await client.getByIdentifier(address).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -40,8 +42,8 @@ router.post('/', async function (req, res) {
     });
 });
 
-router.put('/', async function (req, res) {
-    var identifier = req.body.identifier;
+router.put('/:identifier', async function (req, res) {
+    var identifier = req.params.identifier;
     var payload = req.body.payload;
     await client.updatePatient(identifier, payload).then(function (response) {
         if (response.error) {
