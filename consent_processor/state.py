@@ -1,52 +1,48 @@
-from models.allergy import Allergy
+from consent_processor.models.consent import Consent
 from helpers import helper
 
 
-class AllergyState:
+class ConsentState:
     def __init__(self, context):
         self._context = context
 
-    def save_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
+    def save_patient(self, consentPayload):
+        consent = Consent()
+        consent.parse_from_payload(consentPayload)
+        consentRegistry = self._load_registry(consent.patient_id)
+        if consentRegistry is None:
+            print(f"save_consent: {consent.patient_id} - {consent.professional_id}")
+            state_data = consent.serialize_to_json().encode()
+            patient_professional_address = helper.make_address_patient_professional(
+                consent.patient_id, consent.professional_id)
+            professional_patient_address = helper.make_address_professional_patient(
+                consent.professional_id, consent.patient_id)
+            self._context.set_state(
+                {patient_professional_address: state_data, professional_patient_address: state_data}, timeout=3)
 
-        if allergyRegistry is None:
-            print(f"save_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            state_data = allergy.serialize_to_json().encode()
-            self._context.set_state({address: state_data}, timeout=3)
+    def revoke_consent(self, consentPayload):
+        consent = Consent()
+        consent.parse_from_payload(consentPayload)
+        consentRegistry = self._load_registry(consent.patient_id)
+        if consentRegistry is not None:
+            print(f"delete_consent: {consent.patient_id} - {consent.professional_id}")
+            patient_professional_address = helper.make_address_patient_professional(
+                consent.patient_id, consent.professional_id)
+            professional_patient_address = helper.make_address_professional_patient(
+                consent.professional_id, consent.patient_id)
+            self._context.delete_state(
+                [patient_professional_address, professional_patient_address], timeout=3)
 
-    def update_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
-
-        if allergyRegistry is not None:
-            print(f"update_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            state_data = allergy.serialize_to_json().encode()
-            self._context.set_state({address: state_data}, timeout=3)
-
-    def delete_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
-
-        if allergyRegistry is not None:
-            print(f"delete_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            self._context.delete_state([address], timeout=3)
-
-    def _load_allergy(self, allergy_id):
-        print(f"get_allergy: {allergy_id}")
-        address = helper.make_address(allergy_id)
+    def _load_registry(self, identifier):
+        print(f"get_patient: {identifier}")
+        address = helper.make_address(identifier)
         state_entries = self._context.get_state([address], timeout=3)
         print(f"state_entries: {state_entries}")
         if state_entries:
             try:
-                allergy = Allergy()
-                return allergy.parse_from_json(state_entries[0].data.decode())
+                consent = Consent()
+                consent.parse_from_json(state_entries[0].data.decode())
+                return consent
             except ValueError:
                 return None
         else:
