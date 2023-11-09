@@ -59,14 +59,14 @@ class AllergyClient extends CommonClient {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_CREATE;
         var address = this.getAddress(payload['patient_id'], identifier);
-        return await this.wrap_and_send(identifier, payload, address);
+        return await this.wrap_and_send(identifier, payload, [address]);
     }
 
     async updateAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_UPDATE;
         var address = this.getAddress(payload['patient_id'], identifier);
-        return await this.wrap_and_send(identifier, payload, address);
+        return await this.wrap_and_send(identifier, payload, [address]);
     }
 
     async deleteAllergy(identifier, patient_id) {
@@ -76,7 +76,7 @@ class AllergyClient extends CommonClient {
         payload['action'] = Constants.ACTION_DELETE;
 
         var address = this.getAddress(patient_id, identifier);
-        var registry = await this.getRegistry(address);
+        var registry = await this.getRegistry([address]);
         
         if (registry.error) {
             return registry;

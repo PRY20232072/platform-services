@@ -1,6 +1,7 @@
 var express = require('express');
 var allergyRouter = require('./routes/allergyRouter');
 var patientRouter = require('./routes/patientRouter');
+var consentRouter = require('./routes/consentRouter');
 
 var app = express();
 
@@ -15,3 +16,4 @@ app.get("/", (req, res) => {
 });
 app.use("/AllergyIntolerance", allergyRouter);
 app.use("/Patient", patientRouter);
+app.use("/Consent", consentRouter)

@@ -51,13 +51,11 @@ class CommonClient {
     }
     
     make_txn_header_bytes(payloadBytes, address) {
-        // var address = this.getAddress(identifier);
-
         const transactionHeaderBytes = protobuf.TransactionHeader.encode({
             familyName: this.TP_NAME,
             familyVersion: this.TP_VERSION,
-            inputs: [address],
-            outputs: [address],
+            inputs: address,
+            outputs: address,
             signerPublicKey: this.signer.getPublicKey().asHex(),
             batcherPublicKey: this.signer.getPublicKey().asHex(),
             dependencies: [],
@@ -202,11 +200,16 @@ class CommonClient {
         registries = registries.data;
         for (var i = 0; i < registries.length; i++) {
             var registry = registries[i];
-            var info = await this.get_from_ipfs(registry.ipfs_hash);
-            if (info.error) {
-                return response;
+            if (registry.ipfs_hash == undefined) {
+                allergyList.push(registry);
             }
-            allergyList.push(info.data);
+            else {
+                var info = await this.get_from_ipfs(registry.ipfs_hash);
+                if (info.error) {
+                    return response;
+                }
+                allergyList.push(info.data);
+            }
         }
         response.error = false;
         response.data = allergyList;

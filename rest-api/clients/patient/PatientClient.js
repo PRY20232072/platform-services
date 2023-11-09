@@ -51,14 +51,14 @@ class PatientClient extends CommonClient {
         payload['patient_id'] = identifier;
         payload['action'] = Constants.ACTION_CREATE;
         var address = this.getAddress(identifier);
-        return await this.wrap_and_send(identifier, payload, address);
+        return await this.wrap_and_send(identifier, payload, [address]);
     }
 
     async updatePatient(identifier, payload) {
         payload['patient_id'] = identifier;
         payload['action'] = Constants.ACTION_UPDATE;
         var address = this.getAddress(identifier);
-        return await this.wrap_and_send(identifier, payload, address);
+        return await this.wrap_and_send(identifier, payload, [address]);
     }
 
     async deletePatient(identifier) {
