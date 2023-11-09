@@ -1,4 +1,4 @@
-from patient_processor.models.patient import Patient
+from models.patient import Patient
 from helpers import helper
 
 
