@@ -14,6 +14,11 @@ class Constants {
     static CONSENT_REGISTRY_TP_CODE = '03';
     static CONSENT_REGISTRY_TP_VERSION = '1.0';
 
+    //PRACTITIONER REGISTRY FAMILY
+    static PRACTITIONER_REGISTRY_TP_NAME = 'practitioner-processor';
+    static PRACTITIONER_REGISTRY_TP_CODE = '04';
+    static PRACTITIONER_REGISTRY_TP_VERSION = '1.0';
+
     //SAWTOOTH REST API
     static SAWTOOTH_REST_API_URL = 'http://localhost:8008';
 
