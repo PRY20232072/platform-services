@@ -5,7 +5,7 @@ const { TextEncoder, TextDecoder } = require('text-encoding/lib/encoding')
 class PatientClient extends CommonClient {
     constructor() {
         super(
-            Constants.PATIENT_REGISTRY_TP_NAME, 
+            Constants.PATIENT_REGISTRY_TP_NAME,
             Constants.PATIENT_REGISTRY_TP_CODE,
             Constants.PATIENT_REGISTRY_TP_VERSION
         );
@@ -41,7 +41,7 @@ class PatientClient extends CommonClient {
         var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
 
         response = await this.saveDataInBlockchain('/batches', txnBytes);
-        
+
         //TODO: validate if response has info
 
         return response;
@@ -49,6 +49,7 @@ class PatientClient extends CommonClient {
 
     async createPatient(identifier, payload) {
         payload['patient_id'] = identifier;
+        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE, Constants.PERMISSION_DELETE];
         payload['action'] = Constants.ACTION_CREATE;
         var address = this.getAddress(identifier);
         return await this.wrap_and_send(identifier, payload, [address]);
@@ -68,18 +69,18 @@ class PatientClient extends CommonClient {
 
         var address = this.getAddress(identifier);
         var registry = await this.getRegistry(address);
-        
+
         if (registry.error) {
             return registry;
         }
-        
+
         registry = registry.data;
         var ipfsResponse = await this.infuraIPFSClient.rm(registry.ipfs_hash);
-        
+
         if (ipfsResponse == undefined) {
             return response;
         }
-        
+
         return await this.wrap_and_send(identifier, payload, address);
     }
 }

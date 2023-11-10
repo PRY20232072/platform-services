@@ -5,7 +5,7 @@ const { TextEncoder, TextDecoder } = require('text-encoding/lib/encoding')
 class ConsentClient extends CommonClient {
     constructor() {
         super(
-            Constants.CONSENT_REGISTRY_TP_NAME, 
+            Constants.CONSENT_REGISTRY_TP_NAME,
             Constants.CONSENT_REGISTRY_TP_CODE,
             Constants.CONSENT_REGISTRY_TP_VERSION
         );
@@ -17,18 +17,18 @@ class ConsentClient extends CommonClient {
         return pref + this.TP_CODE + addr;
     }
 
-    getPatientProfessionalAddress(patient_id, professional_id) {
+    getPatientPractitionerAddress(patient_id, practitioner_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
         var patientAddr = this.hash(patient_id).substring(0, 22);
-        var professionalAddr = this.hash(professional_id).substring(0, 40);
-        return pref + this.TP_CODE + patientAddr + professionalAddr;
+        var practitioner = this.hash(practitioner_id).substring(0, 40);
+        return pref + this.TP_CODE + patientAddr + practitioner;
     }
 
-    getProfessionalPatientAddress(professional_id, patient_id) {
+    getPractitionerPatientAddress(practitioner_id, patient_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
-        var professionalAddr = this.hash(professional_id).substring(0, 22);
+        var practitionerAddr = this.hash(practitioner_id).substring(0, 22);
         var patientAddr = this.hash(patient_id).substring(0, 40);
-        return pref + this.TP_CODE + professionalAddr + patientAddr;
+        return pref + this.TP_CODE + practitionerAddr + patientAddr;
     }
 
     async wrap_and_send(payload, addresses) {
@@ -52,20 +52,20 @@ class ConsentClient extends CommonClient {
 
     async createConsent(payload) {
         payload['action'] = Constants.ACTION_CREATE;
-        var patientProfessionalAddr = this.getPatientProfessionalAddress(payload.patient_id, payload.professional_id);
-        var professionalPatientAddr = this.getProfessionalPatientAddress(payload.professional_id, payload.patient_id);
-        var addresses = [patientProfessionalAddr, professionalPatientAddr];
+        var patientPractitionerAddr = this.getPatientPractitionerAddress(payload.patient_id, payload.practitioner_id);
+        var practitionerPatientAddr = this.getPractitionerPatientAddress(payload.practitioner_id, payload.patient_id);
+        var addresses = [patientPractitionerAddr, practitionerPatientAddr];
         return await this.wrap_and_send(payload, addresses);
     }
 
-    async revokeConsent(patient_id, professional_id) {
-        var patientProfessionalAddr = this.getPatientProfessionalAddress(patient_id, professional_id);
-        var professionalPatientAddr = this.getProfessionalPatientAddress(professional_id, patient_id);
-        var addresses = [patientProfessionalAddr, professionalPatientAddr];
+    async revokeConsent(patient_id, practitioner_id) {
+        var patientPractitionerAddr = this.getPatientPractitionerAddress(patient_id, practitioner_id);
+        var practitionerPatientAddr = this.getPractitionerPatientAddress(practitioner_id, patient_id);
+        var addresses = [patientPractitionerAddr, practitionerPatientAddr];
 
         var payload = {};
         payload['patient_id'] = patient_id;
-        payload['professional_id'] = professional_id;
+        payload['practitioner_id'] = practitioner_id;
         payload['action'] = Constants.ACTION_REVOKE;
         return await this.wrap_and_send(payload, addresses);
     }
