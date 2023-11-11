@@ -6,8 +6,7 @@ const client = new ConsentClient();
 
 router.get('/patient/:patient_id', async function (req, res) {
     var patient_id = req.params.patient_id;
-    var address = client.getAddress(patient_id);
-    await client.getList(address).then(function (response) {
+    await client.getByIdentifier(patient_id).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -19,8 +18,7 @@ router.get('/patient/:patient_id', async function (req, res) {
 
 router.get('/practitioner/:practitioner_id', async function (req, res) {
     var practitioner_id = req.params.practitioner_id;
-    var address = client.getAddress(practitioner_id);
-    await client.getList(address).then(function (response) {
+    await client.getByIdentifier(practitioner_id).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }

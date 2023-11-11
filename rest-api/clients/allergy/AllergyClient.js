@@ -42,8 +42,9 @@ class AllergyClient extends CommonClient {
 
         var allergyPatientAddr = this.AllergyAddressHelper.getAllergyPatientAddress(identifier, payload['patient_id']);
         var patientAllergyAddr = this.AllergyAddressHelper.getPatientAllergyAddress(payload['patient_id'], identifier);
+        var addresses = [allergyPatientAddr, patientAllergyAddr];
 
-        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, [allergyPatientAddr, patientAllergyAddr]);
+        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, addresses);
     }
 
     async updateAllergy(identifier, payload) {
@@ -52,8 +53,9 @@ class AllergyClient extends CommonClient {
 
         var allergyPatientAddr = this.AllergyAddressHelper.getAllergyPatientAddress(identifier, payload['patient_id']);
         var patientAllergyAddr = this.AllergyAddressHelper.getPatientAllergyAddress(payload['patient_id'], identifier);
+        var addresses = [allergyPatientAddr, patientAllergyAddr];
 
-        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, [allergyPatientAddr, patientAllergyAddr]);
+        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, addresses);
     }
 
     async deleteAllergy(identifier, patient_id) {
