@@ -1,0 +1,25 @@
+const { CommonIPFSHelper } = require('../../common/helpers/CommonIPFSHelper');
+
+class PractitionerIPFSHelper extends CommonIPFSHelper {
+    constructor() {
+        super();
+    }
+
+    async sentToIPFS(identifier, payload) {
+        var response = await this.InfuraIPFSClient.add(payload);
+    
+        if (response.error) {
+            return response;
+        }
+
+        var new_payload = {
+            practitioner_id: identifier,
+            ipfs_hash: response.hash,
+            action: payload.action
+        };
+        
+        return new_payload;
+    }
+}
+
+module.exports.PractitionerIPFSHelper = PractitionerIPFSHelper;

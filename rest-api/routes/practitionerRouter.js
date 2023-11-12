@@ -5,8 +5,7 @@ const { PractitionerClient } = require('../clients/practitioner/PractitionerClie
 const client = new PractitionerClient();
 
 router.get('/', async function (req, res) {
-    var address = client.getAddressList();
-    await client.getList(address).then(function (response) {
+    await client.getPractitionerList().then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -18,8 +17,7 @@ router.get('/', async function (req, res) {
 
 router.get('/:identifier', async function (req, res) {
     var identifier = req.params.identifier;
-    var address = client.getAddress(identifier);
-    await client.getByIdentifier(address).then(function (response) {
+    await client.getPractitionerById(identifier).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }

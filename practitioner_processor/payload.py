@@ -24,10 +24,13 @@ class PractitionerPayload(object):
         
         self._practitioner_id = payload['practitioner_id']
 
-        if not payload['ipfs_hash']:
-            raise InvalidTransaction("IPFS Hash is required")
-        
-        self._ipfs_hash = payload['ipfs_hash']
+        self._ipfs_hash = None
+
+        if self._action != PractitionerTransactionAction.DELETE.name:
+            if not payload['ipfs_hash']:
+                raise InvalidTransaction("IPFS Hash is required")
+            
+            self._ipfs_hash = payload['ipfs_hash']
 
     @property
     def practitioner_id(self):

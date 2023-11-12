@@ -1,4 +1,4 @@
-from practitioner_processor.models.practitioner import Practitioner
+from models.practitioner import Practitioner
 from helpers import helper
 
 
@@ -10,7 +10,6 @@ class PractitionerState:
         practitioner = Practitioner()
         practitioner.parse_from_payload(practitionerPayload)
         practitionerRegistry = self._load_registry(practitioner.practitioner_id)
-        # print(f"practitionerRegistry found: {practitionerRegistry}")
         if practitionerRegistry is None:
             print(f"save_practitioner: {practitioner.practitioner_id}")
             address = helper.make_address(practitioner.practitioner_id)
@@ -21,7 +20,6 @@ class PractitionerState:
         practitioner = Practitioner()
         practitioner.parse_from_payload(practitionerPayload)
         practitionerRegistry = self._load_registry(practitioner.practitioner_id)
-        # print(f"practitionerRegistry found: {practitionerRegistry}")
         if practitionerRegistry is not None:
             print(f"update_practitioner: {practitioner.practitioner_id}")
             address = helper.make_address(practitioner.practitioner_id)
@@ -32,7 +30,6 @@ class PractitionerState:
         practitioner = Practitioner()
         practitioner.parse_from_payload(practitionerPayload)
         practitionerRegistry = self._load_registry(practitioner.practitioner_id)
-        # print(f"practitionerRegistry found: {practitionerRegistry}")
         if practitionerRegistry is not None:
             print(f"delete_practitioner: {practitioner.practitioner_id}")
             address = helper.make_address(practitioner.practitioner_id)

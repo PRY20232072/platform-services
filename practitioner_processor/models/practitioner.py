@@ -2,7 +2,8 @@ import json
 
 class Practitioner(object): 
     def __init__(self) -> None:
-        pass
+        self._practitioner_id = None
+        self._ipfs_hash = None
 
     def parse_from_payload(self, payload):
         self._practitioner_id = payload.practitioner_id
