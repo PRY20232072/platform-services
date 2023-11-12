@@ -10,7 +10,7 @@ class CommonIPFSHelper {
             error: true,
             data: null
         }
-
+        
         if (registry.ipfs_hash == undefined) {
             response.error = false;
             response.data = registry;

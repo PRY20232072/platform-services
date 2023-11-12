@@ -51,7 +51,6 @@ class AllergyState:
                 allergy_id=allergy.allergy_id, patient_id=allergy.patient_id)
             patient_allergy_address = helper.make_address_patient_allergy(
                 patient_id=allergy.patient_id, allergy_id=allergy.allergy_id)
-            state_data = allergy.serialize_to_json().encode()
             self._context.delete_state(
                 [allergy_patient_address, patient_allergy_address], timeout=3)
 

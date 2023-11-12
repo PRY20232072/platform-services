@@ -29,10 +29,13 @@ class AllergyPayload(object):
         
         self._patient_id = payload['patient_id']
 
-        if not payload['ipfs_hash']:
-            raise InvalidTransaction("IPFS Hash is required")
-        
-        self._ipfs_hash = payload['ipfs_hash']
+        self._ipfs_hash = None
+
+        if self._action != AllergyTransactionAction.DELETE.name:
+            if not payload['ipfs_hash']:
+                raise InvalidTransaction("IPFS Hash is required")
+            
+            self._ipfs_hash = payload['ipfs_hash']
 
     @property
     def allergy_id(self):

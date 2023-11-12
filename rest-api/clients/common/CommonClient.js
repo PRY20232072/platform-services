@@ -1,9 +1,5 @@
-const { InfuraIPFSClient } = require('./InfuraIPFSClient');
-
 class CommonClient {
-    constructor() { 
-        this.infuraIPFSClient = new InfuraIPFSClient();
-    }
+    constructor() { }
 }
 
 module.exports.CommonClient = CommonClient;

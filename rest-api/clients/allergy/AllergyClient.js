@@ -1,15 +1,13 @@
-const { CommonClient } = require('../common/CommonClient');
 const { Constants } = require('../common/Constants');
 const { AllergyAddressHelper } = require('./helpers/AllergyAddressHelper');
 const { AllergyBlockchainHelper } = require('./helpers/AllergyBlockchainHelper');
-const { CommonIPFSHelper } = require('../common/helpers/CommonIPFSHelper');
+const { AllergyIPFSHelper } = require('./helpers/AllergyIPFSHelper');
 
-class AllergyClient extends CommonClient {
+class AllergyClient {
     constructor() {
-        super();
         this.AllergyAddressHelper = new AllergyAddressHelper();
         this.AllergyBlockchainHelper = new AllergyBlockchainHelper();
-        this.CommonIPFSHelper = new CommonIPFSHelper();
+        this.AllergyIPFSHelper = new AllergyIPFSHelper();
     }
 
     async getAllergyList() {
@@ -18,21 +16,21 @@ class AllergyClient extends CommonClient {
         //only get the even position of the list, because the odd position is the address
         data.data = data.data.filter((_, i) => i % 2 == 0);
 
-        data = this.CommonIPFSHelper.getIPFSDataOfRegistryList(data);
+        data = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
     }
 
     async getAllergyById(allergy_id) {
         var address = this.AllergyAddressHelper.getAddressByAllergyId(allergy_id);
         var data = await this.AllergyBlockchainHelper.getRegistryList(address);
-        data = this.CommonIPFSHelper.getIPFSDataOfRegistryList(data);
+        data = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
     }
 
     async getAllergyByPatientId(patient_id) {
         var address = this.AllergyAddressHelper.getAddressByPatientId(patient_id);
         var data = await this.AllergyBlockchainHelper.getRegistryList(address);
-        data = this.CommonIPFSHelper.getIPFSDataOfRegistryList(data);
+        data = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
     }
 
@@ -40,22 +38,20 @@ class AllergyClient extends CommonClient {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_CREATE;
 
-        var allergyPatientAddr = this.AllergyAddressHelper.getAllergyPatientAddress(identifier, payload['patient_id']);
-        var patientAllergyAddr = this.AllergyAddressHelper.getPatientAllergyAddress(payload['patient_id'], identifier);
-        var addresses = [allergyPatientAddr, patientAllergyAddr];
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, payload['patient_id']);
+        payload = await this.AllergyIPFSHelper.sentToIPFS(identifier, payload);
 
-        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, addresses);
+        return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
     async updateAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_UPDATE;
 
-        var allergyPatientAddr = this.AllergyAddressHelper.getAllergyPatientAddress(identifier, payload['patient_id']);
-        var patientAllergyAddr = this.AllergyAddressHelper.getPatientAllergyAddress(payload['patient_id'], identifier);
-        var addresses = [allergyPatientAddr, patientAllergyAddr];
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, payload['patient_id']);
+        payload = await this.AllergyIPFSHelper.sentToIPFS(identifier, payload);
 
-        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, addresses);
+        return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
     async deleteAllergy(identifier, patient_id) {
@@ -72,13 +68,15 @@ class AllergyClient extends CommonClient {
         }
 
         registry = registry.data;
-        var ipfsResponse = await this.infuraIPFSClient.rm(registry.ipfs_hash);
+        var ipfsResponse = await this.AllergyIPFSHelper.InfuraIPFSClient.rm(registry.ipfs_hash);
 
         if (ipfsResponse == undefined) {
             return response;
         }
 
-        return await this.AllergyBlockchainHelper.wrap_and_send(identifier, payload, address);
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, patient_id);
+
+        return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
     }
 }
 

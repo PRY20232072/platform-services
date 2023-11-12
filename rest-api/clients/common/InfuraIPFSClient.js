@@ -48,7 +48,6 @@ class InfuraIPFSClient {
                 }
             })
             .then((res) => {
-                console.log("ipfs cat | res: ", res.data);
                 response.data = res.data;
                 response.error = false;
             })

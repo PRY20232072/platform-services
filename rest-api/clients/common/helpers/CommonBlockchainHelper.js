@@ -117,7 +117,6 @@ class CommonBlockchainHelper {
                 return res;
             })
             .catch((error) => {
-                console.error(error);
                 var res = {
                     error: true,
                     data: null
@@ -146,6 +145,25 @@ class CommonBlockchainHelper {
             .catch((error) => {
                 console.error(error)
             });
+
+        return response;
+    }
+
+    async wrap_and_send(payload, address) {
+        var enc = new TextEncoder('utf8');
+
+        payload = JSON.stringify(payload);
+        
+        //TODO: encrypt payload
+
+        var payloadBytes = enc.encode(payload);
+
+        var txnHeaderBytes = this.make_txn_header_bytes(payloadBytes, address);
+        var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
+
+        var response = await this.saveDataInBlockchain('/batches', txnBytes);
+        
+        //TODO: validate if response has info
 
         return response;
     }

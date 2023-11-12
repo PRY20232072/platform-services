@@ -24,6 +24,12 @@ class AllergyAddressHelper extends CommonAddressHelper {
         return pref + this.TP_CODE + patientAddr + allergyAddr;
     }
 
+    getAddresses(allergy_id, patient_id) {
+        var allergyPatientAddr = this.getAllergyPatientAddress(allergy_id, patient_id);
+        var patientAllergyAddr = this.getPatientAllergyAddress(patient_id, allergy_id);
+        return [allergyPatientAddr, patientAllergyAddr];
+    }
+
     getAddressByPatientId(patient_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
         var patientAddr = this.hash(patient_id).substring(0, 22);
