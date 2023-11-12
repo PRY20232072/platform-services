@@ -19,9 +19,7 @@ class ConsentClient extends CommonClient {
     async createConsent(payload) {
         payload['action'] = Constants.ACTION_CREATE;
 
-        var patientPractitionerAddr = this.ConsentAddressHelper.getPatientPractitionerAddress(payload.patient_id, payload.practitioner_id);
-        var practitionerPatientAddr = this.ConsentAddressHelper.getPractitionerPatientAddress(payload.practitioner_id, payload.patient_id);
-        var addresses = [patientPractitionerAddr, practitionerPatientAddr];
+        var addresses = this.ConsentAddressHelper.getAddresses(payload['patient_id'], payload['practitioner_id']);
 
         return await this.ConsentBlockchainHelper.wrap_and_send(payload, addresses);
     }
@@ -32,9 +30,7 @@ class ConsentClient extends CommonClient {
         payload['practitioner_id'] = practitioner_id;
         payload['action'] = Constants.ACTION_REVOKE;
 
-        var patientPractitionerAddr = this.ConsentAddressHelper.getPatientPractitionerAddress(patient_id, practitioner_id);
-        var practitionerPatientAddr = this.ConsentAddressHelper.getPractitionerPatientAddress(practitioner_id, patient_id);
-        var addresses = [patientPractitionerAddr, practitionerPatientAddr];
+        var addresses = this.ConsentAddressHelper.getAddresses(patient_id, practitioner_id);
 
         return await this.ConsentBlockchainHelper.wrap_and_send(payload, addresses);
     }

@@ -16,6 +16,12 @@ class ConsentAddressHelper extends CommonAddressHelper {
         return pref + this.TP_CODE + addr;
     }
 
+    getAddresses(patient_id, practitioner_id) {
+        var patientPractitionerAddr = this.getPatientPractitionerAddress(patient_id, practitioner_id);
+        var practitionerPatientAddr = this.getPractitionerPatientAddress(practitioner_id, patient_id);
+        return [patientPractitionerAddr, practitionerPatientAddr];
+    }
+
     getPatientPractitionerAddress(patient_id, practitioner_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
         var patientAddr = this.hash(patient_id).substring(0, 22);
