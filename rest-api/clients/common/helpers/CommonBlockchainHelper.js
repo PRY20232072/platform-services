@@ -153,7 +153,7 @@ class CommonBlockchainHelper {
         var enc = new TextEncoder('utf8');
 
         payload = JSON.stringify(payload);
-        console.log("payload: ", payload);
+
         //TODO: encrypt payload
 
         var payloadBytes = enc.encode(payload);
