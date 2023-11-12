@@ -2,7 +2,8 @@ import json
 
 class Patient(object): 
     def __init__(self) -> None:
-        pass
+        self._patient_id = None
+        self._ipfs_hash = None
 
     def parse_from_payload(self, payload):
         self._patient_id = payload.patient_id
