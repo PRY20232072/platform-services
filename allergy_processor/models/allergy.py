@@ -2,18 +2,31 @@ import json
 
 class Allergy(object): 
     def __init__(self) -> None:
-        pass
+        self._allergy_id = None
+        self._patient_id = None
+        self._ipfs_hash = None
 
     def parse_from_payload(self, payload):
-        self._allergy_id = payload.allergy_id
-        self._patient_id = payload.patient_id
-        self._ipfs_hash = payload.ipfs_hash
+        if payload.allergy_id:
+            self._allergy_id = payload.allergy_id
+
+        if payload.patient_id:
+            self._patient_id = payload.patient_id
+
+        if payload.ipfs_hash:
+            self._ipfs_hash = payload.ipfs_hash
 
     def parse_from_json(self, jsonString):
         allergy = json.loads(jsonString)
-        self._allergy_id = allergy['allergy_id']
-        self._patient_id = allergy['patient_id']
-        self._ipfs_hash = allergy['ipfs_hash']
+
+        if allergy['allergy_id']:
+            self._allergy_id = allergy['allergy_id']
+
+        if allergy['patient_id']:
+            self._patient_id = allergy['patient_id']
+
+        if allergy['ipfs_hash']:
+            self._ipfs_hash = allergy['ipfs_hash']
 
     def serialize_to_json(self):
         return json.dumps({

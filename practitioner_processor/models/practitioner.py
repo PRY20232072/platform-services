@@ -1,32 +1,32 @@
 import json
 
-class Patient(object): 
+class Practitioner(object): 
     def __init__(self) -> None:
-        self._patient_id = None
+        self._practitioner_id = None
         self._ipfs_hash = None
         self._permissions = None
 
     def parse_from_payload(self, payload):
-        self._patient_id = payload.patient_id
+        self._practitioner_id = payload.practitioner_id
         self._ipfs_hash = payload.ipfs_hash
         self._permissions = payload.permissions
 
     def parse_from_json(self, jsonString):
-        patient = json.loads(jsonString)
-        self._patient_id = patient['patient_id']
-        self._ipfs_hash = patient['ipfs_hash']
-        self._permissions = patient['permissions']
+        practitioner = json.loads(jsonString)
+        self._practitioner_id = practitioner['practitioner_id']
+        self._ipfs_hash = practitioner['ipfs_hash']
+        self._permissions = practitioner['permissions']
 
     def serialize_to_json(self):
         return json.dumps({
-            'patient_id': self._patient_id,
+            'practitioner_id': self._practitioner_id,
             'ipfs_hash': self._ipfs_hash,
             'permissions': self._permissions
         })
     
     @property
-    def patient_id(self):
-        return self._patient_id
+    def practitioner_id(self):
+        return self._practitioner_id
     
     @property
     def ipfs_hash(self):

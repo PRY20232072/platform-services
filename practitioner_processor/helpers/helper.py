@@ -1,12 +1,14 @@
 import hashlib
 
-TP_NAME = 'allergy-processor'
+TP_NAME = 'practitioner-processor'
 TP_FAMILY_VERSION = '1.0'
+PRACTITIONER_CODE = '04'
 
-ALLERGY_REGISTRY_CODE = '01'
+def _hash(identifier):
+    return hashlib.sha512(identifier.encode('utf-8')).hexdigest()
 
 def get_namespace_prefix():
-    return hashlib.sha512(TP_NAME.encode('utf-8')).hexdigest()[:6]
+    return _hash(TP_NAME)[:6]
 
-def make_address(name):
-    return get_namespace_prefix + ALLERGY_REGISTRY_CODE + hashlib.sha512(name.encode('utf-8')).hexdigest()[:62]
+def make_address(identifier):
+    return get_namespace_prefix() + PRACTITIONER_CODE + _hash(identifier)[:62]

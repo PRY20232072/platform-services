@@ -2,7 +2,7 @@ import sys
 import argparse
 
 from sawtooth_sdk.processor.core import TransactionProcessor
-from handler import AllergyTransactionHandler
+from handler import ConsentTransactionHandler
 
 
 def parse_args(args):
@@ -35,7 +35,7 @@ def main(args=None):
 
         print("Connecting to Sawtooth validator at {}".format(opts.connect))
 
-        handler = AllergyTransactionHandler()
+        handler = ConsentTransactionHandler()
 
         processor.add_handler(handler)
         processor.start()
