@@ -16,20 +16,22 @@ class PractitionerPayload(object):
         
         if payload['action'] not in PractitionerTransactionAction.__members__:
             raise InvalidTransaction("Invalid Practitioner Transaction Action: {}".format(payload['action']))
-        
         self._action = payload['action']
 
         if not payload['practitioner_id']:
             raise InvalidTransaction("Practitioner Id is required")
-        
         self._practitioner_id = payload['practitioner_id']
 
-        self._ipfs_hash = None
+        self._permissions = None
+        if self._action == PractitionerTransactionAction.CREATE.name:
+            if not payload['permissions']:
+                raise InvalidTransaction("Permissions is required")
+            self._permissions = payload['permissions']
 
+        self._ipfs_hash = None
         if self._action != PractitionerTransactionAction.DELETE.name:
             if not payload['ipfs_hash']:
                 raise InvalidTransaction("IPFS Hash is required")
-            
             self._ipfs_hash = payload['ipfs_hash']
 
     @property
@@ -39,6 +41,10 @@ class PractitionerPayload(object):
     @property
     def ipfs_hash(self):
         return self._ipfs_hash
+    
+    @property
+    def permissions(self):
+        return self._permissions
     
     @property
     def is_create(self):

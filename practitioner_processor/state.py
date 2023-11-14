@@ -22,6 +22,7 @@ class PractitionerState:
         practitionerRegistry = self._load_registry(practitioner.practitioner_id)
         if practitionerRegistry is not None:
             print(f"update_practitioner: {practitioner.practitioner_id}")
+            practitioner.permissions = practitionerRegistry.permissions
             address = helper.make_address(practitioner.practitioner_id)
             state_data = practitioner.serialize_to_json().encode()
             self._context.set_state({address: state_data}, timeout=3)

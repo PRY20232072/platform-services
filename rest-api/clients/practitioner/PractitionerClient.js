@@ -31,21 +31,23 @@ class PractitionerClient {
 
     async createPractitioner(identifier, payload) {
         payload['practitioner_id'] = identifier;
-        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE];
-        payload['action'] = Constants.ACTION_CREATE;
-
+        
         var address = this.PractitionerAddressHelper.getAddress(identifier);
         payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
+
+        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE];
+        payload['action'] = Constants.ACTION_CREATE;
 
         return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
     }
 
     async updatePractitioner(identifier, payload) {
         payload['practitioner_id'] = identifier;
-        payload['action'] = Constants.ACTION_UPDATE;
-
+        
         var address = this.PractitionerAddressHelper.getAddress(identifier);
         payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
+        
+        payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
     }
