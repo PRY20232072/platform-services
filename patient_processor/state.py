@@ -10,7 +10,6 @@ class PatientState:
         patient = Patient()
         patient.parse_from_payload(patientPayload)
         patientRegistry = self._load_registry(patient.patient_id)
-        # print(f"patientRegistry found: {patientRegistry}")
         if patientRegistry is None:
             print(f"save_patient: {patient.patient_id}")
             address = helper.make_address(patient.patient_id)
@@ -21,9 +20,9 @@ class PatientState:
         patient = Patient()
         patient.parse_from_payload(patientPayload)
         patientRegistry = self._load_registry(patient.patient_id)
-        # print(f"patientRegistry found: {patientRegistry}")
         if patientRegistry is not None:
             print(f"update_patient: {patient.patient_id}")
+            patient.permissions = patientRegistry.permissions
             address = helper.make_address(patient.patient_id)
             state_data = patient.serialize_to_json().encode()
             self._context.set_state({address: state_data}, timeout=3)
@@ -32,7 +31,6 @@ class PatientState:
         patient = Patient()
         patient.parse_from_payload(patientPayload)
         patientRegistry = self._load_registry(patient.patient_id)
-        # print(f"patientRegistry found: {patientRegistry}")
         if patientRegistry is not None:
             print(f"delete_patient: {patient.patient_id}")
             address = helper.make_address(patient.patient_id)

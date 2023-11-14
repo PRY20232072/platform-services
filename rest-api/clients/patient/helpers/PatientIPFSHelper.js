@@ -14,8 +14,7 @@ class PatientIPFSHelper extends CommonIPFSHelper {
 
         var new_payload = {
             patient_id: identifier,
-            ipfs_hash: response.hash,
-            action: payload.action
+            ipfs_hash: response.hash
         };
         
         return new_payload;
