@@ -29,7 +29,9 @@ class ConsentTransactionHandler(TransactionHandler):
         consent_state = ConsentState(context)
 
         if consent_payload.is_create:
-            consent_state.save_patient(consent_payload)
+            consent_state.create_consent(consent_payload)
+        if consent_payload.is_approve:
+            consent_state.approve_consent(consent_payload)
         elif consent_payload.is_revoke:
             consent_state.revoke_consent(consent_payload)
         else:
