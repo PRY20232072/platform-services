@@ -56,6 +56,17 @@ class AllergyClient extends CommonClient {
         return response;
     }
 
+    async getAlleryByIdAndPatientId(allergy_id, patient_id) {
+        var address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
+        var data = await this.AllergyBlockchainHelper.getRegistry(address);
+        if (data.error) {
+            data.data = "There is no allergy with this identifier";
+            return data;
+        }
+        data = await this.AllergyIPFSHelper.getIPFSDataOfRegistry(data);
+        return data;
+    }
+
     async createAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
         payload['action'] = Constants.ACTION_CREATE;
