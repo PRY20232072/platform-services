@@ -69,15 +69,15 @@ class AllergyClient extends CommonClient {
 
     async createAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
-        payload['action'] = Constants.ACTION_CREATE;
         var address = this.getAddress(payload['patient_id'], identifier);
+        payload['action'] = Constants.ACTION_CREATE;
         return await this.wrap_and_send(identifier, payload, address);
     }
 
     async updateAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
-        payload['action'] = Constants.ACTION_UPDATE;
         var address = this.getAddress(payload['patient_id'], identifier);
+        payload['action'] = Constants.ACTION_UPDATE;
         return await this.wrap_and_send(identifier, payload, address);
     }
 

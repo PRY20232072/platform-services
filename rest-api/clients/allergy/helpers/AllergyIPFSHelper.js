@@ -16,8 +16,7 @@ class AllergyIPFSHelper extends CommonIPFSHelper {
         var new_payload = {
             allergy_id: identifier,
             patient_id: payload.patient_id,
-            ipfs_hash: response.hash,
-            action: payload.action
+            ipfs_hash: response.hash
         };
 
         return new_payload;
