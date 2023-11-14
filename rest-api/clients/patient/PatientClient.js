@@ -31,21 +31,23 @@ class PatientClient {
 
     async createPatient(identifier, payload) {
         payload['patient_id'] = identifier;
-        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE, Constants.PERMISSION_DELETE];
-        payload['action'] = Constants.ACTION_CREATE;
-
+        
         var address = this.PatientAddressHelper.getAddress(identifier);
         payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
+        
+        payload['action'] = Constants.ACTION_CREATE;
+        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE, Constants.PERMISSION_DELETE];
 
         return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);
     }
 
     async updatePatient(identifier, payload) {
         payload['patient_id'] = identifier;
-        payload['action'] = Constants.ACTION_UPDATE;
-
+        
         var address = this.PatientAddressHelper.getAddress(identifier);
         payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
+
+        payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);
     }

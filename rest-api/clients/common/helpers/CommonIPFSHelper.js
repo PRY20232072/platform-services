@@ -22,6 +22,7 @@ class CommonIPFSHelper {
             }
             response.error = false;
             response.data = info.data;
+            response.data.permissions = registry.permissions;
         }
 
         return response;
@@ -45,6 +46,7 @@ class CommonIPFSHelper {
                 if (info.error) {
                     return response;
                 }
+                info.data.permissions = registry.permissions;
                 data.push(info.data);
             }
         }
