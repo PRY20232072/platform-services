@@ -40,6 +40,10 @@ class Consent(object):
     @property
     def register_type(self):
         return self._register_type
+    
+    @register_type.setter
+    def register_type(self, value):
+        self._register_type = value
 
     @property
     def state(self):

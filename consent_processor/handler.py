@@ -30,7 +30,7 @@ class ConsentTransactionHandler(TransactionHandler):
 
         if consent_payload.is_create:
             consent_state.create_consent(consent_payload)
-        if consent_payload.is_approve:
+        elif consent_payload.is_approve:
             consent_state.approve_consent(consent_payload)
         elif consent_payload.is_revoke:
             consent_state.revoke_consent(consent_payload)

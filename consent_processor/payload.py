@@ -30,7 +30,7 @@ class ConsentPayload(object):
 
         self._register_type = None
         self._state = None
-        if self._action == ConsentTransactionAction.CREATE_REQUEST.name:
+        if self._action == ConsentTransactionAction.CREATE.name:
             if not payload['register_type']:
                 raise InvalidTransaction("Register Type is required")
             if payload['register_type'] not in ConsentRegisterType.__members__:
@@ -39,12 +39,6 @@ class ConsentPayload(object):
             self._register_type = payload['register_type']
 
             self._state = ConsentStatus.PENDING.name
-            # if not payload['state']:
-            #     raise InvalidTransaction("State is required")
-            # if payload['state'] not in ConsentState.__members__:
-            #     raise InvalidTransaction(
-            #         "Invalid State: {}".format(payload['state']))
-            # self._state = payload['state']
 
     @property
     def register_id(self):
