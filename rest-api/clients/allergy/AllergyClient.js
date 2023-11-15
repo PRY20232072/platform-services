@@ -2,12 +2,14 @@ const { Constants } = require('../common/Constants');
 const { AllergyAddressHelper } = require('./helpers/AllergyAddressHelper');
 const { AllergyBlockchainHelper } = require('./helpers/AllergyBlockchainHelper');
 const { AllergyIPFSHelper } = require('./helpers/AllergyIPFSHelper');
+const { ConsentValidatorHelper } = require("../common/helpers/ConsentValidatorHelper");
 
 class AllergyClient {
     constructor() {
         this.AllergyAddressHelper = new AllergyAddressHelper();
         this.AllergyBlockchainHelper = new AllergyBlockchainHelper();
         this.AllergyIPFSHelper = new AllergyIPFSHelper();
+        this.ConsentValidatorHelper = new ConsentValidatorHelper();
     }
 
     async getAllergyList() {
@@ -34,7 +36,12 @@ class AllergyClient {
         return data;
     }
 
-    async getAlleryByIdAndPatientId(allergy_id, patient_id) {
+    async getAlleryByIdAndPatientId(allergy_id, patient_id, practitioner_id) {
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, allergy_id, Constants.PERMISSION_READ);
+        if (accessControlResponse.error) {
+            return accessControlResponse;
+        }
+
         var address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
         var data = await this.AllergyBlockchainHelper.getRegistry(address);
         if (data.error) {
@@ -55,17 +62,27 @@ class AllergyClient {
         return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
-    async updateAllergy(identifier, payload) {
+    async updateAllergy(identifier, practitioner_id, payload) {
+        var patient_id = payload['patient_id'];
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE);
+        if (accessControlResponse.error) {
+            return accessControlResponse;
+        }
+
         payload['allergy_id'] = identifier;
-        
-        var addresses = this.AllergyAddressHelper.getAddresses(identifier, payload['patient_id']);
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, patient_id);
         payload = await this.AllergyIPFSHelper.sentToIPFS(identifier, payload);
         payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
-    async deleteAllergy(identifier, patient_id) {
+    async deleteAllergy(identifier, patient_id, practitioner_id) {
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE);
+        if (accessControlResponse.error) {
+            return accessControlResponse;
+        }
+
         var payload = {};
         payload['allergy_id'] = identifier;
         payload['patient_id'] = patient_id;

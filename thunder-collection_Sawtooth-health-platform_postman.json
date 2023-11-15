@@ -1,0 +1,494 @@
+{
+    "info": {
+        "_postman_id": "1a4aac8d-32d1-4119-83cb-0106f3a9f4b2",
+        "name": "Sawtooth-health-platform",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Allergy",
+            "item": [
+                {
+                    "name": "Get Allergy List",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}",
+                            "path": [
+                                "{{ALLERGY_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Allergy By Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}/6666",
+                            "path": [
+                                "{{ALLERGY_URL}}",
+                                "6666"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Allergy By Patient Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}/patient/1111",
+                            "path": [
+                                "{{ALLERGY_URL}}",
+                                "patient",
+                                "1111"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Allergy",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}",
+                            "path": [
+                                "{{ALLERGY_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"identifier\": \"6666\",\n  \"payload\": {\n    \"patient_id\": \"1234\",\n    \"participant_id\": \"4321\",\n    \"type\": \"ALLERGY\",\n    \"category\": \"FOOD\",\n    \"criticality\": \"LOW\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"verification_status\": \"CONFIRMED\",\n    \"onset_date\": \"12/12/2023\",\n    \"recorded_date\": \"12/12/2023\",\n    \"last_occurrence\": \"12/12/2023\",\n    \"allergy_notes\": \"Probando ipfs con sawtooth\"\n  }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Update Allergy",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}/6666?practitioner_id=4321",
+                            "query": [
+                                {
+                                    "key": "practitioner_id",
+                                    "value": "4321"
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "{{ALLERGY_URL}}",
+                                "6666"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"payload\": {\n    \"patient_id\": \"1234\",\n    \"participant_id\": \"4321\",\n    \"type\": \"ALLERGY\",\n    \"category\": \"FOOD\",\n    \"criticality\": \"LOW\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"verification_status\": \"CONFIRMED\",\n    \"onset_date\": \"12/12/2023\",\n    \"recorded_date\": \"12/12/2023\",\n    \"last_occurrence\": \"12/12/2023\",\n    \"allergy_notes\": \"Probando update con sawtooth\"\n  }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Allergy",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}/6666?patient_id=1234",
+                            "query": [
+                                {
+                                    "key": "patient_id",
+                                    "value": "1234"
+                                },
+                                {
+                                    "key": "practitioner_id",
+                                    "value": "4321",
+                                    "disabled": true
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "{{ALLERGY_URL}}",
+                                "6666"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Allergy By Id and  Patient Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{ALLERGY_URL}}/6666/patient/1234?practitioner_id=4321",
+                            "query": [
+                                {
+                                    "key": "practitioner_id",
+                                    "value": "4321"
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "{{ALLERGY_URL}}",
+                                "6666",
+                                "patient",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Practitioner",
+            "item": [
+                {
+                    "name": "Get Practitioner List",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PRACTITIONER_URL}}",
+                            "path": [
+                                "{{PRACTITIONER_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Practitioner By Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PRACTITIONER_URL}}/4321",
+                            "path": [
+                                "{{PRACTITIONER_URL}}",
+                                "4321"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Practitioner",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PRACTITIONER_URL}}",
+                            "path": [
+                                "{{PRACTITIONER_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"identifier\": \"4321\",\n  \"payload\": {\n    \"name_id\": \"Practitioner 1\",\n    \"gender\": \"male\",\n    \"birthDate\": \"13/08/2001\",\n    \"maritalStatus\": \"single\",\n    \"telephone\": \"987654321\",\n    \"address\": \"av arequipa\"\n  }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Practitioner",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PRACTITIONER_URL}}/1234",
+                            "path": [
+                                "{{PRACTITIONER_URL}}",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Practitioner",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PRACTITIONER_URL}}/1234",
+                            "path": [
+                                "{{PRACTITIONER_URL}}",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n    \"payload\": {\n        \"name_id\": \"Sebastian Bran\",\n        \"gender\": \"male\",\n        \"birthDate\": \"13/08/2001\",\n        \"maritalStatus\": \"single\",\n        \"telephone\": \"987654321\",\n        \"address\": \"av arequipa update\"\n    }\n}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Patient",
+            "item": [
+                {
+                    "name": "Get Patient List",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PATIENT_URL}}",
+                            "path": [
+                                "{{PATIENT_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Patient By Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+                            "path": [
+                                "{{PATIENT_URL}}",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Patient",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PATIENT_URL}}",
+                            "path": [
+                                "{{PATIENT_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"identifier\": \"1234\",\n  \"payload\": {\n    \"name_id\": \"Sebastian Bran\",\n    \"gender\": \"male\",\n    \"birthDate\": \"13/08/2001\",\n    \"maritalStatus\": \"single\",\n    \"telephone\": \"987654321\",\n    \"address\": \"av arequipa\"\n  }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Update Patient",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+                            "path": [
+                                "{{PATIENT_URL}}",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n    \"payload\": {\n        \"name_id\": \"Sebastian Bran\",\n        \"gender\": \"male\",\n        \"birthDate\": \"13/08/2001\",\n        \"maritalStatus\": \"single\",\n        \"telephone\": \"987654321\",\n        \"address\": \"av arequipa update\"\n    }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Patient",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+                            "path": [
+                                "{{PATIENT_URL}}",
+                                "1234"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Consent",
+            "item": [
+                {
+                    "name": "Create Consent For Allergy",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}",
+                            "path": [
+                                "{{CONSENT_URL}}"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"payload\": {\n    \"register_id\": \"6666\",\n    \"practitioner_id\": \"4321\",\n    \"register_type\": \"ALLERGY\"\n  }\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Revoke Consent",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+                            "path": [
+                                "{{CONSENT_URL}}",
+                                "register",
+                                "6666",
+                                "practitioner",
+                                "4321"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get By Register Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666",
+                            "path": [
+                                "{{CONSENT_URL}}",
+                                "register",
+                                "6666"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get By Practitioner Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}/practitioner/4321",
+                            "path": [
+                                "{{CONSENT_URL}}",
+                                "practitioner",
+                                "4321"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get By Register And Practitioner Id",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+                            "path": [
+                                "{{CONSENT_URL}}",
+                                "register",
+                                "6666",
+                                "practitioner",
+                                "4321"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Approve consent",
+                    "request": {
+                        "method": "PUT",
+                        "url": {
+                            "raw": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+                            "path": [
+                                "{{CONSENT_URL}}",
+                                "register",
+                                "6666",
+                                "practitioner",
+                                "4321"
+                            ],
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

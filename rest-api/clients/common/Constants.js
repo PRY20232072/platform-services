@@ -34,6 +34,10 @@ class Constants {
     static PERMISSION_WRITE = 'WRITE';
     static PERMISSION_DELETE = 'DELETE';
 
+    //CONSENT STATUS
+    static CONSENT_ACTIVE = 'ACTIVE';
+    static CONSENT_PENDING = 'PENDING';
+
     //IPFS INFURA
     static IPFS_INFURA_URL = 'https://ipfs.infura.io:5001/api/v0';
     static IPFS_INFURA_PROTOCOL = 'https';

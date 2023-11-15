@@ -1,0 +1,419 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Sawtooth-health-platform",
+    "dateExported": "2023-11-15T06:16:13.071Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Allergy",
+            "containerId": "",
+            "created": "2023-11-12T05:45:08.420Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Practitioner",
+            "containerId": "",
+            "created": "2023-11-12T05:45:32.101Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Patient",
+            "containerId": "",
+            "created": "2023-11-12T05:45:38.626Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Consent",
+            "containerId": "",
+            "created": "2023-11-12T05:45:42.040Z",
+            "sortNum": 40000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "484f2cf3-299e-42e9-b510-afe499b13a9a",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Get Allergy List",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-11-12T05:45:13.690Z",
+            "modified": "2023-11-12T05:45:13.690Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "806145ea-4f8f-482f-9479-fc863e425b82",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Get Practitioner List",
+            "url": "{{BASE_URL}}/{{PRACTITIONER_URL}}",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-11-12T05:45:45.784Z",
+            "modified": "2023-11-12T05:45:45.784Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "e47d8c78-e7d7-4cca-8b4c-820df2eda36e",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Get Patient List",
+            "url": "{{BASE_URL}}/{{PATIENT_URL}}",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-11-12T05:46:22.368Z",
+            "modified": "2023-11-12T05:46:22.368Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "5eb98d30-66c9-4602-bab1-9c20029848a7",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Create Consent For Allergy",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-11-12T05:46:44.268Z",
+            "modified": "2023-11-15T06:06:11.959Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"payload\": {\n    \"register_id\": \"6666\",\n    \"practitioner_id\": \"4321\",\n    \"register_type\": \"ALLERGY\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8a200631-3edf-4e44-a6ff-e32c036b69b3",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Approve consent",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+            "method": "PUT",
+            "sortNum": 15000,
+            "created": "2023-11-15T04:07:14.714Z",
+            "modified": "2023-11-15T06:10:33.667Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8fca764f-1e2b-4dfc-a112-df3635d4b465",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Get Allergy By Id",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}/6666",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-12T05:45:15.886Z",
+            "modified": "2023-11-12T05:45:15.886Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "9a33d366-7d9d-4b7b-bbd4-580f08111bbc",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Get Practitioner By Id",
+            "url": "{{BASE_URL}}/{{PRACTITIONER_URL}}/4321",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-12T05:45:48.650Z",
+            "modified": "2023-11-15T05:40:59.637Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "feafb2ff-362a-49be-b888-7b6faa0ba92e",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Get Patient By Id",
+            "url": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-11-12T05:46:24.161Z",
+            "modified": "2023-11-12T05:46:24.161Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a6e8b528-a623-45bb-97bd-ff8322708c3c",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Revoke Consent",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+            "method": "DELETE",
+            "sortNum": 20000,
+            "created": "2023-11-12T05:46:45.664Z",
+            "modified": "2023-11-15T06:15:30.148Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "6f4e2233-56c4-48b0-bc8c-d264024c4784",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Get Allergy By Patient Id",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}/patient/1111",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-11-12T05:45:17.218Z",
+            "modified": "2023-11-12T05:45:17.218Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "5235ecce-d1fb-4005-8c24-f785609ef479",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Create Practitioner",
+            "url": "{{BASE_URL}}/{{PRACTITIONER_URL}}",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-11-12T05:45:52.594Z",
+            "modified": "2023-11-15T05:40:51.781Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"identifier\": \"4321\",\n  \"payload\": {\n    \"name_id\": \"Practitioner 1\",\n    \"gender\": \"male\",\n    \"birthDate\": \"13/08/2001\",\n    \"maritalStatus\": \"single\",\n    \"telephone\": \"987654321\",\n    \"address\": \"av arequipa\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "91088108-3f7c-44db-9843-ff876994cd7b",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Create Patient",
+            "url": "{{BASE_URL}}/{{PATIENT_URL}}",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-11-12T05:46:25.750Z",
+            "modified": "2023-11-12T05:46:25.750Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"identifier\": \"1234\",\n  \"payload\": {\n    \"name_id\": \"Sebastian Bran\",\n    \"gender\": \"male\",\n    \"birthDate\": \"13/08/2001\",\n    \"maritalStatus\": \"single\",\n    \"telephone\": \"987654321\",\n    \"address\": \"av arequipa\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9fec10a3-1b7b-47d7-bd28-d8615573b414",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Get By Register Id",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-11-12T05:46:46.866Z",
+            "modified": "2023-11-15T06:06:19.765Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "1fcd32d8-2952-445d-8873-ee9284876e77",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Get Allergy By Id and  Patient Id",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}/6666/patient/1234?practitioner_id=4321",
+            "method": "GET",
+            "sortNum": 35000,
+            "created": "2023-11-14T07:21:28.339Z",
+            "modified": "2023-11-15T06:12:10.260Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "practitioner_id",
+                    "value": "4321",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "7f69274a-ea24-40ba-a64b-a219e41fbc21",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Create Allergy",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-11-12T05:45:18.423Z",
+            "modified": "2023-11-15T06:05:07.936Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"identifier\": \"6666\",\n  \"payload\": {\n    \"patient_id\": \"1234\",\n    \"participant_id\": \"4321\",\n    \"type\": \"ALLERGY\",\n    \"category\": \"FOOD\",\n    \"criticality\": \"LOW\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"verification_status\": \"CONFIRMED\",\n    \"onset_date\": \"12/12/2023\",\n    \"recorded_date\": \"12/12/2023\",\n    \"last_occurrence\": \"12/12/2023\",\n    \"allergy_notes\": \"Probando ipfs con sawtooth\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8c9002c8-c66d-44a4-9903-2e77b9192e24",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Delete Practitioner",
+            "url": "{{BASE_URL}}/{{PRACTITIONER_URL}}/1234",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2023-11-12T05:45:54.150Z",
+            "modified": "2023-11-12T05:45:54.150Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "e40ea8b9-03ad-4c0b-a2fb-9bdce371f0bf",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Update Patient",
+            "url": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-11-12T05:46:27.048Z",
+            "modified": "2023-11-12T05:46:27.048Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"payload\": {\n        \"name_id\": \"Sebastian Bran\",\n        \"gender\": \"male\",\n        \"birthDate\": \"13/08/2001\",\n        \"maritalStatus\": \"single\",\n        \"telephone\": \"987654321\",\n        \"address\": \"av arequipa update\"\n    }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c324a407-6d0a-4ffd-8185-acfeea35fc26",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Get By Practitioner Id",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}/practitioner/4321",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2023-11-12T05:46:49.913Z",
+            "modified": "2023-11-12T05:46:49.913Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "93d02877-2b87-4adf-9869-52e2813a4eb5",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Update Allergy",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}/6666?practitioner_id=4321",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2023-11-12T05:45:19.489Z",
+            "modified": "2023-11-15T06:10:00.439Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "practitioner_id",
+                    "value": "4321",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"payload\": {\n    \"patient_id\": \"1234\",\n    \"participant_id\": \"4321\",\n    \"type\": \"ALLERGY\",\n    \"category\": \"FOOD\",\n    \"criticality\": \"LOW\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"verification_status\": \"CONFIRMED\",\n    \"onset_date\": \"12/12/2023\",\n    \"recorded_date\": \"12/12/2023\",\n    \"last_occurrence\": \"12/12/2023\",\n    \"allergy_notes\": \"Probando update con sawtooth\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "1868400d-99a2-4120-927b-558ff908a657",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "7f94e109-9d2a-49e4-9d4b-bdcd1cc114b6",
+            "name": "Update Practitioner",
+            "url": "{{BASE_URL}}/{{PRACTITIONER_URL}}/1234",
+            "method": "PUT",
+            "sortNum": 50000,
+            "created": "2023-11-12T05:45:56.737Z",
+            "modified": "2023-11-12T05:45:56.737Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"payload\": {\n        \"name_id\": \"Sebastian Bran\",\n        \"gender\": \"male\",\n        \"birthDate\": \"13/08/2001\",\n        \"maritalStatus\": \"single\",\n        \"telephone\": \"987654321\",\n        \"address\": \"av arequipa update\"\n    }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "6e3208da-650e-4760-a04e-f2eb464cbb48",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "41ca2323-fd06-4298-81d0-462bd5883ed3",
+            "name": "Delete Patient",
+            "url": "{{BASE_URL}}/{{PATIENT_URL}}/1234",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-11-12T05:46:28.799Z",
+            "modified": "2023-11-12T05:46:28.799Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f89f9170-0c88-473a-a5bc-a8f87d5f9a25",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "6c5889f4-d16b-484f-a4f2-5b14713a800c",
+            "name": "Get By Register And Practitioner Id",
+            "url": "{{BASE_URL}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-11-15T03:15:01.645Z",
+            "modified": "2023-11-15T06:06:36.475Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "6756a7c0-dc87-478f-8c40-83919f8f1d39",
+            "colId": "75225826-9eba-4349-b4e6-b19353c0456f",
+            "containerId": "79c9837f-b614-46c7-b28a-9522ea61d107",
+            "name": "Delete Allergy",
+            "url": "{{BASE_URL}}/{{ALLERGY_URL}}/6666?patient_id=1234",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2023-11-12T05:45:22.371Z",
+            "modified": "2023-11-15T06:14:36.728Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "patient_id",
+                    "value": "1234",
+                    "isPath": false
+                },
+                {
+                    "name": "practitioner_id",
+                    "value": "4321",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ]
+}
