@@ -24,6 +24,7 @@ class Constants {
 
     //ACTIONS
     static ACTION_CREATE = 'CREATE';
+    static ACTION_APPROVE = 'APPROVE'
     static ACTION_UPDATE = 'UPDATE';
     static ACTION_DELETE = 'DELETE';
     static ACTION_REVOKE = 'REVOKE';

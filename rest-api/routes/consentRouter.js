@@ -4,9 +4,9 @@ const { ConsentClient } = require('../clients/consent/ConsentClient');
 
 const client = new ConsentClient();
 
-router.get('/patient/:patient_id', async function (req, res) {
-    var patient_id = req.params.patient_id;
-    await client.getByIdentifier(patient_id).then(function (response) {
+router.get('/register/:register_id', async function (req, res) {
+    var register_id = req.params.register_id;
+    await client.getConsentByRegisterId(register_id).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -18,7 +18,20 @@ router.get('/patient/:patient_id', async function (req, res) {
 
 router.get('/practitioner/:practitioner_id', async function (req, res) {
     var practitioner_id = req.params.practitioner_id;
-    await client.getByIdentifier(practitioner_id).then(function (response) {
+    await client.getConsentByPractitionerId(practitioner_id).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
+    });
+});
+
+router.get('/register/:register_id/practitioner/:practitioner_id', async function (req, res) {
+    var register_id = req.params.register_id;
+    var practitioner_id = req.params.practitioner_id;
+    await client.getConsentByRegisterIdAndPractitionerId(register_id, practitioner_id).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -40,10 +53,23 @@ router.post('/', async function (req, res) {
     });
 });
 
-router.delete('/patient/:patient_id/practitioner/:practitioner_id', async function (req, res) {
-    var patient_id = req.params.patient_id;
+router.put('/register/:register_id/practitioner/:practitioner_id', async function (req, res) {
+    var register_id = req.params.register_id;
     var practitioner_id = req.params.practitioner_id;
-    await client.revokeConsent(patient_id, practitioner_id).then(function (response) {
+    await client.approveConsent(register_id, practitioner_id).then(function (response) {
+        if (response.error) {
+            res.status(404).send(response);
+        }
+        else {
+            res.send(response);
+        }
+    });
+});
+
+router.delete('/register/:register_id/practitioner/:practitioner_id', async function (req, res) {
+    var register_id = req.params.register_id;
+    var practitioner_id = req.params.practitioner_id;
+    await client.revokeConsent(register_id, practitioner_id).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
