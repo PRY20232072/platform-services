@@ -4,12 +4,15 @@ kind: List
 
 items:
 
-- apiVersion: extensions/v1beta1
+- apiVersion: apps/v1
   kind: Deployment
   metadata:
     name: sawtooth-0
   spec:
     replicas: 1
+    selector:
+      matchLabels:
+        name: sawtooth-0
     template:
       metadata:
         labels:
@@ -62,19 +65,19 @@ items:
             args:
               - -c
               - "sawadm keygen \
-              && sawtooth keygen my_key \
-              && sawset genesis -k /root/.sawtooth/keys/my_key.priv \
-              && sawset proposal create \
-                -k /root/.sawtooth/keys/my_key.priv \
-                sawtooth.consensus.algorithm.name=Devmode \
-                sawtooth.consensus.algorithm.version=0.1 \
-                -o config.batch \
-              && sawadm genesis config-genesis.batch config.batch \
-              && sawtooth-validator -vv \
-                  --endpoint tcp://$SAWTOOTH_0_SERVICE_HOST:8800 \
-                  --bind component:tcp://eth0:4004 \
-                  --bind consensus:tcp://eth0:5050 \
-                  --bind network:tcp://eth0:8800"
+                && sawtooth keygen my_key \
+                && sawset genesis -k /root/.sawtooth/keys/my_key.priv \
+                && sawset proposal create \
+                  -k /root/.sawtooth/keys/my_key.priv \
+                  sawtooth.consensus.algorithm.name=Devmode \
+                  sawtooth.consensus.algorithm.version=0.1 \
+                  -o config.batch \
+                && sawadm genesis config-genesis.batch config.batch \
+                && sawtooth-validator -vv \
+                    --endpoint tcp://$SAWTOOTH_0_SERVICE_HOST:8800 \
+                    --bind component:tcp://eth0:4004 \
+                    --bind consensus:tcp://eth0:5050 \
+                    --bind network:tcp://eth0:8800"
 
           - name: sawtooth-rest-api
             image: hyperledger/sawtooth-rest-api:nightly
@@ -120,3 +123,17 @@ items:
         protocol: TCP
         port: 8800
         targetPort: 8800
+
+# - apiVersion: v1
+#   kind: Service
+#   metadata:
+#     name: sawtooth-service-2
+#   spec:
+#     type: NodePort
+#     selector:
+#       name: sawtooth-0
+#     ports:
+#       - protocol: TCP
+#         port: 8008
+#         targetPort: 8008
+

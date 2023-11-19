@@ -1,4 +1,4 @@
-# Copyright 2019 Cargill Incorporated
+# Copyright 2017 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# ------------------------------------------------------------------------------
 
 version: '3.6'
 
@@ -18,14 +19,195 @@ volumes:
   pbft-shared:
 
 services:
+# -------------=== allergy-tp ===-------------
+  allergy-tp-0:
+    image: sebastianbran/allergy-processor:latest
+    container_name: allergy-tp-default-0
+    depends_on:
+      - validator-0
+    entrypoint: python3 -u main.py -vv -C tcp://validator-0:4004
+
+  allergy-tp-1:
+    image: sebastianbran/allergy-processor:latest
+    container_name: allergy-tp-default-1
+    depends_on:
+      - validator-1
+    entrypoint: python3 -u main.py -vv -C tcp://validator-1:4004
+
+  allergy-tp-2:
+    image: sebastianbran/allergy-processor:latest
+    container_name: allergy-tp-default-2
+    depends_on:
+      - validator-2
+    entrypoint: python3 -u main.py -vv -C tcp://validator-2:4004
+
+  allergy-tp-3:
+    image: sebastianbran/allergy-processor:latest
+    container_name: allergy-tp-default-3
+    depends_on:
+      - validator-3
+    entrypoint: python3 -u main.py -vv -C tcp://validator-3:4004
+
+  allergy-tp-4:
+    image: sebastianbran/allergy-processor:latest
+    container_name: allergy-tp-default-4
+    depends_on:
+      - validator-4
+    entrypoint: python3 -u main.py -vv -C tcp://validator-4:4004
+
+# -------------=== consent-tp ===-------------
+  consent-tp-0:
+    image: sebastianbran/consent-processor:latest
+    container_name: consent-tp-default-0
+    depends_on:
+      - validator-0
+    entrypoint: python3 -u main.py -vv -C tcp://validator-0:4004
+
+  consent-tp-1:
+    image: sebastianbran/consent-processor:latest
+    container_name: consent-tp-default-1
+    depends_on:
+      - validator-1
+    entrypoint: python3 -u main.py -vv -C tcp://validator-1:4004
+
+  consent-tp-2:
+    image: sebastianbran/consent-processor:latest
+    container_name: consent-tp-default-2
+    depends_on:
+      - validator-2
+    entrypoint: python3 -u main.py -vv -C tcp://validator-2:4004
+
+  consent-tp-3:
+    image: sebastianbran/consent-processor:latest
+    container_name: consent-tp-default-3
+    depends_on:
+      - validator-3
+    entrypoint: python3 -u main.py -vv -C tcp://validator-3:4004
+
+  consent-tp-4:
+    image: sebastianbran/consent-processor:latest
+    container_name: consent-tp-default-4
+    depends_on:
+      - validator-4
+    entrypoint: python3 -u main.py -vv -C tcp://validator-4:4004
+
+# -------------=== patient-tp ===-------------
+  patient-tp-0:
+    image: sebastianbran/patient-processor:latest
+    container_name: patient-tp-default-0
+    depends_on:
+      - validator-0
+    entrypoint: python3 -u main.py -vv -C tcp://validator-0:4004
+
+  patient-tp-1:
+    image: sebastianbran/patient-processor:latest
+    container_name: patient-tp-default-1
+    depends_on:
+      - validator-1
+    entrypoint: python3 -u main.py -vv -C tcp://validator-1:4004
+
+  patient-tp-2:
+    image: sebastianbran/patient-processor:latest
+    container_name: patient-tp-default-2
+    depends_on:
+      - validator-2
+    entrypoint: python3 -u main.py -vv -C tcp://validator-2:4004
+
+  patient-tp-3:
+    image: sebastianbran/patient-processor:latest
+    container_name: patient-tp-default-3
+    depends_on:
+      - validator-3
+    entrypoint: python3 -u main.py -vv -C tcp://validator-3:4004
+
+  patient-tp-4:
+    image: sebastianbran/patient-processor:latest
+    container_name: patient-tp-default-4
+    depends_on:
+      - validator-4
+    entrypoint: python3 -u main.py -vv -C tcp://validator-4:4004
+
+# -------------=== practitioner-tp ===-------------
+  practitioner-tp-0:
+    image: sebastianbran/practitioner-processor:latest
+    container_name: practitioner-tp-default-0
+    depends_on:
+      - validator-0
+    entrypoint: python3 -u main.py -vv -C tcp://validator-0:4004
+
+  practitioner-tp-1:
+    image: sebastianbran/practitioner-processor:latest
+    container_name: practitioner-tp-default-1
+    depends_on:
+      - validator-1
+    entrypoint: python3 -u main.py -vv -C tcp://validator-1:4004
+
+  practitioner-tp-2:
+    image: sebastianbran/practitioner-processor:latest
+    container_name: practitioner-tp-default-2
+    depends_on:
+      - validator-2
+    entrypoint: python3 -u main.py -vv -C tcp://validator-2:4004
+
+  practitioner-tp-3:
+    image: sebastianbran/practitioner-processor:latest
+    container_name: practitioner-tp-default-3
+    depends_on:
+      - validator-3
+    entrypoint: python3 -u main.py -vv -C tcp://validator-3:4004
+
+  practitioner-tp-4:
+    image: sebastianbran/practitioner-processor:latest
+    container_name: practitioner-tp-default-4
+    depends_on:
+      - validator-4
+    entrypoint: python3 -u main.py -vv -C tcp://validator-4:4004
+
+# -------------=== settings-tp ===-------------
+  settings-tp-0:
+    image: hyperledger/sawtooth-settings-tp:chime
+    container_name: sawtooth-settings-tp-default-0
+    depends_on:
+      - validator-0
+    entrypoint: settings-tp -vv -C tcp://validator-0:4004
+
+  settings-tp-1:
+    image: hyperledger/sawtooth-settings-tp:chime
+    container_name: sawtooth-settings-tp-default-1
+    depends_on:
+      - validator-1
+    entrypoint: settings-tp -vv -C tcp://validator-1:4004
+
+  settings-tp-2:
+    image: hyperledger/sawtooth-settings-tp:chime
+    container_name: sawtooth-settings-tp-default-2
+    depends_on:
+      - validator-2
+    entrypoint: settings-tp -vv -C tcp://validator-2:4004
+
+  settings-tp-3:
+    image: hyperledger/sawtooth-settings-tp:chime
+    container_name: sawtooth-settings-tp-default-3
+    depends_on:
+      - validator-3
+    entrypoint: settings-tp -vv -C tcp://validator-3:4004
+
+  settings-tp-4:
+    image: hyperledger/sawtooth-settings-tp:chime
+    container_name: sawtooth-settings-tp-default-4
+    depends_on:
+      - validator-4
+    entrypoint: settings-tp -vv -C tcp://validator-4:4004
 
 # -------------=== rest api ===-------------
 
   rest-api-0:
     image: hyperledger/sawtooth-rest-api:nightly
     container_name: sawtooth-rest-api-default-0
-    expose:
-      - 8008
+    # expose:
+    #   - 8008
+    ports:
+      - "8008:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -37,8 +219,10 @@ services:
   rest-api-1:
     image: hyperledger/sawtooth-rest-api:nightly
     container_name: sawtooth-rest-api-default-1
-    expose:
-      - 8008
+    # expose:
+    #   - 8008
+    ports:
+      - "8009:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -50,8 +234,10 @@ services:
   rest-api-2:
     image: hyperledger/sawtooth-rest-api:nightly
     container_name: sawtooth-rest-api-default-2
-    expose:
-      - 8008
+    # expose:
+    #   - 8008
+    ports:
+      - "8010:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -63,8 +249,10 @@ services:
   rest-api-3:
     image: hyperledger/sawtooth-rest-api:nightly
     container_name: sawtooth-rest-api-default-3
-    expose:
-      - 8008
+    # expose:
+    #   - 8008
+    ports:
+      - "8011:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -76,8 +264,10 @@ services:
   rest-api-4:
     image: hyperledger/sawtooth-rest-api:nightly
     container_name: sawtooth-rest-api-default-4
-    expose:
-      - 8008
+    # expose:
+    #   - 8008
+    ports:
+      - "8012:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -160,8 +350,6 @@ services:
       - 8800
     volumes:
       - pbft-shared:/pbft-shared
-    depends_on:
-      - validator-0
     command: |
       bash -c "
         if [ -e /pbft-shared/validators/validator-1.priv ]; then
@@ -195,8 +383,6 @@ services:
       - 8800
     volumes:
       - pbft-shared:/pbft-shared
-    depends_on:
-      - validator-1
     command: |
       bash -c "
         if [ -e /pbft-shared/validators/validator-2.priv ]; then
@@ -231,8 +417,6 @@ services:
       - 8800
     volumes:
       - pbft-shared:/pbft-shared
-    depends_on:
-      - validator-2
     command: |
       bash -c "
         if [ -e /pbft-shared/validators/validator-3.priv ]; then
@@ -268,8 +452,6 @@ services:
       - 8800
     volumes:
       - pbft-shared:/pbft-shared
-    depends_on:
-      - validator-3
     command: |
       bash -c "
         if [ -e /pbft-shared/validators/validator-4.priv ]; then

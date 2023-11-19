@@ -1,0 +1,151 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sawtooth-0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sawtooth-0
+  template:
+    metadata:
+      labels:
+        name: sawtooth-0
+    spec:
+      containers:
+        - name: allergy-tp
+          image: sebastianbran/allergy-processor:latest
+          command:
+            - bash
+          args:
+            - -c
+            - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+        - name: consent-tp
+          image: sebastianbran/consent-processor:latest
+          command:
+            - bash
+          args:
+            - -c
+            - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+        - name: patient-tp
+          image: sebastianbran/patient-processor:latest
+          command:
+            - bash
+          args:
+            - -c
+            - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+        - name: practitioner-tp
+          image: sebastianbran/practitioner-processor:latest
+          command:
+            - bash
+          args:
+            - -c
+            - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+        - name: sawtooth-devmode-engine
+          image: hyperledger/sawtooth-devmode-engine-rust:nightly
+          command:
+            - bash
+          args:
+            - -c
+            - "devmode-engine-rust -C tcp://$HOSTNAME:5050"
+
+        - name: sawtooth-settings-tp
+          image: hyperledger/sawtooth-settings-tp:nightly
+          command:
+            - bash
+          args:
+            - -c
+            - "settings-tp -vv -C tcp://$HOSTNAME:4004"
+
+        - name: sawtooth-validator
+          image: hyperledger/sawtooth-validator:nightly
+          ports:
+            - name: tp
+              containerPort: 4004
+            - name: consensus
+              containerPort: 5050
+            - name: validators
+              containerPort: 8800
+          command:
+            - bash
+          args:
+            - -c
+            - "sawadm keygen \
+              && sawtooth keygen my_key \
+              && sawset genesis -k /root/.sawtooth/keys/my_key.priv \
+              && sawset proposal create \
+                -k /root/.sawtooth/keys/my_key.priv \
+                sawtooth.consensus.algorithm.name=Devmode \
+                sawtooth.consensus.algorithm.version=0.1 \
+                -o config.batch \
+              && sawadm genesis config-genesis.batch config.batch \
+              && sawtooth-validator -vv \
+                  --endpoint tcp://$SAWTOOTH_0_SERVICE_HOST:8800 \
+                  --bind component:tcp://eth0:4004 \
+                  --bind consensus:tcp://eth0:5050 \
+                  --bind network:tcp://eth0:8800"
+
+        - name: sawtooth-rest-api
+          image: hyperledger/sawtooth-rest-api:chime
+          ports:
+            - name: api
+              containerPort: 80
+          command:
+            - bash
+          args:
+            - -c
+            - "sawtooth-rest-api -C tcp://$HOSTNAME:4004 --bind 127.0.0.1:80"
+
+        - name: sawtooth-shell
+          image: hyperledger/sawtooth-shell:nightly
+          command:
+            - bash
+          args:
+            - -c
+            - "sawtooth keygen && tail -f /dev/null"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sawtooth-service-1
+spec:
+  type: ClusterIP
+  selector:
+    name: sawtooth-0
+  ports:
+    - name: "4004"
+      protocol: TCP
+      port: 4004
+      targetPort: 4004
+    - name: "5050"
+      protocol: TCP
+      port: 5050
+      targetPort: 5050
+    - name: "80"
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: "8800"
+      protocol: TCP
+      port: 8800
+      targetPort: 8800
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sawtooth-service-2
+spec:
+  type: LoadBalancer
+  selector:
+    name: sawtooth-0
+  ports:
+    - name: "80"
+      protocol: TCP
+      port: 80
+      targetPort: 80
