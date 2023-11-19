@@ -8,8 +8,10 @@ var app = express();
 
 app.use(express.json());
 
-app.listen(3000, function () {
-    console.log("Server running on port 3000");
+//TODO: set the port with environment variable
+var port = 80;
+app.listen(port, function () {
+    console.log(`Server running on port ${port}`);
 });
 
 app.get("/", (req, res) => {

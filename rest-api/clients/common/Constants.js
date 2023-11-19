@@ -20,7 +20,8 @@ class Constants {
     static PRACTITIONER_REGISTRY_TP_VERSION = '1.0';
 
     //SAWTOOTH REST API
-    static SAWTOOTH_REST_API_URL = 'http://localhost:8008';
+    // static SAWTOOTH_REST_API_URL = 'http://localhost:8008';
+    static SAWTOOTH_REST_API_URL = 'https://blockchainnetwork.azurewebsites.net';
 
     //ACTIONS
     static ACTION_CREATE = 'CREATE';
