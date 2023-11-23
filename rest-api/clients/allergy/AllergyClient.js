@@ -15,8 +15,9 @@ class AllergyClient {
     async getAllergyList() {
         var address = this.AllergyAddressHelper.getAddressByTPName();
         var data = await this.AllergyBlockchainHelper.getRegistryList(address);
-        //only get the even position of the list, because the odd position is the address
-        data.data = data.data.filter((_, i) => i % 2 == 0);
+
+        //the registers are duplicated, using a filter to remove the duplicated registers by allergy_id
+        data.data = data.data.filter((value, index, self) => self.findIndex(v => v.allergy_id === value.allergy_id) === index);
 
         data = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
