@@ -1,8 +1,12 @@
 import sys
 import argparse
+import logging
 
 from sawtooth_sdk.processor.core import TransactionProcessor
 from handler import AllergyTransactionHandler
+from helpers import logging_config
+
+logging_config.configure_logging()
 
 
 def parse_args(args):
@@ -33,7 +37,8 @@ def main(args=None):
     try:
         processor = TransactionProcessor(url=opts.connect)
 
-        print("Connecting to Sawtooth validator at {}".format(opts.connect))
+        logging.info(
+            "Connecting to Sawtooth validator at {}".format(opts.connect))
 
         handler = AllergyTransactionHandler()
 
@@ -42,7 +47,7 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     except Exception as e:  # pylint: disable=broad-except, invalid-name
-        print("Error: {}".format(e), file=sys.stderr)
+        logging.error(e)
     finally:
         if processor is not None:
             processor.stop()

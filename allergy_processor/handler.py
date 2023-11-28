@@ -1,9 +1,13 @@
+import logging
+
 from sawtooth_sdk.processor.exceptions import InvalidTransaction
 from sawtooth_sdk.processor.handler import TransactionHandler
 
 from payload import AllergyPayload
-from helpers import helper
+from helpers import helper, logging_config
 from state import AllergyState
+
+logging_config.configure_logging()
 
 
 class AllergyTransactionHandler(TransactionHandler):
@@ -23,7 +27,7 @@ class AllergyTransactionHandler(TransactionHandler):
         return [helper.get_namespace_prefix()]
 
     def apply(self, transaction, context):
-        print(f"Payload: {transaction.payload.decode()}")
+        logging.info(f"Payload: {transaction.payload.decode()}")
 
         allergy_payload = AllergyPayload(transaction.payload)
         allergy_state = AllergyState(context)
