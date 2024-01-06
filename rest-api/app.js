@@ -4,14 +4,14 @@ var allergyRouter = require('./routes/allergyRouter');
 var patientRouter = require('./routes/patientRouter');
 var practitionerRouter = require('./routes/practitionerRouter');
 var consentRouter = require('./routes/consentRouter');
+require('dotenv').config();
 
 var app = express();
 
 app.use(express.json());
 app.use(cors());
 
-//TODO: set the port with environment variable
-var port = 4000;
+var port = process.env.PORT || 80;
 app.listen(port, function () {
     console.log(`Server running on port ${port}`);
 });

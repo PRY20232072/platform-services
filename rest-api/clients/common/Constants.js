@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 class Constants {
     //ALLERGY REGISTRY FAMILY
     static ALLERGY_REGISTRY_TP_NAME = 'allergy-processor';
@@ -20,9 +22,7 @@ class Constants {
     static PRACTITIONER_REGISTRY_TP_VERSION = '1.0';
 
     //SAWTOOTH REST API
-    // static SAWTOOTH_REST_API_URL = 'http://localhost:80';
-    // static SAWTOOTH_REST_API_URL = 'http://localhost:8008';
-    static SAWTOOTH_REST_API_URL = 'https://blockchainnetwork.azurewebsites.net';
+    static SAWTOOTH_REST_API_URL = process.env.SAWTOOTH_REST_API_URL;
 
     //ACTIONS
     static ACTION_CREATE = 'CREATE';
@@ -41,12 +41,12 @@ class Constants {
     static CONSENT_PENDING = 'PENDING';
 
     //IPFS INFURA
-    static IPFS_INFURA_URL = 'https://ipfs.infura.io:5001/api/v0';
-    static IPFS_INFURA_PROTOCOL = 'https';
-    static IPFS_INFURA_HOST = 'ipfs.infura.io';
-    static IPFS_INFURA_PORT = '5001';
-    static IPFS_INFURA_API_KEY = '2XEndWqaClJmMVzOkdFiwJLXvHC';
-    static IPFS_INFURA_API_KEY_SECRET = 'de5a46a82e7cee86e579d6403aac259a';
+    static IPFS_INFURA_URL = process.env.IPFS_INFURA_URL;
+    static IPFS_INFURA_PROTOCOL = process.env.IPFS_INFURA_PROTOCOL;
+    static IPFS_INFURA_HOST = process.env.IPFS_INFURA_HOST;
+    static IPFS_INFURA_PORT = process.env.IPFS_INFURA_PORT;
+    static IPFS_INFURA_API_KEY = process.env.IPFS_INFURA_API_KEY;
+    static IPFS_INFURA_API_KEY_SECRET = process.env.IPFS_INFURA_API_KEY_SECRET;
 }
 
 module.exports.Constants = Constants;
