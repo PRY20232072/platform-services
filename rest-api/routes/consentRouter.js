@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const { ConsentClient } = require('../clients/consent/ConsentClient');
+const { checkSchema, validationResult } = require('express-validator');
+const { CreateConsentValidatorSchema, ApproveConsentValidatorSchema } = require('./utils/ValidatorSchemas');
 
 const client = new ConsentClient();
 
@@ -41,7 +43,15 @@ router.get('/register/:register_id/practitioner/:practitioner_id', async functio
     });
 });
 
-router.post('/', async function (req, res) {
+router.post('/', checkSchema(CreateConsentValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var payload = req.body.payload;
     await client.createConsent(payload).then(function (response) {
         if (response.error) {
@@ -53,7 +63,15 @@ router.post('/', async function (req, res) {
     });
 });
 
-router.put('/register/:register_id/practitioner/:practitioner_id', async function (req, res) {
+router.put('/register/:register_id/practitioner/:practitioner_id', checkSchema(ApproveConsentValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var register_id = req.params.register_id;
     var practitioner_id = req.params.practitioner_id;
     await client.approveConsent(register_id, practitioner_id).then(function (response) {

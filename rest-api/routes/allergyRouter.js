@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const { AllergyClient } = require('../clients/allergy/AllergyClient');
+const { checkSchema, validationResult } = require('express-validator');
+const { CreateAllergyValidatorSchema, UpdateAllergyValidatorSchema } = require('./utils/ValidatorSchemas');
 
 const client = new AllergyClient();
 
@@ -53,7 +55,15 @@ router.get('/:identifier/patient/:patient_id', async function (req, res) {
     });
 });
 
-router.post('/', async function (req, res) {
+router.post('/', checkSchema(CreateAllergyValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var identifier = req.body.identifier;
     var payload = req.body.payload;
     await client.createAllergy(identifier, payload).then(function (response) {
@@ -66,7 +76,15 @@ router.post('/', async function (req, res) {
     });
 });
 
-router.put('/:identifier', async function (req, res) {
+router.put('/:identifier', checkSchema(UpdateAllergyValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var identifier = req.params.identifier;
     var practitioner_id = req.query.practitioner_id;
     var payload = req.body.payload;

@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const { PatientClient } = require('../clients/patient/PatientClient');
+const { checkSchema, validationResult } = require('express-validator');
+const { CreatePatientValidatorSchema, UpdatePatientValidatorSchema } = require('./utils/ValidatorSchemas');
 
 const client = new PatientClient();
 
@@ -27,7 +29,15 @@ router.get('/:identifier', async function (req, res) {
     });
 });
 
-router.post('/', async function (req, res) {
+router.post('/', checkSchema(CreatePatientValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var identifier = req.body.identifier;
     var payload = req.body.payload;
     await client.createPatient(identifier, payload).then(function (response) {
@@ -40,7 +50,15 @@ router.post('/', async function (req, res) {
     });
 });
 
-router.put('/:identifier', async function (req, res) {
+router.put('/:identifier', checkSchema(UpdatePatientValidatorSchema), async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array() 
+        });
+    }
+
     var identifier = req.params.identifier;
     var payload = req.body.payload;
     await client.updatePatient(identifier, payload).then(function (response) {
