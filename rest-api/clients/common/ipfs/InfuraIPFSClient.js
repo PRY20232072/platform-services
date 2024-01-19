@@ -1,9 +1,13 @@
 const FormData = require('form-data');
-const { Constants } = require('./Constants');
+const { Constants } = require('../Constants');
 const axios = require('axios');
 
 class InfuraIPFSClient {
     constructor() {
+        if (InfuraIPFSClient.instance) {
+            return InfuraIPFSClient.instance;
+        }
+
         this.instance = axios.create({
             baseURL: Constants.IPFS_INFURA_URL,
             headers: {
@@ -15,6 +19,8 @@ class InfuraIPFSClient {
                 password: Constants.IPFS_INFURA_API_KEY_SECRET,
             },
         });
+
+        InfuraIPFSClient.instance = this;
     }
 
     async add(data) {

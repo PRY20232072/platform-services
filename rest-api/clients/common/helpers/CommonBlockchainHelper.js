@@ -1,13 +1,11 @@
 const { CryptoFactory, createContext } = require('sawtooth-sdk/signing');
 const protobuf = require('sawtooth-sdk/protobuf');
-const { InfuraIPFSClient } = require('../InfuraIPFSClient');
 const axios = require('axios');
 const { Constants } = require('../Constants');
 const { CommonAddressHelper } = require('./CommonAddressHelper');
 
 class CommonBlockchainHelper {
     constructor(TP_NAME, TP_CODE, TP_VERSION) { 
-        this.infuraIPFSClient = new InfuraIPFSClient();
         this.CommonAddressHelper = new CommonAddressHelper(TP_NAME, TP_CODE, TP_VERSION);
 
         const context = createContext('secp256k1');

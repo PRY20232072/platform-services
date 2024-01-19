@@ -65,7 +65,7 @@ class PatientClient {
         }
 
         registry = registry.data;
-        var ipfsResponse = await this.PatientIPFSHelper.InfuraIPFSClient.rm(registry.ipfs_hash);
+        var ipfsResponse = await this.PatientIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
 
         if (ipfsResponse == undefined) {
             return response;

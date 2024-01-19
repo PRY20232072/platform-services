@@ -1,8 +1,10 @@
-const { InfuraIPFSClient } = require('../InfuraIPFSClient');
+const { InfuraIPFSClient } = require('../ipfs/InfuraIPFSClient');
+const { PinataIPFSClient } = require('../ipfs/PinataIPFSClient');
+const { IPFSClientStrategy } = require('../ipfs/IPFSClientStrategy');
 
 class CommonIPFSHelper {
     constructor() {
-        this.InfuraIPFSClient = new InfuraIPFSClient();
+        this.ipfsClient = new IPFSClientStrategy(new PinataIPFSClient());
     }
 
     async getIPFSDataOfRegistry(registry) {
@@ -17,7 +19,7 @@ class CommonIPFSHelper {
             response.data = registry;
         }
         else {
-            var info = await this.InfuraIPFSClient.cat(registry.ipfs_hash);
+            var info = await this.ipfsClient.cat(registry.ipfs_hash);
             if (info.error) {
                 return response;
             }
@@ -42,7 +44,7 @@ class CommonIPFSHelper {
                 data.push(registry);
             }
             else {
-                var info = await this.InfuraIPFSClient.cat(registry.ipfs_hash);
+                var info = await this.ipfsClient.cat(registry.ipfs_hash);
                 if (info.error) {
                     return response;
                 }

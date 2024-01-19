@@ -65,7 +65,7 @@ class PractitionerClient {
         }
 
         registry = registry.data;
-        var ipfsResponse = await this.PractitionerIPFSHelper.InfuraIPFSClient.rm(registry.ipfs_hash);
+        var ipfsResponse = await this.PractitionerIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
 
         if (ipfsResponse == undefined) {
             return response;

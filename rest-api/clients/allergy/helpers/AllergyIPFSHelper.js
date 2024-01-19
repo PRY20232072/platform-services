@@ -7,7 +7,7 @@ class AllergyIPFSHelper extends CommonIPFSHelper {
     }
 
     async sentToIPFS(identifier, payload) {
-        var response = await this.InfuraIPFSClient.add(payload);
+        var response = await this.ipfsClient.add(payload);
 
         if (response.error) {
             return response;

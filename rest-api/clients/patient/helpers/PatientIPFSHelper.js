@@ -6,7 +6,7 @@ class PatientIPFSHelper extends CommonIPFSHelper {
     }
 
     async sentToIPFS(identifier, payload) {
-        var response = await this.InfuraIPFSClient.add(payload);
+        var response = await this.ipfsClient.add(payload);
     
         if (response.error) {
             return response;
@@ -31,7 +31,7 @@ class PatientIPFSHelper extends CommonIPFSHelper {
             response.data = registry;
         }
         else {
-            var info = await this.InfuraIPFSClient.cat(registry.ipfs_hash);
+            var info = await this.ipfsClient.cat(registry.ipfs_hash);
             if (info.error) {
                 return response;
             }
@@ -57,7 +57,7 @@ class PatientIPFSHelper extends CommonIPFSHelper {
                 data.push(registry);
             }
             else {
-                var info = await this.InfuraIPFSClient.cat(registry.ipfs_hash);
+                var info = await this.ipfsClient.cat(registry.ipfs_hash);
                 if (info.error) {
                     return response;
                 }

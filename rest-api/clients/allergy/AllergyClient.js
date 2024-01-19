@@ -97,7 +97,7 @@ class AllergyClient {
         }
 
         registry = registry.data;
-        var ipfsResponse = await this.AllergyIPFSHelper.InfuraIPFSClient.rm(registry.ipfs_hash);
+        var ipfsResponse = await this.AllergyIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
 
         if (ipfsResponse == undefined) {
             return response;
