@@ -23,67 +23,84 @@ class InfuraIPFSClient {
         InfuraIPFSClient.instance = this;
     }
 
+    /**
+     * Adds data to the IPFS network.
+     * @param {Object} data - The data to be added.
+     * @returns {Object} - An object containing the added data and an error flag.
+     */
     async add(data) {
-        var response = {
-            hash: '',
-            error: true
-        };
+        try {
+            var fd = new FormData();
+            fd.append('file', JSON.stringify(data));
+            const res = await this.instance.post('/add', fd);
 
-        var fd = new FormData();
-        fd.append('file', JSON.stringify(data));
-        await this.instance.post('/add', fd)
-            .then((res) => {
-                response.hash = res.data.Hash;
-                response.error = false;
-            })
-            .catch((error) => {
-                console.error(error)
-            });
+            return {
+                data: res.data.Hash,
+                error: false
+            }
+        }
+        catch (error) {
+            console.log(error);
 
-        return response;
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 
+    /**
+     * Retrieves the content of a file from IPFS using the given hash.
+     * @param {string} hash - The hash of the file to retrieve.
+     * @returns {Promise<{ data: any, error: boolean }>} - The retrieved data and an error flag indicating if an error occurred.
+     */
     async cat(hash) {
-        var response = {
-            data: '',
-            error: true
-        };
-
-        await this.instance.post('/cat', {}, {
+        try {
+            const res = await this.instance.post('/cat', {}, {
                 params: {
                     arg: hash
                 }
-            })
-            .then((res) => {
-                response.data = res.data;
-                response.error = false;
-            })
-            .catch((error) => {
-                console.error(error)
             });
 
-        return response;
+            return {
+                data: res.data,
+                error: false
+            }
+        } catch (error) {
+            console.log(error);
+
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 
+    /**
+     * Removes a pinned IPFS hash from Infura IPFS.
+     * @param {string} hash - The IPFS hash to be removed.
+     * @returns {Promise<{ data: any, error: boolean }>} - The result of the removal operation.
+     */
     async rm(hash) {
-        var response = {
-            data: '',
-            error: true
-        };
-        await this.instance.post('/pin/rm', {}, {
+        try {
+            const res = await this.instance.post('/pin/rm', {}, {
                 params: {
                     arg: hash
                 }
-            })
-            .then((res) => {
-                response.data = res.data;
-                response.error = false;
-            })
-            .catch((error) => {
-                console.error(error)
             });
-        
-        return response;
+
+            return {
+                data: res.data,
+                error: false
+            }
+        } catch (error) {
+            console.log(error);
+
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 }
 

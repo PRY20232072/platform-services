@@ -1,3 +1,6 @@
+/**
+ * Represents a strategy for interacting with an IPFS client.
+ */
 class IPFSClientStrategy {
     constructor(client) {
         this.client = client;

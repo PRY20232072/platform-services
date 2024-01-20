@@ -22,46 +22,73 @@ class PinataIPFSClient {
         PinataIPFSClient.instance = this;
     }
 
+    /**
+     * Adds data to IPFS by pinning it as a JSON object.
+     * @param {Object} data - The data to be pinned to IPFS.
+     * @returns {Object} - An object containing the pinned data and an error flag.
+     */
     async add(data) {
-        var response = {
-            hash: '',
-            error: true
-        };
-        await this.instance.pinJSONToIPFS(data).then((res) => {
-            response.hash = res.IpfsHash;
-            response.error = false;
-        }).catch((error) => {
-            console.error(error);
-        });
-        return response;
+        try {
+            const res = await this.instance.pinJSONToIPFS(data);
+
+            return {
+                data: res.IpfsHash,
+                error: false
+            }
+        } catch (error) {
+            console.log(error);
+
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 
+    /**
+     * Retrieves the data associated with a given IPFS hash.
+     * @param {string} hash - The IPFS hash to retrieve data from.
+     * @returns {Promise<{ data: any, error: boolean }>} - The retrieved data and an error flag indicating if an error occurred.
+     */
     async cat(hash) {
-        var response = {
-            data: '',
-            error: true
-        };
-        await this.gatewayInstance.get(`${hash}`).then((res) => {
-            response.data = res.data;
-            response.error = false;
-        }).catch((error) => {
-            console.error(error);
-        });
-        return response;
+        try {
+            const res = await this.gatewayInstance.get(`${hash}`);
+
+            return {
+                data: res.data,
+                error: false
+            }
+        } catch (error) {
+            console.log(error);
+
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 
+    /**
+     * Removes a file from IPFS by unpinning it.
+     * @param {string} hast - The hash of the file to be removed.
+     * @returns {Promise<{ data: any, error: boolean }>} - The result of the removal operation, including the data and error status.
+     */
     async rm(hast) {
-        var response = {
-            data: '',
-            error: true
-        };
-        await this.instance.unpin(hast).then((res) => {
-            response.data = res;
-            response.error = false;
-        }).catch((error) => {
-            console.error(error);
-        });
-        return response;
+        try {
+            const res = await this.instance.unpin(hast);
+
+            return {
+                data: res,
+                error: false
+            }
+        } catch (error) {
+            console.log(error);
+
+            return {
+                data: '',
+                error: true
+            }
+        }
     }
 }
 
