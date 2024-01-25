@@ -1,41 +1,28 @@
 const { InfuraIPFSClient } = require('../ipfs/InfuraIPFSClient');
 const { PinataIPFSClient } = require('../ipfs/PinataIPFSClient');
 const { IPFSClientStrategy } = require('../ipfs/IPFSClientStrategy');
+const { ResponseObject } = require('../ResponseObject');                    
 
 class CommonIPFSHelper {
     constructor() {
         this.ipfsClient = new IPFSClientStrategy(new PinataIPFSClient());
     }
 
-    async getIPFSDataOfRegistry(registry) {
-        var response = {
-            error: true,
-            data: null
-        }
-        
+    async getIPFSDataOfRegistry(registry) {        
         registry = registry.data;
         if (registry.ipfs_hash == undefined) {
-            response.error = false;
-            response.data = registry;
+            return new ResponseObject(registry);
         }
-        else {
-            var info = await this.ipfsClient.cat(registry.ipfs_hash);
-            if (info.error) {
-                return response;
-            }
-            response.error = false;
-            response.data = info.data;
+        
+        var info = await this.ipfsClient.cat(registry.ipfs_hash);
+        if (info.error) {
+            return new ResponseObject(null, true);
         }
 
-        return response;
+        return new ResponseObject(info.data);
     }
 
     async getIPFSDataOfRegistryList(registryList) {
-        var response = {
-            error: true,
-            data: null
-        }
-
         var data = [];
         var registries = registryList.data;
         for (var i = 0; i < registries.length; i++) {
@@ -46,15 +33,13 @@ class CommonIPFSHelper {
             else {
                 var info = await this.ipfsClient.cat(registry.ipfs_hash);
                 if (info.error) {
-                    return response;
+                    return new ResponseObject(null, true);
                 }
                 data.push(info.data);
             }
         }
-        response.error = false;
-        response.data = data;
 
-        return data;
+        return new ResponseObject(data);
     }
 }
 

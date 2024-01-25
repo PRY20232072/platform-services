@@ -5,6 +5,7 @@ const { PatientClient } = require('../../patient/PatientClient');
 const { PractitionerClient } = require('../../practitioner/PractitionerClient');
 const { ConsentClient } = require('../../consent/ConsentClient');
 const { Constants } = require('../Constants');
+const { ResponseObject } = require('../ResponseObject');
 
 class ConsentValidatorHelper {
     constructor() {
@@ -31,16 +32,17 @@ class ConsentValidatorHelper {
         if (practitioner_id == null || practitioner_id == undefined || practitioner_id == "") {
             var patientPermission = await this.patientHasAccessAllergy(patient_id, allergy_id, permission);
             if (!patientPermission) {
-                return { error: true, data: "The patient has no permission to access this allergy" };
+                return new ResponseObject(Constants.ACCESS_DENIED_PATIENT_MSG, true);
             }
-            return { error: false, data: "The patient has permission to access this allergy" };
+
+            return new ResponseObject(Constants.ACCESS_GRANTED_PATIENT_MSG);
         }
         else {
             var practitionerPermission = await this.practitionerHasAccessAllergy(practitioner_id, allergy_id, permission);
             if (!practitionerPermission) {
-                return { error: true, data: "The practitioner has no permission to access this allergy" };
+                return new ResponseObject(Constants.ACCESS_DENIED_PRACTITIONER_MSG, true);
             }
-            return { error: false, data: "The practitioner has permission to access this allergy" };
+            return new ResponseObject(Constants.ACCESS_GRANTED_PRACTITIONER_MSG);
         }
     }
 

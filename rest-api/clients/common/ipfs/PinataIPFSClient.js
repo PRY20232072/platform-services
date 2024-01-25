@@ -1,6 +1,8 @@
 require('dotenv').config();
 const pinataSDK = require('@pinata/sdk');
 const axios = require('axios');
+const { ResponseObject } = require('../ResponseObject');
+const { Constants } = require('../Constants');
 
 class PinataIPFSClient {
     constructor() {
@@ -9,10 +11,10 @@ class PinataIPFSClient {
         }
 
         this.instance = new pinataSDK({
-            pinataJWTKey: process.env.PINATA_JWT_KEY,
+            pinataJWTKey: Constants.IPFS_PINATA_JWT_KEY,
         })
         this.gatewayInstance = axios.create({
-            baseURL: process.env.PINATA_GATEWAY_URL,
+            baseURL: Constants.IPFS_PINATA_GATEWAY_URL,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,DELETE'
@@ -30,18 +32,10 @@ class PinataIPFSClient {
     async add(data) {
         try {
             const res = await this.instance.pinJSONToIPFS(data);
-
-            return {
-                data: res.IpfsHash,
-                error: false
-            }
+            return new ResponseObject(res.IpfsHash);
         } catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 
@@ -53,18 +47,10 @@ class PinataIPFSClient {
     async cat(hash) {
         try {
             const res = await this.gatewayInstance.get(`${hash}`);
-
-            return {
-                data: res.data,
-                error: false
-            }
+            return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 
@@ -76,18 +62,10 @@ class PinataIPFSClient {
     async rm(hast) {
         try {
             const res = await this.instance.unpin(hast);
-
-            return {
-                data: res,
-                error: false
-            }
+            return new ResponseObject(res);
         } catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 }

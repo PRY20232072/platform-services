@@ -47,6 +47,16 @@ class Constants {
     static IPFS_INFURA_PORT = process.env.IPFS_INFURA_PORT;
     static IPFS_INFURA_API_KEY = process.env.IPFS_INFURA_API_KEY;
     static IPFS_INFURA_API_KEY_SECRET = process.env.IPFS_INFURA_API_KEY_SECRET;
+
+    //IPFS PINATA
+    static IPFS_PINATA_GATEWAY_URL = process.env.IPFS_PINATA_GATEWAY_URL;
+    static IPFS_PINATA_JWT_KEY = process.env.IPFS_PINATA_JWT_KEY;
+
+    //VALIDATE ACCESS MESSAGES
+    static ACCESS_DENIED_PATIENT_MSG = 'The patient has no permission to access this allergy';
+    static ACCESS_DENIED_PRACTITIONER_MSG = 'The practitioner has no permission to access this allergy';
+    static ACCESS_GRANTED_PATIENT_MSG = 'The patient has permission to access this allergy';
+    static ACCESS_GRANTED_PRACTITIONER_MSG = 'The practitioner has permission to access this allergy';
 }
 
 module.exports.Constants = Constants;

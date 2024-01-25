@@ -3,6 +3,7 @@ const protobuf = require('sawtooth-sdk/protobuf');
 const axios = require('axios');
 const { Constants } = require('../Constants');
 const { CommonAddressHelper } = require('./CommonAddressHelper');
+const { ResponseObject } = require('../ResponseObject');
 
 class CommonBlockchainHelper {
     constructor(TP_NAME, TP_CODE, TP_VERSION) { 
@@ -94,57 +95,47 @@ class CommonBlockchainHelper {
         var res = await this.blockchainClient.get(URL)
             .then((response) => {
                 var data = response.data.data;
+                var responseData = undefined;
 
-                var res = {
-                    error: false,
-                    data: null
-                };
                 if (data instanceof Array) {
-                    res.data = [];
+                    responseData = [];
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
                         var decoded = this.base64_decode(item.data);
-                        res.data.push(JSON.parse(decoded));
+                        responseData.push(JSON.parse(decoded));
                     }
                 }
                 else {
                     var decoded = this.base64_decode(data);
-                    res.data = JSON.parse(decoded);
+                    responseData = JSON.parse(decoded);
                 }
 
-                return res;
+                return new ResponseObject(responseData);
             })
             .catch((error) => {
-                var res = {
-                    error: true,
-                    data: null
-                };
-                return res;
+                console.error(error)
+                return new ResponseObject(null, true);
             });
         return res;
     }
 
     async saveDataInBlockchain(suffix, data) {
         const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
-        var response = {
-            error: true,
-            data: null
-        };
 
-        await this.blockchainClient.post(URL, data, {
+        var res = await this.blockchainClient.post(URL, data, {
                 headers: {
                     'Content-Type': 'application/octet-stream'
                 }
             })
             .then((res) => {
-                response.data = res.data;
-                response.error = false;
+                return new ResponseObject(res.data);
             })
             .catch((error) => {
                 console.error(error)
+                return new ResponseObject(null, true);
             });
 
-        return response;
+        return res;
     }
 
     async wrap_and_send(payload, address) {

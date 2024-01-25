@@ -1,6 +1,7 @@
 const FormData = require('form-data');
 const { Constants } = require('../Constants');
 const axios = require('axios');
+const { ResponseObject } = require('../ResponseObject');
 
 class InfuraIPFSClient {
     constructor() {
@@ -33,19 +34,11 @@ class InfuraIPFSClient {
             var fd = new FormData();
             fd.append('file', JSON.stringify(data));
             const res = await this.instance.post('/add', fd);
-
-            return {
-                data: res.data.Hash,
-                error: false
-            }
+            return new ResponseObject(res.data.Hash);
         }
         catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 
@@ -61,18 +54,10 @@ class InfuraIPFSClient {
                     arg: hash
                 }
             });
-
-            return {
-                data: res.data,
-                error: false
-            }
+            return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 
@@ -88,18 +73,10 @@ class InfuraIPFSClient {
                     arg: hash
                 }
             });
-
-            return {
-                data: res.data,
-                error: false
-            }
+            return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-
-            return {
-                data: '',
-                error: true
-            }
+            return new ResponseObject('', true);
         }
     }
 }
