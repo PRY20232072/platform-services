@@ -92,50 +92,48 @@ class CommonBlockchainHelper {
 
     async fetchFromBlockchain(suffix) {
         const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
-        var res = await this.blockchainClient.get(URL)
-            .then((response) => {
-                var data = response.data.data;
-                var responseData = undefined;
 
-                if (data instanceof Array) {
-                    responseData = [];
-                    for (var i = 0; i < data.length; i++) {
-                        var item = data[i];
-                        var decoded = this.base64_decode(item.data);
-                        responseData.push(JSON.parse(decoded));
-                    }
-                }
-                else {
-                    var decoded = this.base64_decode(data);
-                    responseData = JSON.parse(decoded);
-                }
+        try {
+            var response = await this.blockchainClient.get(URL);
 
-                return new ResponseObject(responseData);
-            })
-            .catch((error) => {
-                console.error(error)
-                return new ResponseObject(null, true);
-            });
-        return res;
+            var data = response.data.data;
+            var responseData = undefined;
+
+            if (data instanceof Array) {
+                responseData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var decoded = this.base64_decode(item.data);
+                    responseData.push(JSON.parse(decoded));
+                }
+            }
+            else {
+                var decoded = this.base64_decode(data);
+                responseData = JSON.parse(decoded);
+            }
+
+            return new ResponseObject(responseData);
+        } catch (error) {
+            console.error(error)
+            return new ResponseObject(null, true);
+        }
     }
 
     async saveDataInBlockchain(suffix, data) {
         const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
 
-        var res = await this.blockchainClient.post(URL, data, {
+        try {
+            var response = await this.blockchainClient.post(URL, data, {
                 headers: {
                     'Content-Type': 'application/octet-stream'
                 }
-            })
-            .then((res) => {
-                return new ResponseObject(res.data);
-            })
-            .catch((error) => {
-                console.error(error)
-                return new ResponseObject(null, true);
             });
 
-        return res;
+            return new ResponseObject(response.data);
+        } catch (error) {
+            console.error(error)
+            return new ResponseObject(null, true);
+        }
     }
 
     async wrap_and_send(payload, address) {
