@@ -21,7 +21,7 @@ class ConsentValidatorHelper {
         var address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
         var data = await this.AllergyBlockchainHelper.getRegistry(address);
         if (data.error) {
-            data.data = "There is no allergy with this identifier";
+            data.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
             return data;
         }
         data = await this.AllergyIPFSHelper.getIPFSDataOfRegistry(data);

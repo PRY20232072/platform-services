@@ -57,6 +57,9 @@ class Constants {
     static ACCESS_DENIED_PRACTITIONER_MSG = 'The practitioner has no permission to access this allergy';
     static ACCESS_GRANTED_PATIENT_MSG = 'The patient has permission to access this allergy';
     static ACCESS_GRANTED_PRACTITIONER_MSG = 'The practitioner has permission to access this allergy';
+
+    //Messages
+    static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';
 }
 
 module.exports.Constants = Constants;
