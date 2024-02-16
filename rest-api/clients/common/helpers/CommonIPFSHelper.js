@@ -2,6 +2,7 @@ const { InfuraIPFSClient } = require('../ipfs/InfuraIPFSClient');
 const { PinataIPFSClient } = require('../ipfs/PinataIPFSClient');
 const { IPFSClientStrategy } = require('../ipfs/IPFSClientStrategy');
 const { ResponseObject } = require('../ResponseObject');                    
+const { CryptoHelper } = require('./CryptoHelper');
 
 class CommonIPFSHelper {
     constructor() {
@@ -14,7 +15,9 @@ class CommonIPFSHelper {
             return new ResponseObject(registry);
         }
         
-        var info = await this.ipfsClient.cat(registry.ipfs_hash);
+        const ipfs_hash = CryptoHelper.decrypt(registry.ipfs_hash);
+        var info = await this.ipfsClient.cat(ipfs_hash);
+
         if (info.error) {
             return new ResponseObject(null, true);
         }
@@ -31,10 +34,13 @@ class CommonIPFSHelper {
                 data.push(registry);
             }
             else {
-                var info = await this.ipfsClient.cat(registry.ipfs_hash);
+                const ipfs_hash = CryptoHelper.decrypt(registry.ipfs_hash);
+                var info = await this.ipfsClient.cat(ipfs_hash);
+
                 if (info.error) {
                     return new ResponseObject(null, true);
                 }
+
                 data.push(info.data);
             }
         }

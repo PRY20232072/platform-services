@@ -32,9 +32,11 @@ class PatientClient {
     async createPatient(identifier, payload) {
         payload['patient_id'] = identifier;
         
-        var address = this.PatientAddressHelper.getAddress(identifier);
+        // Send to IPFS
         payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
         
+        // Send to Blockchain
+        var address = this.PatientAddressHelper.getAddress(identifier);
         payload['action'] = Constants.ACTION_CREATE;
         payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE, Constants.PERMISSION_DELETE];
 
@@ -44,9 +46,11 @@ class PatientClient {
     async updatePatient(identifier, payload) {
         payload['patient_id'] = identifier;
         
-        var address = this.PatientAddressHelper.getAddress(identifier);
+        // Send to IPFS
         payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
-
+        
+        // Send to Blockchain
+        var address = this.PatientAddressHelper.getAddress(identifier);
         payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);

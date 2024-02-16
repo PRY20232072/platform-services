@@ -13,7 +13,7 @@ class PractitionerClient {
     async getPractitionerList() {
         var address = this.PractitionerAddressHelper.getAddressByTPName();
         var data = await this.PractitionerBlockchainHelper.getRegistryList(address);
-
+        console.log("getPractitionerList", data);
         data = this.PractitionerIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
     }
@@ -32,9 +32,11 @@ class PractitionerClient {
     async createPractitioner(identifier, payload) {
         payload['practitioner_id'] = identifier;
         
-        var address = this.PractitionerAddressHelper.getAddress(identifier);
+        // Send to IPFS
         payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
-
+        
+        // Send to Blockchain
+        var address = this.PractitionerAddressHelper.getAddress(identifier);
         payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE];
         payload['action'] = Constants.ACTION_CREATE;
 
@@ -44,9 +46,11 @@ class PractitionerClient {
     async updatePractitioner(identifier, payload) {
         payload['practitioner_id'] = identifier;
         
-        var address = this.PractitionerAddressHelper.getAddress(identifier);
+        // Send to IPFS
         payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
         
+        // Send to Blockchain
+        var address = this.PractitionerAddressHelper.getAddress(identifier);
         payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);

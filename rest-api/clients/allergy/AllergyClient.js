@@ -55,9 +55,12 @@ class AllergyClient {
 
     async createAllergy(identifier, payload) {
         payload['allergy_id'] = identifier;
-        
-        var addresses = this.AllergyAddressHelper.getAddresses(identifier, payload['patient_id']);
+
+        // Send to IPFS
         payload = await this.AllergyIPFSHelper.sentToIPFS(identifier, payload);
+
+        // Send to blockchain
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, payload.patient_id);
         payload['action'] = Constants.ACTION_CREATE;
 
         return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);
@@ -70,9 +73,12 @@ class AllergyClient {
             return accessControlResponse;
         }
 
+        // Sent to IPFS
         payload['allergy_id'] = identifier;
-        var addresses = this.AllergyAddressHelper.getAddresses(identifier, patient_id);
         payload = await this.AllergyIPFSHelper.sentToIPFS(identifier, payload);
+
+        // Send to blockchain
+        var addresses = this.AllergyAddressHelper.getAddresses(identifier, patient_id);
         payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.AllergyBlockchainHelper.wrap_and_send(payload, addresses);

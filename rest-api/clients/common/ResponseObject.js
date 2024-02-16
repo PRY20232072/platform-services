@@ -3,6 +3,14 @@ class ResponseObject {
     this.data = data;
     this.error = error;
   }
+
+  setData(data) {
+    this.data = data;
+  }
+
+  getData() {
+    return this.data;
+  }
 }
 
 module.exports = {

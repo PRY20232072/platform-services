@@ -141,8 +141,6 @@ class CommonBlockchainHelper {
 
         payload = JSON.stringify(payload);
 
-        //TODO: encrypt payload
-
         var payloadBytes = enc.encode(payload);
 
         var txnHeaderBytes = this.make_txn_header_bytes(payloadBytes, address);

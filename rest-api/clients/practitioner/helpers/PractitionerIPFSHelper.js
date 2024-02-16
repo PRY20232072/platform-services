@@ -1,5 +1,6 @@
 const { CommonIPFSHelper } = require('../../common/helpers/CommonIPFSHelper');
 const { ResponseObject } = require('../../common/ResponseObject');
+const { CryptoHelper } = require('../../common/helpers/CryptoHelper');
 
 class PractitionerIPFSHelper extends CommonIPFSHelper {
     constructor() {
@@ -26,7 +27,8 @@ class PractitionerIPFSHelper extends CommonIPFSHelper {
             return new ResponseObject(registry, false);
         }
 
-        var info = await this.ipfsClient.cat(registry.ipfs_hash);
+        const ipfs_hash = CryptoHelper.decrypt(registry.ipfs_hash);
+        var info = await this.ipfsClient.cat(ipfs_hash);
         if (info.error) {
             return new ResponseObject(null, true);
         }
@@ -46,7 +48,8 @@ class PractitionerIPFSHelper extends CommonIPFSHelper {
                 data.push(registry);
             }
             else {
-                var info = await this.ipfsClient.cat(registry.ipfs_hash);
+                const ipfs_hash = CryptoHelper.decrypt(registry.ipfs_hash);
+                var info = await this.ipfsClient.cat(ipfs_hash);
                 if (info.error) {
                     return new ResponseObject(null, true);
                 }
