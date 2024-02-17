@@ -60,6 +60,10 @@ class Constants {
 
     //Messages
     static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';
+
+    // Crypto
+    static CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY;
+    static CRYPTO_SECRET_SALT = process.env.CRYPTO_SECRET_SALT;
 }
 
 module.exports.Constants = Constants;

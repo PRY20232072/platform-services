@@ -13,7 +13,6 @@ class PractitionerClient {
     async getPractitionerList() {
         var address = this.PractitionerAddressHelper.getAddressByTPName();
         var data = await this.PractitionerBlockchainHelper.getRegistryList(address);
-        console.log("getPractitionerList", data);
         data = this.PractitionerIPFSHelper.getIPFSDataOfRegistryList(data);
         return data;
     }

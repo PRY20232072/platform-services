@@ -1,14 +1,14 @@
-require('dotenv').config();
 const crypto = require('crypto');
+const { Constants } = require('../Constants');
 
 class CryptoHelper {
     static getCryptoSecretKey() {
-        return process.env.CRYPTO_SECRET_KEY;
+        return Constants.CRYPTO_SECRET_KEY;
     }
 
     static getSalt() {
         // return random 256 bit salt
-        return process.env.CRYPTO_SECRET_SALT;
+        return Constants.CRYPTO_SECRET_SALT;
     }
 
     static generateKey() {
