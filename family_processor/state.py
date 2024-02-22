@@ -1,52 +1,70 @@
-from models.allergy import Allergy
+from models.familyHistory import FamilyHistory
 from helpers import helper
 
 
-class AllergyState:
+class FamilyHistoryState:
     def __init__(self, context):
         self._context = context
 
-    def save_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
+    def save_familyHistory(self, familyHistoryPayload):
+        familyHistory = FamilyHistory()
+        familyHistory.parse_from_payload(familyHistoryPayload)
+        familyHistoryRegistry = self._load_registry(
+            patient_id=familyHistory.patient_id, identifier=familyHistory.familyHistory_id)
+        # print(f"familyHistoryRegistry found: {familyHistoryRegistry}")
+        if familyHistoryRegistry is None:
+            print(f"save_familyHistory: {familyHistory.familyHistory_id}")
+            state_data = familyHistory.serialize_to_json().encode()
+            familyHistory_patient_address = helper.make_address_familyHistory_patient(
+                familyHistory_id=familyHistory.familyHistory_id, patient_id=familyHistory.patient_id)
+            patient_familyHistory_address = helper.make_address_patient_familyHistory(
+                patient_id=familyHistory.patient_id, familyHistory_id=familyHistory.familyHistory_id)
 
-        if allergyRegistry is None:
-            print(f"save_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            state_data = allergy.serialize_to_json().encode()
-            self._context.set_state({address: state_data}, timeout=3)
+            self._context.set_state(
+                {familyHistory_patient_address: state_data, patient_familyHistory_address: state_data}, timeout=3)
 
-    def update_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
+    def update_familyHistory(self, familyHistoryPayload):
+        familyHistory = FamilyHistory()
+        familyHistory.parse_from_payload(familyHistoryPayload)
+        familyHistoryRegistry = self._load_registry(
+            patient_id=familyHistory.patient_id, identifier=familyHistory.familyHistory_id)
+        # print(f"familyHistoryRegistry found: {familyHistoryRegistry}")
+        if familyHistoryRegistry is not None:
+            print(f"update_familyHistory: {familyHistory.familyHistory_id}")
+            familyHistory_patient_address = helper.make_address_familyHistory_patient(
+                familyHistory_id=familyHistory.familyHistory_id, patient_id=familyHistory.patient_id)
+            patient_familyHistory_address = helper.make_address_patient_familyHistory(
+                patient_id=familyHistory.patient_id, familyHistory_id=familyHistory.familyHistory_id)
+            state_data = familyHistory.serialize_to_json().encode()
+            self._context.set_state(
+                {familyHistory_patient_address: state_data, patient_familyHistory_address: state_data}, timeout=3)
 
-        if allergyRegistry is not None:
-            print(f"update_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            state_data = allergy.serialize_to_json().encode()
-            self._context.set_state({address: state_data}, timeout=3)
+    def delete_familyHistory(self, familyHistoryPayload):
+        familyHistory = FamilyHistory()
+        familyHistory.parse_from_payload(familyHistoryPayload)
+        familyHistoryRegistry = self._load_registry(
+            patient_id=familyHistory.patient_id, identifier=familyHistory.familyHistory_id)
+        # print(f"familyHistoryRegistry found: {familyHistoryRegistry}")
+        if familyHistoryRegistry is not None:
+            print(f"delete_familyHistory: {familyHistory.familyHistory_id}")
+            familyHistory_patient_address = helper.make_address_familyHistory_patient(
+                familyHistory_id=familyHistory.familyHistory_id, patient_id=familyHistory.patient_id)
+            patient_familyHistory_address = helper.make_address_patient_familyHistory(
+                patient_id=familyHistory.patient_id, familyHistory_id=familyHistory.familyHistory_id)
+            self._context.delete_state(
+                [familyHistory_patient_address, patient_familyHistory_address], timeout=3)
 
-    def delete_allergy(self, allergyPayload):
-        allergy = Allergy()
-        allergy.parse_from_payload(allergyPayload)
-        allergyRegistry = self._load_allergy(allergy.allergy_id)
-
-        if allergyRegistry is not None:
-            print(f"delete_allergy: {allergy.allergy_id}")
-            address = helper.make_address(allergy.allergy_id)
-            self._context.delete_state([address], timeout=3)
-
-    def _load_allergy(self, allergy_id):
-        print(f"get_allergy: {allergy_id}")
-        address = helper.make_address(allergy_id)
+    def _load_registry(self, patient_id, identifier):
+        print(f"get_familyHistory: {identifier}")
+        address = helper.make_address_familyHistory_patient(
+            familyHistory_id=identifier, patient_id=patient_id)
         state_entries = self._context.get_state([address], timeout=3)
         print(f"state_entries: {state_entries}")
         if state_entries:
             try:
-                allergy = Allergy()
-                return allergy.parse_from_json(state_entries[0].data.decode())
+                familyHistory = FamilyHistory()
+                familyHistory.parse_from_json(state_entries[0].data.decode())
+                return familyHistory
             except ValueError:
                 return None
         else:
