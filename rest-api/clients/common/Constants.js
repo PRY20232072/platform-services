@@ -1,25 +1,30 @@
 require('dotenv').config();
 
 class Constants {
-    //ALLERGY REGISTRY FAMILY
+    //ALLERGY REGISTRY
     static ALLERGY_REGISTRY_TP_NAME = 'allergy-processor';
     static ALLERGY_REGISTRY_TP_CODE = '01';
     static ALLERGY_REGISTRY_TP_VERSION = '1.0';
 
-    //PATIENT REGISTRY FAMILY
+    //PATIENT REGISTRY
     static PATIENT_REGISTRY_TP_NAME = 'patient-processor';
     static PATIENT_REGISTRY_TP_CODE = '02';
     static PATIENT_REGISTRY_TP_VERSION = '1.0';
 
-    //CONSENT REGISTRY FAMILY
+    //CONSENT REGISTRY
     static CONSENT_REGISTRY_TP_NAME = 'consent-processor';
     static CONSENT_REGISTRY_TP_CODE = '03';
     static CONSENT_REGISTRY_TP_VERSION = '1.0';
 
-    //PRACTITIONER REGISTRY FAMILY
+    //PRACTITIONER REGISTRY
     static PRACTITIONER_REGISTRY_TP_NAME = 'practitioner-processor';
     static PRACTITIONER_REGISTRY_TP_CODE = '04';
     static PRACTITIONER_REGISTRY_TP_VERSION = '1.0';
+
+    //FAMILY HISTORY REGISTRY
+    static FAMILY_HISTORY_REGISTRY_TP_NAME = 'family-history-processor';
+    static FAMILY_HISTORY_REGISTRY_TP_CODE = '05';
+    static FAMILY_HISTORY_REGISTRY_TP_VERSION = '1.0';
 
     //SAWTOOTH REST API
     static SAWTOOTH_REST_API_URL = process.env.SAWTOOTH_REST_API_URL;

@@ -18,6 +18,11 @@ const {
     UpdateAllergyValidatorSchema
 } = require('./AllergyValidatorSchemas');
 
+const {
+    CreateFamilyHistoryValidatorSchema,
+    UpdateFamilyHistoryValidatorSchema
+} = require('./FamilyHistoryValidatorSchemas');
+
 module.exports = {
     CreatePatientValidatorSchema: CreatePatientValidatorSchema,
     UpdatePatientValidatorSchema: UpdatePatientValidatorSchema,
@@ -26,5 +31,7 @@ module.exports = {
     CreateConsentValidatorSchema: CreateConsentValidatorSchema,
     ApproveConsentValidatorSchema: ApproveConsentValidatorSchema,
     CreateAllergyValidatorSchema: CreateAllergyValidatorSchema,
-    UpdateAllergyValidatorSchema: UpdateAllergyValidatorSchema
+    UpdateAllergyValidatorSchema: UpdateAllergyValidatorSchema,
+    CreateFamilyHistoryValidatorSchema: CreateFamilyHistoryValidatorSchema,
+    UpdateFamilyHistoryValidatorSchema: UpdateFamilyHistoryValidatorSchema
 }
