@@ -4,61 +4,60 @@ services:
 
   allergy-tp:
     image: sebastianbran/allergy-processor:latest
-    container_name: allergy-tp-default
+    container_name: allergy-tp
     depends_on:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   family-history-tp:
     image: sebastianbran/family-history-processor:latest
-    container_name: family-history-tp-default
+    container_name: family-history-tp
     depends_on:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   consent-tp:
     image: sebastianbran/consent-processor:latest
-    container_name: consent-tp-default
+    container_name: consent-tp
     depends_on:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   patient-tp:
     image: sebastianbran/patient-processor:latest
-    container_name: patient-tp-default
+    container_name: patient-tp
     depends_on:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   practitioner-tp:
     image: sebastianbran/practitioner-processor:latest
-    container_name: practitioner-tp-default
+    container_name: practitioner-tp
     depends_on:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:chime
-    container_name: sawtooth-settings-tp-default
+    container_name: sawtooth-settings-tp
     depends_on:
       - validator
     entrypoint: settings-tp -vv -C tcp://validator:4004
 
   intkey-tp-python:
     image: hyperledger/sawtooth-intkey-tp-python:chime
-    container_name: sawtooth-intkey-tp-python-default
+    container_name: sawtooth-intkey-tp-python
     depends_on:
       - validator
     entrypoint: intkey-tp-python -vv -C tcp://validator:4004
 
   validator:
     image: hyperledger/sawtooth-validator:chime
-    container_name: sawtooth-validator-default
+    container_name: sawtooth-validator
     expose:
       - 4004
     ports:
       - "4004:4004"
-    # start the validator with an empty genesis batch
     entrypoint:
       - "bash"
       - "-c"
@@ -78,17 +77,16 @@ services:
           --bind network:tcp://eth0:8800 \
           --bind consensus:tcp://eth0:5050
 
-
   devmode-engine:
     image: hyperledger/sawtooth-devmode-engine-rust:chime
-    container_name: sawtooth-devmode-engine-rust-default
+    container_name: sawtooth-devmode-engine-rust
     depends_on:
       - validator
     entrypoint: devmode-engine-rust -C tcp://validator:5050
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:chime
-    container_name: sawtooth-rest-api-default
+    container_name: sawtooth-rest-api
     ports:
       - "80:80"
     depends_on:
@@ -97,7 +95,7 @@ services:
 
   shell:
     image: hyperledger/sawtooth-shell:chime
-    container_name: sawtooth-shell-default
+    container_name: sawtooth-shell
     depends_on:
       - rest-api
     entrypoint:
