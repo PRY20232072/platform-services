@@ -1,0 +1,785 @@
+{
+	"info": {
+		"_postman_id": "6e002b5b-e310-49b6-a1f5-6fa2f7c25c10",
+		"name": "Sawtooth-health-platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16798744"
+	},
+	"item": [
+		{
+			"name": "Allergy",
+			"item": [
+				{
+					"name": "Get Allergy List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Allergy By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}/6666",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}",
+								"6666"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Allergy By Patient Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}/patient/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}",
+								"patient",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Allergy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"identifier\": \"6666\",\n  \"payload\": {\n    \"patient_id\": \"4321\",\n    \"participant_id\": \"1234\",\n    \"type\": \"GLUTEN\",\n    \"category\": \"FOOD\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"recorded_date\": \"2023-12-12\",\n    \"allergy_notes\": \"Probando ipfs con sawtooth\"\n    // \"criticality\": \"LOW\",\n    // \"verification_status\": \"CONFIRMED\",\n    // \"onset_date\": \"12/12/2023\",\n    // \"last_occurrence\": \"12/12/2023\",\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Allergy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payload\": {\n    \"patient_id\": \"4321\",\n    \"participant_id\": \"1234\",\n    \"type\": \"GLUTEN\",\n    \"category\": \"FOOD\",\n    \"severity\": \"MILD\",\n    \"clinical_status\": \"ACTIVE\",\n    \"recorded_date\": \"2023-12-12\",\n    \"allergy_notes\": \"Update note\"\n    // \"criticality\": \"LOW\",\n    // \"verification_status\": \"CONFIRMED\",\n    // \"onset_date\": \"12/12/2023\",\n    // \"last_occurrence\": \"12/12/2023\",\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}/6666?practitioner_id=1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}",
+								"6666"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Allergy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}/6666?patient_id=4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}",
+								"6666"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "1234",
+									"disabled": true
+								},
+								{
+									"key": "patient_id",
+									"value": "4321"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Allergy By Id and  Patient Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{ALLERGY_URL}}/6666/patient/1234?practitioner_id=4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{ALLERGY_URL}}",
+								"6666",
+								"patient",
+								"1234"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "4321"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Familiar History",
+			"item": [
+				{
+					"name": "Get Family History List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Family History By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}/4553",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}",
+								"4553"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Family History By Patient Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}/patient/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}",
+								"patient",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Family History By Id and  Patient Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}/4553/patient/1234?practitioner_id=4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}",
+								"4553",
+								"patient",
+								"1234"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "4321"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Family History",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"identifier\": \"4553\",\n  \"payload\": {\n    \"patient_id\": \"4321\",\n    \"participant_id\": \"1234\",\n    \"name\": \"consulta médica\",\n    \"reason\": \"gripe\",\n    \"clinical_status\": \"COMPLETE\",\n    \"notes\": \"notaaa\",\n    \"recorded_date\": \"2023-12-12\",\n    \"patient\": {\n      \"name\": \"Juan\",\n      \"gender\": \"MALE\",\n      \"relative_birthdate\": \"2023-12-12\",\n      \"age\": \"18\"\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Family History",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payload\": {\n    \"patient_id\": \"4321\",\n    \"participant_id\": \"1234\",\n    \"name\": \"consulta médica\",\n    \"reason\": \"gripe\",\n    \"clinical_status\": \"COMPLETE\",\n    \"notes\": \"nota update\",\n    \"recorded_date\": \"2023-12-12\",\n    \"patient\": {\n      \"name\": \"Juan\",\n      \"gender\": \"MALE\",\n      \"relative_birthdate\": \"2023-12-12\",\n      \"age\": \"18\"\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}/4553?practitioner_id=1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}",
+								"4553"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Family History",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{FAMILY_HISTORY_URL}}/4553?practitioner_id=1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{FAMILY_HISTORY_URL}}",
+								"4553"
+							],
+							"query": [
+								{
+									"key": "practitioner_id",
+									"value": "1234"
+								},
+								{
+									"key": "patient_id",
+									"value": "4321",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Practitioner",
+			"item": [
+				{
+					"name": "Get Practitioner List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PRACTITIONER_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PRACTITIONER_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Practitioner By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PRACTITIONER_URL}}/1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PRACTITIONER_URL}}",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Practitioner",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"1234\",\n    \"payload\": {\n        \"name_id\": \"Estefano Zapata\",\n        \"gender\": \"MALE\",\n        \"birthDate\": \"2001-08-13\",\n        \"maritalStatus\": \"SINGLE\",\n        \"telephone\": \"987654321\",\n        // \"email\": \"estefanozapata@gmail.com\",\n        \"address\": {\n            \"type_address\": \"PHYSICAL\",\n            \"address_line\": \"Av Lima\",\n            \"district\": \"Lima\",\n            \"city\": \"Lima\",\n            \"country\": \"Peru\",\n            \"postal_code\": \"20100\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{PRACTITIONER_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PRACTITIONER_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Practitioner",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PRACTITIONER_URL}}/1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PRACTITIONER_URL}}",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Practitioner",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"name_id\": \"Estefano Zapata\",\n        \"gender\": \"MALE\",\n        \"birthDate\": \"2001-08-13\",\n        \"maritalStatus\": \"SINGLE\",\n        \"telephone\": \"987654321\",\n        // \"email\": \"estefanozapata@gmail.com\",\n        \"address\": {\n            \"type_address\": \"PHYSICAL\",\n            \"address_line\": \"Av Lima nuevooo\",\n            \"district\": \"Lima\",\n            \"city\": \"Lima\",\n            \"country\": \"Peru\",\n            \"postal_code\": \"20100\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{PRACTITIONER_URL}}/1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PRACTITIONER_URL}}",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Patient",
+			"item": [
+				{
+					"name": "Get Patient List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PATIENT_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PATIENT_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Patient By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PATIENT_URL}}/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PATIENT_URL}}",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\": \"4321\",\n    \"payload\": {\n        \"name_id\": \"Estefano Zapata\",\n        \"gender\": \"MALE\",\n        \"birthDate\": \"2001-08-01\",\n        \"maritalStatus\": \"SINGLE\",\n        \"telephone\": \"987654321\",\n        // \"email\": \"estefanozapata@gmail.com\",\n        \"address\": {\n            \"type_address\": \"PHYSICAL\",\n            \"address_line\": \"Av Lima\",\n            \"district\": \"Lima\",\n            \"city\": \"Lima\",\n            \"country\": \"Peru\",\n            \"postal_code\": \"20100\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{PATIENT_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PATIENT_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Patient",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"name_id\": \"Sebastian Zapata\",\n        \"gender\": \"MALE\",\n        \"birthDate\": \"2001-08-13\",\n        \"maritalStatus\": \"SINGLE\",\n        \"telephone\": \"987654321\",\n        // \"email\": \"estefanozapata@gmail.com\",\n        \"address\": {\n            \"type_address\": \"PHYSICAL\",\n            \"address_line\": \"Av Lima nuevo\",\n            \"district\": \"Lima\",\n            \"city\": \"Lima\",\n            \"country\": \"Peru\",\n            \"postal_code\": \"20100\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{PATIENT_URL}}/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PATIENT_URL}}",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Patient",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{PATIENT_URL}}/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{PATIENT_URL}}",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consent",
+			"item": [
+				{
+					"name": "Create Consent For Allergy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payload\": {\n    \"register_id\": \"6666\",\n    \"practitioner_id\": \"1234\",\n    \"register_type\": \"ALLERGY\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Consent For Family History",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payload\": {\n    \"register_id\": \"4553\",\n    \"practitioner_id\": \"1234\",\n    \"register_type\": \"FAMILY_HISTORY\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Consent",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}",
+								"register",
+								"6666",
+								"practitioner",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Register Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}/register/4553",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}",
+								"register",
+								"4553"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Practitioner Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}/practitioner/1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}",
+								"practitioner",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Register And Practitioner Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}/register/6666/practitioner/4321",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}",
+								"register",
+								"6666",
+								"practitioner",
+								"4321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve consent",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{CONSENT_URL}}/register/4553/practitioner/1234",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"{{CONSENT_URL}}",
+								"register",
+								"4553",
+								"practitioner",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://sawtooth-platform-rest-api.azurewebsites.net/"
+		},
+		{
+			"key": "ALLERGY_URL",
+			"value": "AllergyIntolerance"
+		},
+		{
+			"key": "PATIENT_URL",
+			"value": "Patient"
+		},
+		{
+			"key": "PRACTITIONER_URL",
+			"value": "Practitioner",
+			"type": "string"
+		},
+		{
+			"key": "CONSENT_URL",
+			"value": "Consent",
+			"type": "string"
+		},
+		{
+			"key": "FAMILY_HISTORY_URL",
+			"value": "FamilyHistory",
+			"type": "string"
+		}
+	]
+}
