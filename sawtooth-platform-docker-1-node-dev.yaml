@@ -9,6 +9,13 @@ services:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
+  family-history-tp:
+    image: sebastianbran/family-history-processor:latest
+    container_name: family-history-tp-default
+    depends_on:
+      - validator
+    entrypoint: python3 -u main.py -vv -C tcp://validator:4004
+
   consent-tp:
     image: sebastianbran/consent-processor:latest
     container_name: consent-tp-default
