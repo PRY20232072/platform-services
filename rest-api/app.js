@@ -1,4 +1,5 @@
 var express = require('express');
+var morgan = require('morgan');
 var cors = require('cors');
 var allergyRouter = require('./routes/allergyRouter');
 var familyHistoryRouter = require('./routes/familyHistoryRouter');
@@ -11,6 +12,7 @@ var app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(morgan('dev'));
 
 var port = process.env.PORT || 80;
 app.listen(port, function () {
