@@ -6,6 +6,7 @@ var familyHistoryRouter = require('./routes/familyHistoryRouter');
 var patientRouter = require('./routes/patientRouter');
 var practitionerRouter = require('./routes/practitionerRouter');
 var consentRouter = require('./routes/consentRouter');
+var { validateAccessToken } = require('./routes/utils/ADDTokenValidator');
 require('dotenv').config();
 
 var app = express();
@@ -17,6 +18,23 @@ app.use(morgan('dev'));
 var port = process.env.PORT || 80;
 app.listen(port, function () {
     console.log(`Server running on port ${port}`);
+});
+
+// jwt middleware
+app.use(function (req, res, next) {
+    const token = req.headers['authorization'];
+    if (token) {
+        validateAccessToken(token)
+            .then(decodedToken => {
+                req.decodedToken = decodedToken;
+                next();
+            })
+            .catch(error => {
+                res.status(403).json({ error: error.message });
+            });
+    } else {
+        res.status(403).json({ error: 'No token provided' });
+    }
 });
 
 app.get("/", (req, res) => {
