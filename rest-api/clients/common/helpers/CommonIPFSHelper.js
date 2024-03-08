@@ -1,20 +1,26 @@
 const { InfuraIPFSClient } = require('../ipfs/InfuraIPFSClient');
 const { PinataIPFSClient } = require('../ipfs/PinataIPFSClient');
 const { IPFSClientStrategy } = require('../ipfs/IPFSClientStrategy');
-const { ResponseObject } = require('../ResponseObject');                    
+const { ResponseObject } = require('../ResponseObject');
 const { CryptoHelper } = require('./CryptoHelper');
+require('dotenv').config();
 
 class CommonIPFSHelper {
     constructor() {
-        this.ipfsClient = new IPFSClientStrategy(new PinataIPFSClient());
+        if (process.env.IPFS_CLIENT == 'PINATA') {
+            this.ipfsClient = new IPFSClientStrategy(new PinataIPFSClient());
+        }
+        else {
+            this.ipfsClient = new IPFSClientStrategy(new InfuraIPFSClient());
+        }
     }
 
-    async getIPFSDataOfRegistry(registry) {        
+    async getIPFSDataOfRegistry(registry) {
         registry = registry.data;
         if (registry.ipfs_hash == undefined) {
             return new ResponseObject(registry);
         }
-        
+
         const ipfs_hash = CryptoHelper.decrypt(registry.ipfs_hash);
         var info = await this.ipfsClient.cat(ipfs_hash);
 
