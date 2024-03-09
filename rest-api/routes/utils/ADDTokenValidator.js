@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const jwksClient = require('jwks-rsa');
 
-
 // URL para obtener las claves públicas de Azure AD
 // const jwksUri = 'https://pry20232072.b2clogin.com/pry20232072.onmicrosoft.com/B2C_1_SignUp_SignIn/discovery/v2.0/keys';
 const jwksUri = `https://${process.env.AZURE_AD_B2C_TENANT_NAME}.b2clogin.com/${process.env.AZURE_AD_B2C_TENANT_NAME}.onmicrosoft.com/${process.env.AZURE_AD_B2C_PRIMARY_USER_FLOW}/discovery/v2.0/keys`;
@@ -19,7 +18,6 @@ async function getAzureADKeys() {
         return response.data.keys;
     } catch (error) {
         console.error('Error al obtener las claves públicas de Azure AD:', error);
-        throw error;
     }
 }
 
@@ -41,7 +39,7 @@ async function validateAccessToken(accessToken) {
         const decodedToken = jwt.decode(accessToken, { complete: true });
 
         if (!decodedToken) {
-            throw new Error('Token inválido');
+            throw new Error('Invalid Token');
         }
 
         const keys = await getAzureADKeys();
@@ -49,18 +47,21 @@ async function validateAccessToken(accessToken) {
         const key = keys.find(k => k.kid === tokenKid);
 
         if (!key) {
-            throw new Error('Clave pública no encontrada');
+            throw new Error('Public key not found for the token');
         }
 
-        return jwt.verify(accessToken, getKey, (err) => {
-            if (err) {
-                // eslint-disable-next-line no-console
-                console.error('Jwt Validation Failed', err);
-                throw err;
-            }
+        return new Promise((resolve, reject) => {
+            jwt.verify(accessToken, getKey, (err, decoded) => {
+                if (err) {
+                    console.error('Jwt Validation Failed', err);
+                    reject(err);
+                } else {
+                    resolve(decoded);
+                }
+            });
         });
     } catch (error) {
-        console.error('Error al validar el token de acceso:', error);
+        console.error('Error validation access token:', error);
         throw error;
     }
 }
