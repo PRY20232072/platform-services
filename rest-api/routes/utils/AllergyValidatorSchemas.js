@@ -127,18 +127,6 @@ const CreateAllergyValidatorSchema = {
 }
 
 const UpdateAllergyValidatorSchema = {
-    identifier: {
-        in: ['params', 'query'],
-        exists: {
-            errorMessage: 'identifier is required'
-        }
-    },
-    practitioner_id: {
-        in: ['params', 'query'],
-        exists: {
-            errorMessage: 'practitioner_id is required'
-        }
-    },
     payload: {
         in: ['body'],
         exists: {
