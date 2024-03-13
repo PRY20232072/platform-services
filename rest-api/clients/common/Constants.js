@@ -26,6 +26,10 @@ class Constants {
     static FAMILY_HISTORY_REGISTRY_TP_CODE = '05';
     static FAMILY_HISTORY_REGISTRY_TP_VERSION = '1.0';
 
+    // REGISTRY TYPES
+    static ALLERGY = 'ALLERGY';
+    static FAMILY_HISTORY = 'FAMILY_HISTORY';
+
     //SAWTOOTH REST API
     static SAWTOOTH_REST_API_URL = process.env.SAWTOOTH_REST_API_URL;
 

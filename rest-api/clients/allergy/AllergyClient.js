@@ -38,7 +38,7 @@ class AllergyClient {
     }
 
     async getAlleryByIdAndPatientId(allergy_id, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, allergy_id, Constants.PERMISSION_READ);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, allergy_id, Constants.PERMISSION_READ, Constants.ALLERGY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
@@ -68,7 +68,7 @@ class AllergyClient {
 
     async updateAllergy(identifier, practitioner_id, payload) {
         var patient_id = payload['patient_id'];
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE, Constants.ALLERGY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
@@ -85,7 +85,7 @@ class AllergyClient {
     }
 
     async deleteAllergy(identifier, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE, Constants.ALLERGY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }

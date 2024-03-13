@@ -38,7 +38,7 @@ class FamilyHistoryClient {
     }
 
     async getAlleryByIdAndPatientId(familyHistory_id, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, familyHistory_id, Constants.PERMISSION_READ);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, familyHistory_id, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
@@ -68,7 +68,7 @@ class FamilyHistoryClient {
 
     async updateFamilyHistory(identifier, practitioner_id, payload) {
         var patient_id = payload['patient_id'];
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
@@ -85,7 +85,7 @@ class FamilyHistoryClient {
     }
 
     async deleteFamilyHistory(identifier, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE);
+        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
