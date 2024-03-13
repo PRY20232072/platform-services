@@ -88,7 +88,6 @@ const CreateFamilyHistoryValidatorSchema = {
             errorMessage: 'recorded_date has to be in format YYYY-MM-DD'
         }
     },
-        notEmpty: {
     // 'payload.patient.name': {
     //     in: ['body'],
     //     exists: {
