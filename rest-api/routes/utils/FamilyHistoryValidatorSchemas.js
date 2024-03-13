@@ -88,50 +88,51 @@ const CreateFamilyHistoryValidatorSchema = {
             errorMessage: 'recorded_date has to be in format YYYY-MM-DD'
         }
     },
-    'payload.patient.name': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'patient name is required'
-        },
         notEmpty: {
-            errorMessage: 'patient name can not be empty'
-        },
-    },
-    'payload.patient.gender': {
-        in: ['body'],
-        errorMessage: "patient gender is not valid",
-        exists: {
-            errorMessage: "patient gender is required"
-        },
-        isIn: {
-            options: [['MALE', 'FEMALE']]
-        },
-        notEmpty: {
-            errorMessage: 'gender can not be empty'
-        },
-    },
-    'payload.patient.relative_birthdate': {
-        in: ['body'],
-        exists: {
-            errorMessage: "patient relative_birthdate is required"
-        },
-        notEmpty: {
-            errorMessage: 'patient relative_birthdate can not be empty'
-        },
-        matches: {
-            options: '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
-            errorMessage: 'patient relative_birthdate has to be in format YYYY-MM-DD'
-        }
-    },
-    'payload.patient.age': {
-        in: ['body'],
-        exists: {
-            errorMessage: "patient age is required"
-        },
-        notEmpty: {
-            errorMessage: 'patient age can not be empty'
-        }
-    }
+    // 'payload.patient.name': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: 'patient name is required'
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient name can not be empty'
+    //     },
+    // },
+    // 'payload.patient.gender': {
+    //     in: ['body'],
+    //     errorMessage: "patient gender is not valid",
+    //     exists: {
+    //         errorMessage: "patient gender is required"
+    //     },
+    //     isIn: {
+    //         options: [['MALE', 'FEMALE']]
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'gender can not be empty'
+    //     },
+    // },
+    // 'payload.patient.relative_birthdate': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: "patient relative_birthdate is required"
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient relative_birthdate can not be empty'
+    //     },
+    //     matches: {
+    //         options: '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
+    //         errorMessage: 'patient relative_birthdate has to be in format YYYY-MM-DD'
+    //     }
+    // },
+    // 'payload.patient.age': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: "patient age is required"
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient age can not be empty'
+    //     }
+    // }
 }
 
 const UpdateFamilyHistoryValidatorSchema = {
@@ -215,50 +216,50 @@ const UpdateFamilyHistoryValidatorSchema = {
             errorMessage: 'recorded_date has to be in format YYYY-MM-DD'
         }
     },
-    'payload.patient.name': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'patient name is required'
-        },
-        notEmpty: {
-            errorMessage: 'patient name can not be empty'
-        },
-    },
-    'payload.patient.gender': {
-        in: ['body'],
-        errorMessage: "patient gender is not valid",
-        exists: {
-            errorMessage: "patient gender is required"
-        },
-        isIn: {
-            options: [['MALE', 'FEMALE']]
-        },
-        notEmpty: {
-            errorMessage: 'gender can not be empty'
-        },
-    },
-    'payload.patient.relative_birthdate': {
-        in: ['body'],
-        exists: {
-            errorMessage: "patient relative_birthdate is required"
-        },
-        notEmpty: {
-            errorMessage: 'patient relative_birthdate can not be empty'
-        },
-        matches: {
-            options: '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
-            errorMessage: 'patient relative_birthdate has to be in format YYYY-MM-DD'
-        }
-    },
-    'payload.patient.age': {
-        in: ['body'],
-        exists: {
-            errorMessage: "patient age is required"
-        },
-        notEmpty: {
-            errorMessage: 'patient age can not be empty'
-        }
-    }
+    // 'payload.patient.name': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: 'patient name is required'
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient name can not be empty'
+    //     },
+    // },
+    // 'payload.patient.gender': {
+    //     in: ['body'],
+    //     errorMessage: "patient gender is not valid",
+    //     exists: {
+    //         errorMessage: "patient gender is required"
+    //     },
+    //     isIn: {
+    //         options: [['MALE', 'FEMALE']]
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'gender can not be empty'
+    //     },
+    // },
+    // 'payload.patient.relative_birthdate': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: "patient relative_birthdate is required"
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient relative_birthdate can not be empty'
+    //     },
+    //     matches: {
+    //         options: '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
+    //         errorMessage: 'patient relative_birthdate has to be in format YYYY-MM-DD'
+    //     }
+    // },
+    // 'payload.patient.age': {
+    //     in: ['body'],
+    //     exists: {
+    //         errorMessage: "patient age is required"
+    //     },
+    //     notEmpty: {
+    //         errorMessage: 'patient age can not be empty'
+    //     }
+    // }
 }
 
 module.exports = {
