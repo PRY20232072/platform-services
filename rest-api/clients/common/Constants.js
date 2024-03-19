@@ -40,6 +40,10 @@ class Constants {
     static ACTION_DELETE = 'DELETE';
     static ACTION_REVOKE = 'REVOKE';
 
+    //USERS ROLES
+    static PATIENT = 'patient';
+    static PRACTITIONER = 'practitioner';
+
     //PERMISSIONS
     static PERMISSION_READ = 'READ';
     static PERMISSION_WRITE = 'WRITE';
@@ -66,7 +70,9 @@ class Constants {
     static ACCESS_DENIED_PRACTITIONER_MSG = 'The practitioner has no permission to access this allergy';
     static ACCESS_GRANTED_PATIENT_MSG = 'The patient has permission to access this allergy';
     static ACCESS_GRANTED_PRACTITIONER_MSG = 'The practitioner has permission to access this allergy';
-
+    static PATIENT_CANNOT_GET_ALLERGY_LIST = 'The patient cannot get the allergy list';
+    static PATIENT_CANNOT_GET_FAMILY_HISTORY_LIST = 'The patient cannot get the family history list';
+    static PATIENT_CANNOT_CREATE_A_REGISTRY = 'The patient cannot create a registry';
     //Messages
     static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';
 

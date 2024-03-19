@@ -7,7 +7,9 @@ const { CreateAllergyValidatorSchema, UpdateAllergyValidatorSchema } = require('
 const client = new AllergyClient();
 
 router.get('/', async function (req, res) {
-    await client.getAllergyList().then(function (response) {
+    const current_user = req.current_user;    
+
+    await client.getAllergyList(current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -18,8 +20,10 @@ router.get('/', async function (req, res) {
 });
 
 router.get('/:identifier', async function (req, res) {
-    var identifier = req.params.identifier;
-    await client.getAllergyById(identifier).then(function (response) {
+    const identifier = req.params.identifier;
+    const current_user = req.current_user;
+
+    await client.getAllergyById(identifier, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -30,8 +34,10 @@ router.get('/:identifier', async function (req, res) {
 });
 
 router.get('/patient/:patient_id', async function (req, res) {
-    var patient_id = req.params.patient_id;
-    await client.getAllergyByPatientId(patient_id).then(function (response) {
+    const patient_id = req.params.patient_id;
+    const current_user = req.current_user;
+
+    await client.getAllergyListByPatientId(patient_id, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -42,10 +48,11 @@ router.get('/patient/:patient_id', async function (req, res) {
 });
 
 router.get('/:identifier/patient/:patient_id', async function (req, res) {
-    var identifier = req.params.identifier;
-    var patient_id = req.params.patient_id;
-    var practitioner_id = req.query.practitioner_id;
-    await client.getAlleryByIdAndPatientId(identifier, patient_id, practitioner_id).then(function (response) {
+    const identifier = req.params.identifier;
+    const patient_id = req.params.patient_id;
+    const current_user = req.current_user;
+
+    await client.getAlleryByIdAndPatientId(identifier, patient_id, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -60,13 +67,15 @@ router.post('/', checkSchema(CreateAllergyValidatorSchema), async function (req,
     if (!errors.isEmpty()) {
         return res.status(400).json({
             error: true,
-            errors: errors.array() 
+            errors: errors.array()
         });
     }
 
-    var identifier = req.body.identifier;
-    var payload = req.body.payload;
-    await client.createAllergy(identifier, payload).then(function (response) {
+    const identifier = req.body.identifier;
+    const payload = req.body.payload;
+    const current_user = req.current_user;
+
+    await client.createAllergy(identifier, payload, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -81,14 +90,15 @@ router.put('/:identifier', checkSchema(UpdateAllergyValidatorSchema), async func
     if (!errors.isEmpty()) {
         return res.status(400).json({
             error: true,
-            errors: errors.array() 
+            errors: errors.array()
         });
     }
 
-    var identifier = req.params.identifier;
-    var practitioner_id = req.query.practitioner_id;
-    var payload = req.body.payload;
-    await client.updateAllergy(identifier, practitioner_id, payload).then(function (response) {
+    const identifier = req.params.identifier;
+    const payload = req.body.payload;
+    const current_user = req.current_user;
+
+    await client.updateAllergy(identifier, payload, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -99,10 +109,11 @@ router.put('/:identifier', checkSchema(UpdateAllergyValidatorSchema), async func
 });
 
 router.delete('/:identifier', async function (req, res) {
-    var identifier = req.params.identifier;
-    var patient_id = req.query.patient_id;
-    var practitioner_id = req.query.practitioner_id;
-    await client.deleteAllergy(identifier, patient_id, practitioner_id).then(function (response) {
+    const identifier = req.params.identifier;
+    const patient_id = req.query.patient_id;
+    const current_user = req.current_user;
+
+    await client.deleteAllergy(identifier, patient_id, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
