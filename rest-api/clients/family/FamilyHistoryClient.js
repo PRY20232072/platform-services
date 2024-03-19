@@ -1,101 +1,133 @@
 const { Constants } = require('../common/Constants');
+const { FamilyHistoryHelper } = require('./helpers/FamilyHistoryHelper');
 const { FamilyHistoryAddressHelper } = require('./helpers/FamilyHistoryAddressHelper');
 const { FamilyHistoryBlockchainHelper } = require('./helpers/FamilyHistoryBlockchainHelper');
 const { FamilyHistoryIPFSHelper } = require('./helpers/FamilyHistoryIPFSHelper');
 const { ConsentValidatorHelper } = require("../common/helpers/ConsentValidatorHelper");
+const { ResponseObject } = require('../common/ResponseObject');
 
 class FamilyHistoryClient {
     constructor() {
+        this.FamilyHistoryHelper = new FamilyHistoryHelper();
         this.FamilyHistoryAddressHelper = new FamilyHistoryAddressHelper();
         this.FamilyHistoryBlockchainHelper = new FamilyHistoryBlockchainHelper();
         this.FamilyHistoryIPFSHelper = new FamilyHistoryIPFSHelper();
         this.ConsentValidatorHelper = new ConsentValidatorHelper();
     }
 
-    async getFamilyHistoryList() {
-        var address = this.FamilyHistoryAddressHelper.getAddressByTPName();
-        var data = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
+    async getFamilyHistoryList(current_user) {
+        if (current_user.role === Constants.PATIENT) {
+            return new ResponseObject(Constants.PATIENT_CANNOT_GET_FAMILY_HISTORY_LIST, true);
+        }
+
+        const address = this.FamilyHistoryAddressHelper.getAddressByTPName();
+        var registryList = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
 
         //the registers are duplicated, using a filter to remove the duplicated registers by familyHistory_id
-        data.data = data.data.filter((value, index, self) => self.findIndex(v => v.familyHistory_id === value.familyHistory_id) === index);
+        registryList.data = registryList.data.filter((value, index, self) => self.findIndex(v => v.familyHistory_id === value.familyHistory_id) === index);
+        registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(registryList);
 
-        data = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(data);
-        return data;
+        if (registryList.error) {
+            return registryList;
+        }
+
+        return this.FamilyHistoryHelper.transformRegistryList(registryList);
     }
 
-    async getFamilyHistoryById(familyHistory_id) {
-        var address = this.FamilyHistoryAddressHelper.getAddressByFamilyHistoryId(familyHistory_id);
-        var data = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
-        data = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(data);
-        return data;
-    }
+    async getFamilyHistoryById(familyHistory_id, current_user) {
+        const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
 
-    async getFamilyHistoryByPatientId(patient_id) {
-        var address = this.FamilyHistoryAddressHelper.getAddressByPatientId(patient_id);
-        var data = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
-        data = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(data);
-        return data;
-    }
-
-    async getAlleryByIdAndPatientId(familyHistory_id, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, familyHistory_id, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
 
-        var address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(familyHistory_id, patient_id);
-        var data = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
-        if (data.error) {
-            data.data = "There is no familyHistory with this identifier";
-            return data;
-        }
-        data = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistry(data);
-        return data;
+        const address = this.FamilyHistoryAddressHelper.getAddressByFamilyHistoryId(familyHistory_id);
+        var registryList = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
+        registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(registryList);
+
+        return registryList;
     }
 
-    async createFamilyHistory(identifier, payload) {
-        payload['familyHistory_id'] = identifier;
+    async getFamilyHistoryByPatientId(patient_id, current_user) {
+        if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
+            return new ResponseObject(Constants.PATIENT_CANNOT_GET_FAMILY_HISTORY_LIST, true);
+        }
+
+        const address = this.FamilyHistoryAddressHelper.getAddressByPatientId(patient_id);
+        var registryList = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
+        registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(registryList);
+
+        return this.FamilyHistoryHelper.transformRegistryList(registryList);
+    }
+
+    async getAlleryByIdAndPatientId(familyHistory_id, patient_id, current_user) {
+        const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
+        if (accessControlResponse.error) {
+            return accessControlResponse;
+        }
+
+        const address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(familyHistory_id, patient_id);
+        var registryList = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
+        if (registryList.error) {
+            registryList.data = "There is no familyHistory with this identifier";
+            return registryList;
+        }
+        registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistry(registryList);
+
+        return registryList;
+    }
+
+    async createFamilyHistory(familyHistory_id, payload, current_user) {
+        if (current_user.role === Constants.PATIENT) {
+            return new ResponseObject(Constants.PATIENT_CANNOT_CREATE_A_REGISTRY, true);
+        }
+
+        payload['familyHistory_id'] = familyHistory_id;
 
         // Send to IPFS
-        payload = await this.FamilyHistoryIPFSHelper.sentToIPFS(identifier, payload);
+        payload = await this.FamilyHistoryIPFSHelper.sentToIPFS(familyHistory_id, payload);
 
         // Send to blockchain
-        var addresses = this.FamilyHistoryAddressHelper.getAddresses(identifier, payload.patient_id);
+        const addresses = this.FamilyHistoryAddressHelper.getAddresses(familyHistory_id, payload.patient_id);
         payload['action'] = Constants.ACTION_CREATE;
 
         return await this.FamilyHistoryBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
-    async updateFamilyHistory(identifier, practitioner_id, payload) {
-        var patient_id = payload['patient_id'];
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_WRITE, Constants.FAMILY_HISTORY);
+    async updateFamilyHistory(familyHistory_id, payload, current_user) {
+        if (current_user.role === Constants.PATIENT) {
+            return new ResponseObject(Constants.PATIENT_CANNOT_CREATE_A_REGISTRY, true);
+        }
+
+        const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_WRITE, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
-
+        
         // Sent to IPFS
-        payload['familyHistory_id'] = identifier;
-        payload = await this.FamilyHistoryIPFSHelper.sentToIPFS(identifier, payload);
-
+        payload['familyHistory_id'] = familyHistory_id;
+        payload = await this.FamilyHistoryIPFSHelper.sentToIPFS(familyHistory_id, payload);
+        
         // Send to blockchain
-        var addresses = this.FamilyHistoryAddressHelper.getAddresses(identifier, patient_id);
+        const patient_id = payload['patient_id'];
+        const addresses = this.FamilyHistoryAddressHelper.getAddresses(familyHistory_id, patient_id);
         payload['action'] = Constants.ACTION_UPDATE;
 
         return await this.FamilyHistoryBlockchainHelper.wrap_and_send(payload, addresses);
     }
 
-    async deleteFamilyHistory(identifier, patient_id, practitioner_id) {
-        var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(patient_id, practitioner_id, identifier, Constants.PERMISSION_DELETE, Constants.FAMILY_HISTORY);
+    async deleteFamilyHistory(familyHistory_id, patient_id, current_user) {
+        const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_DELETE, Constants.FAMILY_HISTORY);
         if (accessControlResponse.error) {
             return accessControlResponse;
         }
 
         var payload = {};
-        payload['familyHistory_id'] = identifier;
+        payload['familyHistory_id'] = familyHistory_id;
         payload['patient_id'] = patient_id;
         payload['action'] = Constants.ACTION_DELETE;
 
-        var address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(identifier, patient_id);
+        const address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(familyHistory_id, patient_id);
         var registry = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
 
         if (registry.error) {
@@ -103,13 +135,13 @@ class FamilyHistoryClient {
         }
 
         registry = registry.data;
-        var ipfsResponse = await this.FamilyHistoryIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
+        const ipfsResponse = await this.FamilyHistoryIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
 
-        if (ipfsResponse == undefined) {
+        if (ipfsResponse === undefined) {
             return response;
         }
 
-        var addresses = this.FamilyHistoryAddressHelper.getAddresses(identifier, patient_id);
+        const addresses = this.FamilyHistoryAddressHelper.getAddresses(familyHistory_id, patient_id);
 
         return await this.FamilyHistoryBlockchainHelper.wrap_and_send(payload, addresses);
     }
