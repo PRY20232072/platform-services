@@ -26,7 +26,13 @@ app.use(function (req, res, next) {
     if (token) {
         validateAccessToken(token)
             .then(decodedToken => {
+                const current_user = {
+                    id: decodedToken.oid,
+                    role: decodedToken.extension_UserRole
+                }
+                
                 req.decodedToken = decodedToken;
+                req.current_user = current_user;
                 next();
             })
             .catch(error => {
