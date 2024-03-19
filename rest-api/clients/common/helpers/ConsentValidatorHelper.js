@@ -20,7 +20,7 @@ class ConsentValidatorHelper {
         this.FamilyHistoryIPFSHelper = new FamilyHistoryIPFSHelper();
         this.PatientClient = new PatientClient();
         this.PractitionerClient = new PractitionerClient();
-        this.ConsentClient = new ConsentClient();  
+        this.ConsentClient = new ConsentClient();
     }
 
     async getAlleryByIdAndPatientId(allergy_id, patient_id) {
@@ -54,20 +54,23 @@ class ConsentValidatorHelper {
         }
     }
 
-    async validateAccess(patient_id, practitioner_id, registry_id, permission, registry_type) {
-        if (practitioner_id == null || practitioner_id == undefined || practitioner_id == "") {
-            var patientPermission = await this.patientHasAccessToRegistry(patient_id, registry_id, permission, registry_type);
+    async validateAccess(registry_id, current_user, permission, registry_type) {
+        if (current_user.role === Constants.PATIENT) {
+            const patientPermission = await this.patientHasAccessToRegistry(current_user.id, registry_id, permission, registry_type);
+
             if (!patientPermission) {
                 return new ResponseObject(Constants.ACCESS_DENIED_PATIENT_MSG, true);
             }
 
             return new ResponseObject(Constants.ACCESS_GRANTED_PATIENT_MSG);
-        }
+        } 
         else {
-            var practitionerPermission = await this.practitionerHasAccessToRegistry(practitioner_id, registry_id, permission);
+            const practitionerPermission = await this.practitionerHasAccessToRegistry(current_user.id, registry_id, permission);
+
             if (!practitionerPermission) {
                 return new ResponseObject(Constants.ACCESS_DENIED_PRACTITIONER_MSG, true);
             }
+
             return new ResponseObject(Constants.ACCESS_GRANTED_PRACTITIONER_MSG);
         }
     }
