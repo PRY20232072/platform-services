@@ -7,7 +7,9 @@ const { CreatePractitionerValidatorSchema, UpdatePractitionerValidatorSchema } =
 const client = new PractitionerClient();
 
 router.get('/', async function (req, res) {
-    await client.getPractitionerList().then(function (response) {
+    const current_user = req.current_user;
+
+    await client.getPractitionerList(current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -18,8 +20,10 @@ router.get('/', async function (req, res) {
 });
 
 router.get('/:identifier', async function (req, res) {
-    var identifier = req.params.identifier;
-    await client.getPractitionerById(identifier).then(function (response) {
+    const identifier = req.params.identifier;
+    const current_user = req.current_user;
+
+    await client.getPractitionerById(identifier, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -34,13 +38,15 @@ router.post('/', checkSchema(CreatePractitionerValidatorSchema), async function 
     if (!errors.isEmpty()) {
         return res.status(400).json({
             error: true,
-            errors: errors.array() 
+            errors: errors.array()
         });
     }
 
-    var identifier = req.body.identifier;
-    var payload = req.body.payload;
-    await client.createPractitioner(identifier, payload).then(function (response) {
+    const identifier = req.body.identifier;
+    const payload = req.body.payload;
+    const current_user = req.current_user;
+
+    await client.createPractitioner(identifier, payload, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -55,13 +61,15 @@ router.put('/:identifier', checkSchema(UpdatePractitionerValidatorSchema), async
     if (!errors.isEmpty()) {
         return res.status(400).json({
             error: true,
-            errors: errors.array() 
+            errors: errors.array()
         });
     }
 
-    var identifier = req.params.identifier;
-    var payload = req.body.payload;
-    await client.updatePractitioner(identifier, payload).then(function (response) {
+    const identifier = req.params.identifier;
+    const payload = req.body.payload;
+    const current_user = req.current_user;
+
+    await client.updatePractitioner(identifier, payload, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
@@ -72,8 +80,10 @@ router.put('/:identifier', checkSchema(UpdatePractitionerValidatorSchema), async
 });
 
 router.delete('/:identifier', async function (req, res) {
-    var identifier = req.params.identifier;
-    await client.deletePractitioner(identifier).then(function (response) {
+    const identifier = req.params.identifier;
+    const current_user = req.current_user;
+
+    await client.deletePractitioner(identifier, current_user).then(function (response) {
         if (response.error) {
             res.status(404).send(response);
         }
