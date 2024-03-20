@@ -7,7 +7,7 @@ const { CreateAllergyValidatorSchema, UpdateAllergyValidatorSchema } = require('
 const client = new AllergyClient();
 
 router.get('/', async function (req, res) {
-    const current_user = req.current_user;    
+    const current_user = req.current_user;
 
     await client.getAllergyList(current_user).then(function (response) {
         if (response.error) {
