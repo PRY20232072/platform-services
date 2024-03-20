@@ -27,7 +27,7 @@ class AllergyClient {
         registryList.data = registryList.data.filter((value, index, self) => self.findIndex(v => v.allergy_id === value.allergy_id) === index);
         registryList = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(registryList);
 
-        if (registryList.error) {
+        if (registryList.error || registryList.data == undefined) {
             return registryList;
         }
 
@@ -56,6 +56,10 @@ class AllergyClient {
         const address = this.AllergyAddressHelper.getAddressByPatientId(patient_id);
         var registryList = await this.AllergyBlockchainHelper.getRegistryList(address);
         registryList = await this.AllergyIPFSHelper.getIPFSDataOfRegistryList(registryList);
+
+        if (registryList.error || registryList.data == undefined) {
+            return registryList;
+        }
 
         return this.AllergyHelper.transformRegistryList(registryList);
     }

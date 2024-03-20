@@ -24,25 +24,25 @@ class ConsentValidatorHelper {
     }
 
     async getAlleryByIdAndPatientId(allergy_id, patient_id) {
-        var address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
-        var data = await this.AllergyBlockchainHelper.getRegistry(address);
-        if (data.error) {
-            data.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
-            return data;
+        const address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
+        var registryResult = await this.AllergyBlockchainHelper.getRegistry(address);
+        if (registryResult.error) {
+            registryResult.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
+            return registryResult;
         }
-        data = await this.AllergyIPFSHelper.getIPFSDataOfRegistry(data);
-        return data;
+        registryResult = await this.AllergyIPFSHelper.getIPFSDataOfRegistry(registryResult);
+        return registryResult;
     }
 
     async getFamilyHistoryByIdAndPatientId(family_history_id, patient_id) {
-        var address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(family_history_id, patient_id);
-        var data = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
-        if (data.error) {
-            data.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
-            return data;
+        const address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(family_history_id, patient_id);
+        var registryResult = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
+        if (registryResult.error) {
+            registryResult.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
+            return registryResult;
         }
-        data = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistry(data);
-        return data;
+        registryResult = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistry(registryResult);
+        return registryResult;
     }
 
     async getRegistryByIdAndPatientId(registry_id, patient_id, registry_type) {
@@ -56,7 +56,7 @@ class ConsentValidatorHelper {
 
     async validateAccess(registry_id, current_user, permission, registry_type) {
         if (current_user.role === Constants.PATIENT) {
-            const patientPermission = await this.patientHasAccessToRegistry(current_user.id, registry_id, permission, registry_type);
+            const patientPermission = await this.patientHasAccessToRegistry(current_user, registry_id, permission, registry_type);
 
             if (!patientPermission) {
                 return new ResponseObject(Constants.ACCESS_DENIED_PATIENT_MSG, true);
@@ -65,7 +65,7 @@ class ConsentValidatorHelper {
             return new ResponseObject(Constants.ACCESS_GRANTED_PATIENT_MSG);
         } 
         else {
-            const practitionerPermission = await this.practitionerHasAccessToRegistry(current_user.id, registry_id, permission);
+            const practitionerPermission = await this.practitionerHasAccessToRegistry(current_user, registry_id, permission);
 
             if (!practitionerPermission) {
                 return new ResponseObject(Constants.ACCESS_DENIED_PRACTITIONER_MSG, true);
@@ -75,18 +75,18 @@ class ConsentValidatorHelper {
         }
     }
 
-    async patientHasAccessToRegistry(patient_id, registry_id, permission, registry_type) {
-        var patient = await this.PatientClient.getPatientById(patient_id);
-        if (patient.error) { //patient not found
+    async patientHasAccessToRegistry(patient, registry_id, permission, registry_type) {
+        const patientResult = await this.PatientClient.getPatientById(patient.id, patient);
+        if (patientResult.error) { //patient not found
             return false;
         }
 
-        var registry = await this.getRegistryByIdAndPatientId(registry_id, patient_id, registry_type);
+        const registry = await this.getRegistryByIdAndPatientId(registry_id, patient.id, registry_type);
         if (registry.error) { //allergy not found
             return false;
         }
 
-        var patientPermission = patient.data.permissions;
+        const patientPermission = patientResult.data.permissions;
         if (patientPermission.includes(permission)) { //patient has permission
             return true;
         }
@@ -94,20 +94,20 @@ class ConsentValidatorHelper {
         return false; //patient has no permission
     }
 
-    async practitionerHasAccessToRegistry(practitioner_id, registry_id, permission) {
-        var practitioner = await this.PractitionerClient.getPractitionerById(practitioner_id);
-        if (practitioner.error) { //practitioner not found
+    async practitionerHasAccessToRegistry(practitioner, registry_id, permission) {
+        const practitionerResult = await this.PractitionerClient.getPractitionerById(practitioner.id, practitioner);
+        if (practitionerResult.error) { //practitioner not found
             return false;
         }
 
-        var consent = await this.ConsentClient.getConsentByRegisterIdAndPractitionerId(registry_id, practitioner_id);
+        const consent = await this.ConsentClient.getConsentByRegisterIdAndPractitionerId(registry_id, practitioner.id);
 
         if (consent.error) { //practice has no consent for this allergy
             return false;
         }
 
-        var consentState = consent.data.state;
-        var practitionerPermission = practitioner.data.permissions;
+        const consentState = consent.data.state;
+        const practitionerPermission = practitionerResult.data.permissions;
         if (consentState == Constants.CONSENT_ACTIVE && practitionerPermission.includes(permission)) { //practitioner has permission
             return true;
         }

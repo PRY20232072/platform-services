@@ -27,7 +27,7 @@ class FamilyHistoryClient {
         registryList.data = registryList.data.filter((value, index, self) => self.findIndex(v => v.familyHistory_id === value.familyHistory_id) === index);
         registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(registryList);
 
-        if (registryList.error) {
+        if (registryList.error || registryList.data == undefined) {
             return registryList;
         }
 
@@ -56,6 +56,10 @@ class FamilyHistoryClient {
         const address = this.FamilyHistoryAddressHelper.getAddressByPatientId(patient_id);
         var registryList = await this.FamilyHistoryBlockchainHelper.getRegistryList(address);
         registryList = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistryList(registryList);
+
+        if (registryList.error || registryList.data == undefined) {
+            return registryList;
+        }
 
         return this.FamilyHistoryHelper.transformRegistryList(registryList);
     }
