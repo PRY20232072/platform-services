@@ -73,6 +73,15 @@ class Constants {
     static PATIENT_CANNOT_GET_ALLERGY_LIST = 'The patient cannot get the allergy list';
     static PATIENT_CANNOT_GET_FAMILY_HISTORY_LIST = 'The patient cannot get the family history list';
     static PATIENT_CANNOT_CREATE_A_REGISTRY = 'The patient cannot create a registry';
+    static PRACTITIONER_CANNOT_CREATE_A_REGISTRY = 'The practitioner cannot create a registry';
+    static PATIENT_CANNOT_GET_PATIENT = 'The patient cannot get the information of other patients';
+    static PATIENT_CANNOT_GET_PATIENT_LIST = 'The patient cannot get the patient list';
+    static PRACTITIONER_CANNOT_UPDATE_PATIENT = 'The practitioner cannot update a patient';
+    static PATIENT_CANNOT_UPDATE_PATIENT = 'The patient cannot update a patient with a different identifier';
+    static PRACTITIONER_CANNOT_GET_PRACTITIONER = 'The practitioner cannot get the information of other practitioners';
+    static PATIENT_CANNOT_CREATE_A_PRACTITIONER = 'The patient cannot create a practitioner';
+    static PATIENT_CANNOT_UPDATE_A_PRACTITIONER = 'The patient cannot update a practitioner';
+
     //Messages
     static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';
 
