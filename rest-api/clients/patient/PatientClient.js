@@ -1,16 +1,12 @@
 const { Constants } = require('../common/Constants');
 const { PatientHelper } = require('./helpers/PatientHelper');
-const { PatientAddressHelper } = require('./helpers/PatientAddressHelper');
-const { PatientBlockchainHelper } = require('./helpers/PatientBlockchainHelper');
-const { PatientIPFSHelper } = require('./helpers/PatientIPFSHelper');
 const { ResponseObject } = require('../common/ResponseObject');
+const { PatientRepositoryImpl } = require('./implementations/PatientRepositoryImpl');
 
 class PatientClient {
     constructor() {
         this.PatientHelper = new PatientHelper();
-        this.PatientAddressHelper = new PatientAddressHelper();
-        this.PatientBlockchainHelper = new PatientBlockchainHelper();
-        this.PatientIPFSHelper = new PatientIPFSHelper();
+        this.PatientRepository = new PatientRepositoryImpl();
     }
 
     async getPatientList(current_user) {
@@ -18,13 +14,7 @@ class PatientClient {
             return new ResponseObject(Constants.PATIENT_CANNOT_GET_PATIENT_LIST, true);
         }
 
-        const address = this.PatientAddressHelper.getAddressByTPName();
-        var patientRegistryList = await this.PatientBlockchainHelper.getRegistryList(address);
-        patientRegistryList = await this.PatientIPFSHelper.getIPFSDataOfRegistryList(patientRegistryList);
-
-        if (patientRegistryList.error || patientRegistryList.data == undefined) {
-            return patientRegistryList;
-        }
+        const patientRegistryList = await this.PatientRepository.getPatientList();
 
         return this.PatientHelper.transformPatientList(patientRegistryList);
     }
@@ -34,13 +24,7 @@ class PatientClient {
             return new ResponseObject(Constants.PATIENT_CANNOT_GET_PATIENT, true);
         }
 
-        const address = this.PatientAddressHelper.getAddress(patient_id);
-        var patientRegistry = await this.PatientBlockchainHelper.getRegistry(address);
-        if (patientRegistry.error) {
-            patientRegistry.data = "There is no patient with this identifier";
-            return patientRegistry;
-        }
-        patientRegistry = await this.PatientIPFSHelper.getIPFSDataOfRegistry(patientRegistry.data);
+        const patientRegistry = await this.PatientRepository.getPatientById(patient_id);
 
         return patientRegistry;
     }
@@ -50,17 +34,9 @@ class PatientClient {
             return new ResponseObject(Constants.PATIENT_CANNOT_CREATE_A_REGISTRY, true);
         }
 
-        payload['patient_id'] = identifier;
-        
-        // Send to IPFS
-        payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
-        
-        // Send to Blockchain
-        const address = this.PatientAddressHelper.getAddress(identifier);
-        payload['action'] = Constants.ACTION_CREATE;
-        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE, Constants.PERMISSION_DELETE];
+        const createdResponse = await this.PatientRepository.createPatient(identifier, payload);
 
-        return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);
+        return createdResponse;
     }
 
     async updatePatient(identifier, payload, current_user) {
@@ -68,20 +44,9 @@ class PatientClient {
             return new ResponseObject(Constants.PRACTITIONER_CANNOT_UPDATE_PATIENT, true);
         }
 
-        if (current_user.role == Constants.PATIENT && current_user.id !== identifier) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_PATIENT, true);
-        }
+        const updateResponse = await this.PatientRepository.updatePatient(identifier, payload);
 
-        payload['patient_id'] = identifier;
-        
-        // Send to IPFS
-        payload = await this.PatientIPFSHelper.sentToIPFS(identifier, payload);
-        
-        // Send to Blockchain
-        const address = this.PatientAddressHelper.getAddress(identifier);
-        payload['action'] = Constants.ACTION_UPDATE;
-
-        return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);
+        return updateResponse;
     }
 
     async deletePatient(identifier, current_user) {
@@ -93,25 +58,9 @@ class PatientClient {
             return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_PATIENT, true);
         }
 
-        var payload = {};
-        payload['patient_id'] = identifier;
-        payload['action'] = Constants.ACTION_DELETE;
+        const deleteResponse = await this.PatientRepository.deletePatient(identifier);
 
-        const address = this.PatientAddressHelper.getAddress(identifier);
-        var registry = await this.PatientBlockchainHelper.getRegistry(address);
-
-        if (registry.error) {
-            return registry;
-        }
-
-        registry = registry.data;
-        const ipfsResponse = await this.PatientIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
-
-        if (ipfsResponse == undefined) {
-            return response;
-        }
-
-        return await this.PatientBlockchainHelper.wrap_and_send(payload, [address]);
+        return deleteResponse;
     }
 }
 
