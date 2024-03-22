@@ -1,22 +1,16 @@
 const { Constants } = require('../common/Constants');
 const { PractitionerHelper } = require('./helpers/PractitionerHelper');
-const { PractitionerAddressHelper } = require('./helpers/PractitionerAddressHelper');
-const { PractitionerBlockchainHelper } = require('./helpers/PractitionerBlockchainHelper');
-const { PractitionerIPFSHelper } = require('./helpers/PractitionerIPFSHelper');
+const { PractitionerRepositoryImpl } = require('./implementations/PractitionerRepositoryImpl');
 const { ResponseObject } = require('../common/ResponseObject');
 
 class PractitionerClient {
     constructor() {
         this.PractitionerHelper = new PractitionerHelper();
-        this.PractitionerAddressHelper = new PractitionerAddressHelper();
-        this.PractitionerBlockchainHelper = new PractitionerBlockchainHelper();
-        this.PractitionerIPFSHelper = new PractitionerIPFSHelper();
+        this.PractitionerRepository = new PractitionerRepositoryImpl();
     }
 
-    async getPractitionerList(current_user) {
-        const address = this.PractitionerAddressHelper.getAddressByTPName();
-        var practitionerRegistryList = await this.PractitionerBlockchainHelper.getRegistryList(address);
-        practitionerRegistryList = await this.PractitionerIPFSHelper.getIPFSDataOfRegistryList(practitionerRegistryList);
+    async getPractitionerList() {
+        const practitionerRegistryList = await this.PractitionerRepository.getPractitionerList();
 
         if (practitionerRegistryList.error) {
             return practitionerRegistryList;
@@ -30,13 +24,7 @@ class PractitionerClient {
             return new ResponseObject(Constants.PRACTITIONER_CANNOT_GET_PRACTITIONER, true);
         }
 
-        const address = this.PractitionerAddressHelper.getAddress(practitioner_id);
-        var practitionerRegistry = await this.PractitionerBlockchainHelper.getRegistry(address);
-        if (practitionerRegistry.error) {
-            practitionerRegistry.data = "There is no practitioner with this identifier";
-            return practitionerRegistry;
-        }
-        practitionerRegistry = await this.PractitionerIPFSHelper.getIPFSDataOfRegistry(practitionerRegistry.data);
+        const practitionerRegistry = await this.PractitionerRepository.getPractitionerById(practitioner_id);
 
         if (practitionerRegistry.error) {
             return practitionerRegistry;
@@ -58,17 +46,9 @@ class PractitionerClient {
             return new ResponseObject(Constants.PRACTITIONER_CANNOT_CREATE_A_REGISTRY, true);
         }
 
-        payload['practitioner_id'] = identifier;
+        const createdResponse = await this.PractitionerRepository.createPractitioner(identifier, payload);
 
-        // Send to IPFS
-        payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
-
-        // Send to Blockchain
-        const address = this.PractitionerAddressHelper.getAddress(identifier);
-        payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE];
-        payload['action'] = Constants.ACTION_CREATE;
-
-        return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
+        return createdResponse;
     }
 
     async updatePractitioner(identifier, payload, current_user) {
@@ -80,16 +60,9 @@ class PractitionerClient {
             return new ResponseObject(Constants.PRACTITIONER_CANNOT_CREATE_A_REGISTRY, true);
         }
 
-        payload['practitioner_id'] = identifier;
+        const updateResponse = await this.PractitionerRepository.updatePractitioner(identifier, payload);
 
-        // Send to IPFS
-        payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
-
-        // Send to Blockchain
-        const address = this.PractitionerAddressHelper.getAddress(identifier);
-        payload['action'] = Constants.ACTION_UPDATE;
-
-        return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
+        return updateResponse;
     }
 
     async deletePractitioner(identifier, current_user) {
@@ -97,25 +70,9 @@ class PractitionerClient {
             return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_A_PRACTITIONER, true);
         }
 
-        var payload = {};
-        payload['practitioner_id'] = identifier;
-        payload['action'] = Constants.ACTION_DELETE;
+        const deleteResponse = await this.PractitionerRepository.deletePractitioner(identifier);
 
-        const address = this.PractitionerAddressHelper.getAddress(identifier);
-        var registry = await this.PractitionerBlockchainHelper.getRegistry(address);
-
-        if (registry.error) {
-            return registry;
-        }
-
-        registry = registry.data;
-        const ipfsResponse = await this.PractitionerIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
-
-        if (ipfsResponse == undefined) {
-            return response;
-        }
-
-        return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
+        return deleteResponse;
     }
 }
 
