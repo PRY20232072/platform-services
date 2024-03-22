@@ -1,57 +1,18 @@
-const { AllergyAddressHelper } = require('../../allergy/helpers/AllergyAddressHelper');
-const { AllergyBlockchainHelper } = require('../../allergy/helpers/AllergyBlockchainHelper');
-const { AllergyIPFSHelper } = require('../../allergy/helpers/AllergyIPFSHelper');
-const { FamilyHistoryAddressHelper } = require('../../family/helpers/FamilyHistoryAddressHelper');
-const { FamilyHistoryBlockchainHelper } = require('../../family/helpers/FamilyHistoryBlockchainHelper');
-const { FamilyHistoryIPFSHelper } = require('../../family/helpers/FamilyHistoryIPFSHelper');
-const { PatientClient } = require('../../patient/PatientClient');
-const { PractitionerClient } = require('../../practitioner/PractitionerClient');
 const { ConsentClient } = require('../../consent/ConsentClient');
 const { Constants } = require('../Constants');
 const { ResponseObject } = require('../ResponseObject');
+const { AllergyRepositoryImpl } = require('../../allergy/implementations/AllergyRepositoryImpl');
+const { FamilyHistoryRepositoryImpl } = require('../../family/implementations/FamilyHistoryRepositoryImpl');
+const { PatientRepositoryImpl } = require('../../patient/implementations/PatientRepositoryImpl');
+const { PractitionerRepositoryImpl } = require('../../practitioner/implementations/PractitionerRepositoryImpl');
 
 class ConsentValidatorHelper {
     constructor() {
-        this.AllergyAddressHelper = new AllergyAddressHelper();
-        this.AllergyBlockchainHelper = new AllergyBlockchainHelper();
-        this.AllergyIPFSHelper = new AllergyIPFSHelper();
-        this.FamilyHistoryAddressHelper = new FamilyHistoryAddressHelper();
-        this.FamilyHistoryBlockchainHelper = new FamilyHistoryBlockchainHelper();
-        this.FamilyHistoryIPFSHelper = new FamilyHistoryIPFSHelper();
-        this.PatientClient = new PatientClient();
-        this.PractitionerClient = new PractitionerClient();
         this.ConsentClient = new ConsentClient();
-    }
-
-    async getAlleryByIdAndPatientId(allergy_id, patient_id) {
-        const address = this.AllergyAddressHelper.getAllergyPatientAddress(allergy_id, patient_id);
-        var registryResult = await this.AllergyBlockchainHelper.getRegistry(address);
-        if (registryResult.error) {
-            registryResult.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
-            return registryResult;
-        }
-        registryResult = await this.AllergyIPFSHelper.getIPFSDataOfRegistry(registryResult);
-        return registryResult;
-    }
-
-    async getFamilyHistoryByIdAndPatientId(family_history_id, patient_id) {
-        const address = this.FamilyHistoryAddressHelper.getFamilyHistoryPatientAddress(family_history_id, patient_id);
-        var registryResult = await this.FamilyHistoryBlockchainHelper.getRegistry(address);
-        if (registryResult.error) {
-            registryResult.data = Constants.REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST;
-            return registryResult;
-        }
-        registryResult = await this.FamilyHistoryIPFSHelper.getIPFSDataOfRegistry(registryResult);
-        return registryResult;
-    }
-
-    async getRegistryByIdAndPatientId(registry_id, patient_id, registry_type) {
-        if (registry_type == Constants.ALLERGY) {
-            return await this.getAlleryByIdAndPatientId(registry_id, patient_id);
-        }
-        else if (registry_type == Constants.FAMILY_HISTORY) {
-            return await this.getFamilyHistoryByIdAndPatientId(registry_id, patient_id);
-        }
+        this.AllergyRepository = new AllergyRepositoryImpl();
+        this.FamilyHistoryRepository = new FamilyHistoryRepositoryImpl();
+        this.PatientRepository = new PatientRepositoryImpl();
+        this.PractitionerRepository = new PractitionerRepositoryImpl();
     }
 
     async validateAccess(registry_id, current_user, permission, registry_type) {
@@ -63,7 +24,7 @@ class ConsentValidatorHelper {
             }
 
             return new ResponseObject(Constants.ACCESS_GRANTED_PATIENT_MSG);
-        } 
+        }
         else {
             const practitionerPermission = await this.practitionerHasAccessToRegistry(current_user, registry_id, permission);
 
@@ -76,13 +37,13 @@ class ConsentValidatorHelper {
     }
 
     async patientHasAccessToRegistry(patient, registry_id, permission, registry_type) {
-        const patientResult = await this.PatientClient.getPatientById(patient.id, patient);
-        if (patientResult.error) { //patient not found
+        const patientResult = await this.PatientRepository.getPatientById(patient.id);
+        if (patientResult.error) {
             return false;
         }
 
-        const registry = await this.getRegistryByIdAndPatientId(registry_id, patient.id, registry_type);
-        if (registry.error) { //allergy not found
+        const existRegistry = await this.existRegistryByIdAndPatientId(registry_id, patient.id, registry_type);
+        if (!existRegistry) {
             return false;
         }
 
@@ -95,8 +56,8 @@ class ConsentValidatorHelper {
     }
 
     async practitionerHasAccessToRegistry(practitioner, registry_id, permission) {
-        const practitionerResult = await this.PractitionerClient.getPractitionerById(practitioner.id, practitioner);
-        if (practitionerResult.error) { //practitioner not found
+        const practitionerResult = await this.PractitionerRepository.getPractitionerById(practitioner.id);
+        if (practitionerResult.error) {
             return false;
         }
 
@@ -113,6 +74,16 @@ class ConsentValidatorHelper {
         }
 
         return false; //practitioner has no permission
+    }
+
+    async existRegistryByIdAndPatientId(registry_id, patient_id, registry_type) {
+        if (registry_type == Constants.ALLERGY) {
+            return await this.AllergyRepository.existAllergyByIdAndPatientId(registry_id, patient_id);
+        } else if (registry_type == Constants.FAMILY_HISTORY) {
+            return await this.FamilyHistoryRepository.existFamilyHistoryByIdAndPatientId(registry_id, patient_id);
+        }
+
+        return false;
     }
 }
 
