@@ -65,6 +65,9 @@ class Constants {
     static IPFS_PINATA_GATEWAY_URL = process.env.IPFS_PINATA_GATEWAY_URL;
     static IPFS_PINATA_JWT_KEY = process.env.IPFS_PINATA_JWT_KEY;
 
+    //ERROR MESSAGES
+    static ABSTRACT_METHOD_ERROR_MSG = 'Abstract method must be implemented';
+
     //VALIDATE ACCESS MESSAGES
     static ACCESS_DENIED_PATIENT_MSG = 'The patient has no permission to access this allergy';
     static ACCESS_DENIED_PRACTITIONER_MSG = 'The practitioner has no permission to access this allergy';
