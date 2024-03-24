@@ -116,22 +116,22 @@ const CreatePractitionerValidatorSchema = {
             errorMessage: 'district can not be empty'
         }
     },
-    'payload.address.city': {
+    'payload.address.department': {
         in: ['body'],
         exists: {
-            errorMessage: 'City is required',
+            errorMessage: 'department is required',
         },
         notEmpty: {
-            errorMessage: 'city can not be empty'
-        }
+            errorMessage: 'department can not be empty'
+        },
     },
-    'payload.address.country': {
+    'payload.address.province': {
         in: ['body'],
         exists: {
-            errorMessage: 'Country is required',
+            errorMessage: 'province is required',
         },
         notEmpty: {
-            errorMessage: 'country can not be empty'
+            errorMessage: 'province can not be empty'
         }
     },
     'payload.address.postal_code': {
@@ -269,22 +269,22 @@ const UpdatePractitionerValidatorSchema = {
             errorMessage: 'district can not be empty'
         }
     },
-    'payload.address.city': {
+    'payload.address.department': {
         in: ['body'],
         exists: {
-            errorMessage: 'City is required',
+            errorMessage: 'department is required',
         },
         notEmpty: {
-            errorMessage: 'city can not be empty'
-        }
+            errorMessage: 'department can not be empty'
+        },
     },
-    'payload.address.country': {
+    'payload.address.province': {
         in: ['body'],
         exists: {
-            errorMessage: 'Country is required',
+            errorMessage: 'province is required',
         },
         notEmpty: {
-            errorMessage: 'country can not be empty'
+            errorMessage: 'province can not be empty'
         }
     },
     'payload.address.postal_code': {

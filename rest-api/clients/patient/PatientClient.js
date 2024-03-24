@@ -1,6 +1,7 @@
 const { Constants } = require('../common/Constants');
+const { UnauthorizedPatientError } = require('../common/errors/UnauthorizedPatientError');
+const { UnauthorizedPractitionerError } = require('../common/errors/UnauthorizedPractitionerError');
 const { PatientHelper } = require('./helpers/PatientHelper');
-const { ResponseObject } = require('../common/ResponseObject');
 const { PatientRepositoryImpl } = require('./implementations/PatientRepositoryImpl');
 
 class PatientClient {
@@ -10,57 +11,85 @@ class PatientClient {
     }
 
     async getPatientList(current_user) {
-        if (current_user.role === Constants.PATIENT) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_GET_PATIENT_LIST, true);
+        try {
+            if (current_user.role === Constants.PATIENT) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            const patientRegistryList = await this.PatientRepository.getPatientList();
+    
+            return this.PatientHelper.transformPatientList(patientRegistryList);
+        } catch (error) {
+            throw error;
         }
-
-        const patientRegistryList = await this.PatientRepository.getPatientList();
-
-        return this.PatientHelper.transformPatientList(patientRegistryList);
     }
 
     async getPatientById(patient_id, current_user) {
-        if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_GET_PATIENT, true);
+        try {
+            if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            const patientRegistry = await this.PatientRepository.getPatientById(patient_id);
+    
+            return patientRegistry;
+        } catch (error) {
+            throw error;
         }
-
-        const patientRegistry = await this.PatientRepository.getPatientById(patient_id);
-
-        return patientRegistry;
     }
 
     async createPatient(identifier, payload, current_user) {
-        if (current_user.role === Constants.PATIENT && current_user.id !== identifier) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_CREATE_A_REGISTRY, true);
+        try {
+            if (current_user.role === Constants.PATIENT && current_user.id !== identifier) {
+                throw new UnauthorizedPatientError();
+            }
+
+            if (current_user.role === Constants.PRACTITIONER) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const createdResponse = await this.PatientRepository.createPatient(identifier, payload);
+    
+            return createdResponse;
+        } catch (error) {
+            throw error;
         }
-
-        const createdResponse = await this.PatientRepository.createPatient(identifier, payload);
-
-        return createdResponse;
     }
 
     async updatePatient(identifier, payload, current_user) {
-        if (current_user.role == Constants.PRACTITIONER) {
-            return new ResponseObject(Constants.PRACTITIONER_CANNOT_UPDATE_PATIENT, true);
+        try {
+            if (current_user.role === Constants.PATIENT && current_user.id !== identifier) {
+                throw new UnauthorizedPatientError();
+            }
+
+            if (current_user.role == Constants.PRACTITIONER) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const updateResponse = await this.PatientRepository.updatePatient(identifier, payload);
+    
+            return updateResponse;
+        } catch (error) {
+            throw error;
         }
-
-        const updateResponse = await this.PatientRepository.updatePatient(identifier, payload);
-
-        return updateResponse;
     }
 
     async deletePatient(identifier, current_user) {
-        if (current_user.role == Constants.PRACTITIONER) {
-            return new ResponseObject(Constants.PRACTITIONER_CANNOT_UPDATE_PATIENT, true);
+        try {
+            if (current_user.role == Constants.PATIENT && current_user.id !== identifier) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            if (current_user.role == Constants.PRACTITIONER) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const deleteResponse = await this.PatientRepository.deletePatient(identifier);
+    
+            return deleteResponse;
+        } catch (error) {
+            throw error;
         }
-
-        if (current_user.role == Constants.PATIENT && current_user.id !== identifier) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_PATIENT, true);
-        }
-
-        const deleteResponse = await this.PatientRepository.deletePatient(identifier);
-
-        return deleteResponse;
     }
 }
 

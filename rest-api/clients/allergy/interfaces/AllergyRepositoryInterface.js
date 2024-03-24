@@ -13,7 +13,7 @@ class AllergyRepositoryInterface {
         throw new Error(Constants.ABSTRACT_METHOD_ERROR_MSG);
     }
 
-    getAlleryByIdAndPatientId(allergy_id, patient_id) {
+    getAllergyByIdAndPatientId(allergy_id, patient_id) {
         throw new Error(Constants.ABSTRACT_METHOD_ERROR_MSG);
     }
 

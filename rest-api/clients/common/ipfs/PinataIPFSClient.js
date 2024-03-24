@@ -3,6 +3,7 @@ const pinataSDK = require('@pinata/sdk');
 const axios = require('axios');
 const { ResponseObject } = require('../ResponseObject');
 const { Constants } = require('../Constants');
+const { CustomError } = require('../errors/CustomError');
 
 class PinataIPFSClient {
     constructor() {
@@ -35,7 +36,10 @@ class PinataIPFSClient {
             return new ResponseObject(res.IpfsHash);
         } catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_ADDING_TO_IPFS,
+                error.message,
+            );
         }
     }
 
@@ -50,7 +54,10 @@ class PinataIPFSClient {
             return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_RETRIEVING_FROM_IPFS,
+                error.message,
+            );
         }
     }
 
@@ -65,7 +72,10 @@ class PinataIPFSClient {
             return new ResponseObject(res);
         } catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_DELETING_FROM_IPFS,
+                error.message,
+            );
         }
     }
 }

@@ -4,9 +4,10 @@ const axios = require('axios');
 const { Constants } = require('../Constants');
 const { CommonAddressHelper } = require('./CommonAddressHelper');
 const { ResponseObject } = require('../ResponseObject');
+const { CustomError } = require('../errors/CustomError');
 
 class CommonBlockchainHelper {
-    constructor(TP_NAME, TP_CODE, TP_VERSION) { 
+    constructor(TP_NAME, TP_CODE, TP_VERSION) {
         this.CommonAddressHelper = new CommonAddressHelper(TP_NAME, TP_CODE, TP_VERSION);
 
         const context = createContext('secp256k1');
@@ -26,6 +27,96 @@ class CommonBlockchainHelper {
                 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
             }
         });
+    }
+
+    async getRegistry(address) {
+        try {
+            var data = await this.fetchFromBlockchain('/state/' + address);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getRegistryList(address) {
+        try {
+            var data = await this.fetchFromBlockchain('/state?address=' + address);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async fetchFromBlockchain(suffix) {
+        try {
+            const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
+
+            var response = await this.blockchainClient.get(URL);
+
+            var data = response.data.data;
+            var responseData = undefined;
+
+            if (data instanceof Array) {
+                responseData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var decoded = this.base64_decode(item.data);
+                    responseData.push(JSON.parse(decoded));
+                }
+            }
+            else {
+                var decoded = this.base64_decode(data);
+                responseData = JSON.parse(decoded);
+            }
+
+            return new ResponseObject(responseData);
+        } catch (error) {
+            throw new CustomError(
+                Constants.ERROR_FETCHING_FROM_BLOCKCHAIN,
+                error.message,
+            );
+        }
+    }
+
+    async wrap_and_send(payload, address) {
+        try {
+            var enc = new TextEncoder('utf8');
+
+            payload = JSON.stringify(payload);
+
+            var payloadBytes = enc.encode(payload);
+
+            var txnHeaderBytes = this.make_txn_header_bytes(payloadBytes, address);
+            var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
+
+            var response = await this.saveDataInBlockchain('/batches', txnBytes);
+
+            //TODO: validate if response has info
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async saveDataInBlockchain(suffix, data) {
+        try {
+            const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
+
+            var response = await this.blockchainClient.post(URL, data, {
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                }
+            });
+
+            return new ResponseObject(response.data);
+        } catch (error) {
+            console.error(error)
+            throw new CustomError(
+                Constants.ERROR_SAVING_TO_BLOCKCHAIN,
+                error.message,
+            );
+        }
     }
 
     make_txn_header_bytes(payloadBytes, address) {
@@ -78,79 +169,6 @@ class CommonBlockchainHelper {
 
     base64_decode(encoded) {
         return Buffer.from(encoded, 'base64').toString();
-    }
-
-    async getRegistry(address) {
-        var data = await this.fetchFromBlockchain('/state/' + address);
-        return data;
-    }
-
-    async getRegistryList(address) {
-        var data = await this.fetchFromBlockchain('/state?address=' + address);
-        return data;
-    }
-
-    async fetchFromBlockchain(suffix) {
-        const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
-
-        try {
-            var response = await this.blockchainClient.get(URL);
-
-            var data = response.data.data;
-            var responseData = undefined;
-
-            if (data instanceof Array) {
-                responseData = [];
-                for (var i = 0; i < data.length; i++) {
-                    var item = data[i];
-                    var decoded = this.base64_decode(item.data);
-                    responseData.push(JSON.parse(decoded));
-                }
-            }
-            else {
-                var decoded = this.base64_decode(data);
-                responseData = JSON.parse(decoded);
-            }
-
-            return new ResponseObject(responseData);
-        } catch (error) {
-            console.error(error)
-            return new ResponseObject(null, true);
-        }
-    }
-
-    async saveDataInBlockchain(suffix, data) {
-        const URL = Constants.SAWTOOTH_REST_API_URL + suffix;
-
-        try {
-            var response = await this.blockchainClient.post(URL, data, {
-                headers: {
-                    'Content-Type': 'application/octet-stream'
-                }
-            });
-
-            return new ResponseObject(response.data);
-        } catch (error) {
-            console.error(error)
-            return new ResponseObject(null, true);
-        }
-    }
-
-    async wrap_and_send(payload, address) {
-        var enc = new TextEncoder('utf8');
-
-        payload = JSON.stringify(payload);
-
-        var payloadBytes = enc.encode(payload);
-
-        var txnHeaderBytes = this.make_txn_header_bytes(payloadBytes, address);
-        var txnBytes = this.make_txn_bytes(txnHeaderBytes, payloadBytes);
-
-        var response = await this.saveDataInBlockchain('/batches', txnBytes);
-        
-        //TODO: validate if response has info
-
-        return response;
     }
 }
 

@@ -3,37 +3,28 @@ var router = express.Router();
 const { PatientClient } = require('../clients/patient/PatientClient');
 const { checkSchema, validationResult } = require('express-validator');
 const { CreatePatientValidatorSchema, UpdatePatientValidatorSchema } = require('./utils/ValidatorSchemas');
+const { asyncErrorHandler } = require('./utils/asyncErrorHandler');
 
 const client = new PatientClient();
 
-router.get('/', async function (req, res) {
+router.get('/', asyncErrorHandler(async function (req, res) {
     const current_user = req.current_user;
 
-    await client.getPatientList(current_user).then(function (response) {
-        if (response.error) {
-            res.status(404).send(response);
-        }
-        else {
-            res.send(response);
-        }
-    });
-});
+    const response = await client.getPatientList(current_user);
 
-router.get('/:identifier', async function (req, res) {
+    res.send(response);
+}));
+
+router.get('/:identifier', asyncErrorHandler(async function (req, res) {
     const identifier = req.params.identifier;
     const current_user = req.current_user;
 
-    await client.getPatientById(identifier, current_user).then(function (response) {
-        if (response.error) {
-            res.status(404).send(response);
-        }
-        else {
-            res.send(response);
-        }
-    });
-});
+    const response = await client.getPatientById(identifier, current_user);
 
-router.post('/', checkSchema(CreatePatientValidatorSchema), async function (req, res) {
+    res.send(response);
+}));
+
+router.post('/', checkSchema(CreatePatientValidatorSchema), asyncErrorHandler(async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -46,17 +37,12 @@ router.post('/', checkSchema(CreatePatientValidatorSchema), async function (req,
     const payload = req.body.payload;
     const current_user = req.current_user;
 
-    await client.createPatient(identifier, payload, current_user).then(function (response) {
-        if (response.error) {
-            res.status(404).send(response);
-        }
-        else {
-            res.send(response);
-        }
-    });
-});
+    const response = await client.createPatient(identifier, payload, current_user);
 
-router.put('/:identifier', checkSchema(UpdatePatientValidatorSchema), async function (req, res) {
+    res.send(response);
+}));
+
+router.put('/:identifier', checkSchema(UpdatePatientValidatorSchema), asyncErrorHandler(async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -69,28 +55,18 @@ router.put('/:identifier', checkSchema(UpdatePatientValidatorSchema), async func
     const payload = req.body.payload;
     const current_user = req.current_user;
 
-    await client.updatePatient(identifier, payload, current_user).then(function (response) {
-        if (response.error) {
-            res.status(404).send(response);
-        }
-        else {
-            res.send(response);
-        }
-    });
-});
+    const response = await client.updatePatient(identifier, payload, current_user);
 
-router.delete('/:identifier', async function (req, res) {
+    res.send(response);
+}));
+
+router.delete('/:identifier', asyncErrorHandler(async function (req, res) {
     const identifier = req.params.identifier;
     const current_user = req.current_user;
 
-    await client.deletePatient(identifier, current_user).then(function (response) {
-        if (response.error) {
-            res.status(404).send(response);
-        }
-        else {
-            res.send(response);
-        }
-    });
-});
+    const response = await client.deletePatient(identifier, current_user);
+
+    res.send(response);
+}));
 
 module.exports = router;

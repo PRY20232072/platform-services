@@ -66,24 +66,26 @@ class Constants {
     static IPFS_PINATA_JWT_KEY = process.env.IPFS_PINATA_JWT_KEY;
 
     //ERROR MESSAGES
+    static ERROR_FETCHING_FROM_BLOCKCHAIN = 'Error fetching data from blockchain';
+    static ERROR_SAVING_TO_BLOCKCHAIN = 'Error saving data to blockchain';
+    static ERROR_ADDING_TO_IPFS = 'Error adding data to IPFS';
+    static ERROR_RETRIEVING_FROM_IPFS = 'Error retrieving data from IPFS';
+    static ERROR_DELETING_FROM_IPFS = 'Error deleting data from IPFS';
+    static ERROR_TO_GET_REGISTRY_BY_ID = 'Error to get the registry by id';
+    static ERROR_TO_GET_REGISTRY_LIST = 'Error to get the registry list';
+    static ERROR_CREATING_REGISTRY = 'Error creating the registry';
+    static ERROR_UPDATING_REGISTRY = 'Error updating the registry';
+    static ERROR_DELETING_REGISTRY = 'Error deleting the registry';
+    static ERROR_CREATING_CONSENT = 'Error creating the consent';
+    static ERROR_APPROVING_CONSENT = 'Error approving the consent';
+    static ERROR_REVOKING_CONSENT = 'Error revoking the consent';
+    static ERROR_FETCHING_CONSENT = 'Error fetching the consent';
+    static IPFS_HASH_NOT_FOUND = 'The IPFS hash is not found';
     static ABSTRACT_METHOD_ERROR_MSG = 'Abstract method must be implemented';
 
     //VALIDATE ACCESS MESSAGES
-    static ACCESS_DENIED_PATIENT_MSG = 'The patient has no permission to access this allergy';
-    static ACCESS_DENIED_PRACTITIONER_MSG = 'The practitioner has no permission to access this allergy';
-    static ACCESS_GRANTED_PATIENT_MSG = 'The patient has permission to access this allergy';
-    static ACCESS_GRANTED_PRACTITIONER_MSG = 'The practitioner has permission to access this allergy';
-    static PATIENT_CANNOT_GET_ALLERGY_LIST = 'The patient cannot get the allergy list';
-    static PATIENT_CANNOT_GET_FAMILY_HISTORY_LIST = 'The patient cannot get the family history list';
-    static PATIENT_CANNOT_CREATE_A_REGISTRY = 'The patient cannot create a registry';
-    static PRACTITIONER_CANNOT_CREATE_A_REGISTRY = 'The practitioner cannot create a registry';
-    static PATIENT_CANNOT_GET_PATIENT = 'The patient cannot get the information of other patients';
-    static PATIENT_CANNOT_GET_PATIENT_LIST = 'The patient cannot get the patient list';
-    static PRACTITIONER_CANNOT_UPDATE_PATIENT = 'The practitioner cannot update a patient';
-    static PATIENT_CANNOT_UPDATE_PATIENT = 'The patient cannot update a patient with a different identifier';
-    static PRACTITIONER_CANNOT_GET_PRACTITIONER = 'The practitioner cannot get the information of other practitioners';
-    static PATIENT_CANNOT_CREATE_A_PRACTITIONER = 'The patient cannot create a practitioner';
-    static PATIENT_CANNOT_UPDATE_A_PRACTITIONER = 'The patient cannot update a practitioner';
+    static UNAUTHORIZED_PATIENT_MSG = 'The patient is not authorized to access to this resource';
+    static UNAUTHORIZED_PRACTITIONER_MSG = 'The practitioner is not authorized to access to this resource';
 
     //Messages
     static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';

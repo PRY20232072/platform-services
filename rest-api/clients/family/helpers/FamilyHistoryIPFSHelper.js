@@ -7,20 +7,20 @@ class FamilyHistoryIPFSHelper extends CommonIPFSHelper {
     }
 
     async sentToIPFS(identifier, payload) {
-        var response = await this.ipfsClient.add(payload);
-
-        if (response.error) {
-            return response;
+        try {
+            var response = await this.ipfsClient.add(payload);
+    
+            var new_payload = {
+                familyHistory_id: identifier,
+                patient_id: payload.patient_id,
+                ipfs_hash: response.data
+            };
+    
+            return new_payload;
+        } catch (error) {
+            throw error;
         }
-
-        var new_payload = {
-            familyHistory_id: identifier,
-            patient_id: payload.patient_id,
-            ipfs_hash: response.data
-        };
-
-        return new_payload;
     }
 }
-
+ 
 module.exports.FamilyHistoryIPFSHelper = FamilyHistoryIPFSHelper;

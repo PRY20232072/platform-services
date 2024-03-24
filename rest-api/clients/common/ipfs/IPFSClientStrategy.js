@@ -13,43 +13,47 @@ class IPFSClientStrategy {
         data = CryptoHelper.encrypt(data);
 
         // Add the encrypted data to IPFS
-        const response = await this.client.add(data);
+        try {
+            const response = await this.client.add(data);
 
-        if (response.error) {
+            // Encrypt the IPFS hash before returning it
+            const encryptedIpfsHash = CryptoHelper.encrypt(response.data);
+
+            // Return the encrypted IPFS hash
+            response.setData(encryptedIpfsHash);
             return response;
+        } catch (error) {
+            throw error;
         }
-
-        // Encrypt the IPFS hash before returning it
-        const encryptedIpfsHash = CryptoHelper.encrypt(response.data);
-
-        // Return the encrypted IPFS hash
-        response.setData(encryptedIpfsHash);
-        return response;
     }
 
     async cat(hash) {
         // Decrypt the IPFS hash before retrieving the data
         // hash = CryptoHelper.decrypt(hash);
 
-        const response = await this.client.cat(hash);
+        try {
+            const response = await this.client.cat(hash);
 
-        if (response.error) {
+            // Decrypt the data retrieved from IPFS
+            const data = CryptoHelper.decrypt(response.data);
+
+            // Return the decrypted data
+            response.setData(data);
             return response;
+        } catch (error) {
+            throw error;
         }
-
-        // Decrypt the data retrieved from IPFS
-        const data = CryptoHelper.decrypt(response.data);
-
-        // Return the decrypted data
-        response.setData(data);
-        return response;
     }
 
     async rm(hash) {
         // Decrypt the IPFS hash before removing it
-        hash = CryptoHelper.decrypt(hash);
-
-        return await this.client.rm(hash);
+        try {
+            hash = CryptoHelper.decrypt(hash);
+    
+            return await this.client.rm(hash);
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

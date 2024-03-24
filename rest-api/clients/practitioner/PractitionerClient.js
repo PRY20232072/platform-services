@@ -1,7 +1,8 @@
 const { Constants } = require('../common/Constants');
 const { PractitionerHelper } = require('./helpers/PractitionerHelper');
 const { PractitionerRepositoryImpl } = require('./implementations/PractitionerRepositoryImpl');
-const { ResponseObject } = require('../common/ResponseObject');
+const { UnauthorizedPractitionerError } = require('../common/errors/UnauthorizedPractitionerError');
+const { UnauthorizedPatientError } = require('../common/errors/UnauthorizedPatientError');
 
 class PractitionerClient {
     constructor() {
@@ -10,69 +11,81 @@ class PractitionerClient {
     }
 
     async getPractitionerList() {
-        const practitionerRegistryList = await this.PractitionerRepository.getPractitionerList();
-
-        if (practitionerRegistryList.error) {
-            return practitionerRegistryList;
+        try {
+            const practitionerRegistryList = await this.PractitionerRepository.getPractitionerList();
+    
+            return this.PractitionerHelper.transformPractitionerList(practitionerRegistryList);
+        } catch (error) {
+            throw error;
         }
-
-        return this.PractitionerHelper.transformPractitionerList(practitionerRegistryList);
     }
 
     async getPractitionerById(practitioner_id, current_user) {
-        if (current_user.role === Constants.PRACTITIONER && current_user.id !== practitioner_id) {
-            return new ResponseObject(Constants.PRACTITIONER_CANNOT_GET_PRACTITIONER, true);
-        }
-
-        const practitionerRegistry = await this.PractitionerRepository.getPractitionerById(practitioner_id);
-
-        if (practitionerRegistry.error) {
-            return practitionerRegistry;
-        }
-
-        if (current_user.role === Constants.PRACTITIONER) {
-            return practitionerRegistry;
-        } else { // Patient
-            return this.PractitionerHelper.transformPractitioner(practitionerRegistry);
+        try {
+            if (current_user.role === Constants.PRACTITIONER && current_user.id !== practitioner_id) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const practitionerRegistry = await this.PractitionerRepository.getPractitionerById(practitioner_id);
+    
+            if (current_user.role === Constants.PRACTITIONER) {
+                return practitionerRegistry;
+            } else { // Patient
+                return this.PractitionerHelper.transformPractitioner(practitionerRegistry);
+            }
+        } catch (error) {
+            throw error;
         }
     }
 
     async createPractitioner(identifier, payload, current_user) {
-        if (current_user.role === Constants.PATIENT) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_CREATE_A_PRACTITIONER, true);
+        try {
+            if (current_user.role === Constants.PATIENT) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            if (current_user.role === Constants.PRACTITIONER && current_user.id !== identifier) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const createdResponse = await this.PractitionerRepository.createPractitioner(identifier, payload);
+    
+            return createdResponse;
+        } catch (error) {
+            throw error;
         }
-
-        if (current_user.role === Constants.PRACTITIONER && current_user.id !== identifier) {
-            return new ResponseObject(Constants.PRACTITIONER_CANNOT_CREATE_A_REGISTRY, true);
-        }
-
-        const createdResponse = await this.PractitionerRepository.createPractitioner(identifier, payload);
-
-        return createdResponse;
     }
 
     async updatePractitioner(identifier, payload, current_user) {
-        if (current_user.role === Constants.PATIENT) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_A_PRACTITIONER, true);
+        try {
+            if (current_user.role === Constants.PATIENT) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            if (current_user.role === Constants.PRACTITIONER && current_user.id !== identifier) {
+                throw new UnauthorizedPractitionerError();
+            }
+    
+            const updateResponse = await this.PractitionerRepository.updatePractitioner(identifier, payload);
+    
+            return updateResponse;
+        } catch (error) {
+            throw error;
         }
-
-        if (current_user.role === Constants.PRACTITIONER && current_user.id !== identifier) {
-            return new ResponseObject(Constants.PRACTITIONER_CANNOT_CREATE_A_REGISTRY, true);
-        }
-
-        const updateResponse = await this.PractitionerRepository.updatePractitioner(identifier, payload);
-
-        return updateResponse;
     }
 
     async deletePractitioner(identifier, current_user) {
-        if (current_user.role === Constants.PATIENT) {
-            return new ResponseObject(Constants.PATIENT_CANNOT_UPDATE_A_PRACTITIONER, true);
+        try {
+            if (current_user.role === Constants.PATIENT) {
+                throw new UnauthorizedPatientError();
+            }
+    
+            const deleteResponse = await this.PractitionerRepository.deletePractitioner(identifier);
+    
+            return deleteResponse;
+        } catch (error) {
+            throw error;
         }
-
-        const deleteResponse = await this.PractitionerRepository.deletePractitioner(identifier);
-
-        return deleteResponse;
     }
 }
 

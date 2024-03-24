@@ -17,7 +17,7 @@ async function getAzureADKeys() {
         const response = await axios.get(jwksUri);
         return response.data.keys;
     } catch (error) {
-        console.error('Error al obtener las claves públicas de Azure AD:', error);
+        throw new Error('Error obtaining Azure AD public keys: ' + error);
     }
 }
 
@@ -53,7 +53,6 @@ async function validateAccessToken(accessToken) {
         return new Promise((resolve, reject) => {
             jwt.verify(accessToken, getKey, (err, decoded) => {
                 if (err) {
-                    console.error('Jwt Validation Failed', err);
                     reject(err);
                 } else {
                     resolve(decoded);
@@ -61,7 +60,6 @@ async function validateAccessToken(accessToken) {
             });
         });
     } catch (error) {
-        console.error('Error validation access token:', error);
         throw error;
     }
 }

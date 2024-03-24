@@ -2,6 +2,7 @@ const FormData = require('form-data');
 const { Constants } = require('../Constants');
 const axios = require('axios');
 const { ResponseObject } = require('../ResponseObject');
+const { CustomError } = require('../errors/CustomError');
 
 class InfuraIPFSClient {
     constructor() {
@@ -38,7 +39,10 @@ class InfuraIPFSClient {
         }
         catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_ADDING_TO_IPFS,
+                error.message,
+            );
         }
     }
 
@@ -57,7 +61,10 @@ class InfuraIPFSClient {
             return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_RETRIEVING_FROM_IPFS,
+                error.message,
+            );
         }
     }
 
@@ -76,7 +83,10 @@ class InfuraIPFSClient {
             return new ResponseObject(res.data);
         } catch (error) {
             console.log(error);
-            return new ResponseObject('', true);
+            throw new CustomError(
+                Constants.ERROR_DELETING_FROM_IPFS,
+                error.message,
+            );
         }
     }
 }
