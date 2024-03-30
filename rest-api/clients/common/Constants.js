@@ -47,6 +47,7 @@ class Constants {
     //PERMISSIONS
     static PERMISSION_READ = 'READ';
     static PERMISSION_WRITE = 'WRITE';
+    static PERMISSION_MESSAGE = 'MESSAGE';
     static PERMISSION_DELETE = 'DELETE';
 
     //CONSENT STATUS
@@ -80,6 +81,12 @@ class Constants {
     static ERROR_APPROVING_CONSENT = 'Error approving the consent';
     static ERROR_REVOKING_CONSENT = 'Error revoking the consent';
     static ERROR_FETCHING_CONSENT = 'Error fetching the consent';
+    static ERROR_CONNECTING_DATABASE = 'Error connecting to the database:';
+    static ERROR_FETCHING_NOTIFICATION_BY_ID_FROM_DATABASE = 'Error fetching notification by id from database';
+    static ERROR_FETCHING_NOTIFICATION_LIST_FROM_DATABASE = 'Error fetching notification list from database';
+    static ERROR_CREATING_NOTIFICATION_IN_DATABASE = 'Error creating notification in database';
+    static ERROR_UPDATING_NOTIFICATION_IN_DATABASE = 'Error updating notification in database';
+    static ERROR_DELETING_NOTIFICATION_IN_DATABASE = 'Error deleting notification in database';
     static IPFS_HASH_NOT_FOUND = 'The IPFS hash is not found';
     static ABSTRACT_METHOD_ERROR_MSG = 'Abstract method must be implemented';
 
@@ -89,6 +96,10 @@ class Constants {
 
     //Messages
     static REGISTRY_WITH_IDENTIFIER_DOES_NOT_EXIST = 'There is no allergy with this identifier';
+    static DATABASE_CONNECTION_ESTABLISHED = 'Database connection established:';
+    static NOTIFICATION_CREATED_SUCCESSFULLY = 'Notification created successfully';
+    static NOTIFICATION_UPDATED_SUCCESSFULLY = 'Notification updated successfully';
+    static NOTIFICATION_NOT_FOUND = 'Notification not found';
 
     // Crypto
     static CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY;
