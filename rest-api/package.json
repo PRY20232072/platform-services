@@ -18,8 +18,10 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
     "sawtooth-sdk": "^1.0.5",
     "text-encoding": "^0.7.0",
+    "typeorm": "^0.2.25",
     "uuid": "^9.0.1"
   }
 }
