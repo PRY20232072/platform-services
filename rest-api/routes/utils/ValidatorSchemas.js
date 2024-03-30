@@ -23,6 +23,11 @@ const {
     UpdateFamilyHistoryValidatorSchema
 } = require('./FamilyHistoryValidatorSchemas');
 
+const {
+    CreateNotificationValidatorSchema,
+    UpdateNotificationValidatorSchema
+} = require('./NotificationValidatorSchemas');
+
 module.exports = {
     CreatePatientValidatorSchema: CreatePatientValidatorSchema,
     UpdatePatientValidatorSchema: UpdatePatientValidatorSchema,
@@ -33,5 +38,7 @@ module.exports = {
     CreateAllergyValidatorSchema: CreateAllergyValidatorSchema,
     UpdateAllergyValidatorSchema: UpdateAllergyValidatorSchema,
     CreateFamilyHistoryValidatorSchema: CreateFamilyHistoryValidatorSchema,
-    UpdateFamilyHistoryValidatorSchema: UpdateFamilyHistoryValidatorSchema
+    UpdateFamilyHistoryValidatorSchema: UpdateFamilyHistoryValidatorSchema,
+    CreateNotificationValidatorSchema: CreateNotificationValidatorSchema,
+    UpdateNotificationValidatorSchema: UpdateNotificationValidatorSchema
 }
