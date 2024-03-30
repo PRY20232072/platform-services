@@ -6,6 +6,7 @@ var familyHistoryRouter = require('./routes/familyHistoryRouter');
 var patientRouter = require('./routes/patientRouter');
 var practitionerRouter = require('./routes/practitionerRouter');
 var consentRouter = require('./routes/consentRouter');
+var notificationRouter = require('./routes/notificationRouter');
 const authMiddleware = require('./routes/middlewares/authMiddleware');
 const errorHandlerMiddleware = require('./routes/middlewares/errorHandlerMiddleware');
 require('dotenv').config();
@@ -32,5 +33,6 @@ app.use("/Patient", patientRouter);
 app.use("/Practitioner", practitionerRouter);
 app.use("/Consent", consentRouter);
 app.use("/FamilyHistory", familyHistoryRouter);
+app.use("/Notification", notificationRouter);
 
 app.use(errorHandlerMiddleware);
