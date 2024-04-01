@@ -81,6 +81,7 @@ class Constants {
     static ERROR_APPROVING_CONSENT = 'Error approving the consent';
     static ERROR_REVOKING_CONSENT = 'Error revoking the consent';
     static ERROR_FETCHING_CONSENT = 'Error fetching the consent';
+    static ERROR_CONSENT_NOT_FOUND = 'Consent not found';
     static ERROR_CONNECTING_DATABASE = 'Error connecting to the database:';
     static ERROR_FETCHING_NOTIFICATION_BY_ID_FROM_DATABASE = 'Error fetching notification by id from database';
     static ERROR_FETCHING_NOTIFICATION_LIST_FROM_DATABASE = 'Error fetching notification list from database';
@@ -100,6 +101,10 @@ class Constants {
     static NOTIFICATION_CREATED_SUCCESSFULLY = 'Notification created successfully';
     static NOTIFICATION_UPDATED_SUCCESSFULLY = 'Notification updated successfully';
     static NOTIFICATION_NOT_FOUND = 'Notification not found';
+    static CONSENT_CREATED_SUCCESSFULLY = 'Consent created successfully';
+    static CONSENT_REVOKE_SUCCESSFULLY = 'Consent revoked successfully';
+    static PATIENT_HAS_APPROVED_CONSENT_TO_REGISTER = 'Patient has approved the consent for register: ';
+    static PATIENT_HAS_REVOKED_CONSENT_TO_REGISTER = 'Patient has revoked the consent for register: ';
 
     // Crypto
     static CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY;

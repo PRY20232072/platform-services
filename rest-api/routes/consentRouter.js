@@ -8,26 +8,47 @@ const { asyncErrorHandler } = require('./utils/asyncErrorHandler');
 const client = new ConsentClient();
 
 router.get('/register/:register_id', asyncErrorHandler(async function (req, res) {
-    var register_id = req.params.register_id;
+    const register_id = req.params.register_id;
+    const current_user = req.current_user;
 
-    const response = await client.getConsentByRegisterId(register_id);
+    const response = await client.getConsentByRegisterId(register_id, current_user);
 
     res.send(response);
 }));
 
 router.get('/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
-    var practitioner_id = req.params.practitioner_id;
+    const practitioner_id = req.params.practitioner_id;
+    const current_user = req.current_user;
 
-    const response = await client.getConsentByPractitionerId(practitioner_id);
+    const response = await client.getConsentByPractitionerId(practitioner_id, current_user);
 
     res.send(response);
 }));
 
 router.get('/register/:register_id/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
-    var register_id = req.params.register_id;
-    var practitioner_id = req.params.practitioner_id;
+    const register_id = req.params.register_id;
+    const practitioner_id = req.params.practitioner_id;
+    const current_user = req.current_user;
 
-    const response = await client.getConsentByRegisterIdAndPractitionerId(register_id, practitioner_id);
+    const response = await client.getConsentByRegisterIdAndPractitionerId(register_id, practitioner_id, current_user);
+
+    res.send(response);
+}));
+
+router.get('/patient/:patient_id/active', asyncErrorHandler(async function (req, res) {
+    const patient_id = req.params.patient_id;
+    const current_user = req.current_user;
+
+    const response = await client.getActiveConsentListByPatientId(patient_id, current_user);
+
+    res.send(response);
+}));
+
+router.get('/patient/:patient_id/pending', asyncErrorHandler(async function (req, res) {
+    const patient_id = req.params.patient_id;
+    const current_user = req.current_user;
+
+    const response = await client.getPendingConsentListByPatientId(patient_id, current_user);
 
     res.send(response);
 }));
@@ -41,9 +62,10 @@ router.post('/', checkSchema(CreateConsentValidatorSchema), asyncErrorHandler(as
         });
     }
 
-    var payload = req.body.payload;
+    const payload = req.body.payload;
+    const current_user = req.current_user;
 
-    const response = await client.createConsent(payload);
+    const response = await client.createConsent(payload, current_user);
 
     res.send(response);
 }));
@@ -57,19 +79,21 @@ router.put('/register/:register_id/practitioner/:practitioner_id', checkSchema(A
         });
     }
 
-    var register_id = req.params.register_id;
-    var practitioner_id = req.params.practitioner_id;
+    const register_id = req.params.register_id;
+    const practitioner_id = req.params.practitioner_id;
+    const current_user = req.current_user;
 
-    const response = await client.approveConsent(register_id, practitioner_id);
+    const response = await client.approveConsent(register_id, practitioner_id, current_user);
 
     res.send(response);
 }));
 
 router.delete('/register/:register_id/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
-    var register_id = req.params.register_id;
-    var practitioner_id = req.params.practitioner_id;
+    const register_id = req.params.register_id;
+    const practitioner_id = req.params.practitioner_id;
+    const current_user = req.current_user;
 
-    const response = await client.revokeConsent(register_id, practitioner_id);
+    const response = await client.revokeConsent(register_id, practitioner_id, current_user);
 
     res.send(response);
 }));
