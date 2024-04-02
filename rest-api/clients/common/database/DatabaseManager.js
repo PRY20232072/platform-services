@@ -6,11 +6,12 @@ require('dotenv').config();
 
 class DatabaseManager {
     constructor() {
-        if (DatabaseManager.connection !== undefined) {
-            return DatabaseManager.connection;
+        if (DatabaseManager.instance) {
+            return DatabaseManager.instance;
         }
 
         this.connection = undefined;
+        DatabaseManager.instance = this;
     }
 
     async getConnection() {
@@ -47,7 +48,6 @@ class DatabaseManager {
                             rejectUnauthorized: false,
                         },
                     });
-
                 }
 
                 console.log(Constants.DATABASE_CONNECTION_ESTABLISHED, this.connection.options.host);

@@ -23,6 +23,7 @@ class NotificationHelper {
     }
 
     async parsePatientNotificationList(notifications) {
+        notifications = notifications.filter(notification => notification.practitioner_id !== null);
         return await Promise.all(notifications.map(async notification => {
             const response = await this.PractitionerRepository.getPractitionerById(notification.practitioner_id);
             const practitioner = response.data;
@@ -53,6 +54,7 @@ class NotificationHelper {
     }
 
     async parsePractitionerNotificationList(notifications) {
+        notifications = notifications.filter(notification => notification.patient_id !== null);
         return await Promise.all(notifications.map(async notification => {
             const response = await this.PatientRepository.getPatientById(notification.patient_id);
             const patient = response.data;

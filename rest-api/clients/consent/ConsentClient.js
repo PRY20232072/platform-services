@@ -115,13 +115,6 @@ class ConsentClient {
 
                 // approve consent
                 await this.approveConsent(payload['register_id'], payload['practitioner_id'], current_user);
-
-                // create notification to practitioner
-                await this.ConsentHelper.createNotificationToPractitioner(
-                    current_user.id,
-                    payload['practitioner_id'],
-                    Constants.PATIENT_HAS_APPROVED_CONSENT_TO_REGISTER + payload['register_id']
-                );
             }
 
             return new ResponseObject(Constants.CONSENT_CREATED_SUCCESSFULLY);

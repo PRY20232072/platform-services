@@ -31,7 +31,7 @@ class NotificationClient {
                 return new ResponseObject(await this.NotificationHelper.parsePatientNotification(notification));
             }
 
-            return new ResponseObject(notification);
+            return new ResponseObject(await this.NotificationHelper.parsePractitionerNotification(notification));
         } catch (error) {
             throw error;
         }
@@ -50,10 +50,10 @@ class NotificationClient {
             let notificationList = await this.NotificationRepository.getNotificationListByUserId(user_id);
 
             if (current_user.role === Constants.PATIENT) {
-                return new ResponseObject( await this.NotificationHelper.parsePatientNotificationList(notificationList));
+                return new ResponseObject(await this.NotificationHelper.parsePatientNotificationList(notificationList));
             }
 
-            return new ResponseObject(notificationList);
+            return new ResponseObject(await this.NotificationHelper.parsePractitionerNotificationList(notificationList));
         } catch (error) {
             throw error;
         }
@@ -75,7 +75,7 @@ class NotificationClient {
                 return new ResponseObject(await this.NotificationHelper.parsePatientNotificationList(notificationList));
             }
 
-            return new ResponseObject(notificationList);
+            return new ResponseObject(await this.NotificationHelper.parsePractitionerNotificationList(notificationList));
         } catch (error) {
             throw error;
         }
@@ -97,7 +97,7 @@ class NotificationClient {
                 return new ResponseObject(await this.NotificationHelper.parsePatientNotificationList(notificationList));
             }
 
-            return new ResponseObject(notificationList);
+            return new ResponseObject(await this.NotificationHelper.parsePractitionerNotificationList(notificationList));
         } catch (error) {
             throw error;
         }

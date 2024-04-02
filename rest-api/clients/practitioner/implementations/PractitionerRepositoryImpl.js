@@ -16,10 +16,10 @@ class PractitionerRepositoryImpl extends PractitionerRepositoryInterface {
     async getPractitionerList() {
         try {
             const address = this.PractitionerAddressHelper.getAddressByTPName();
-    
+
             var practitionerRegistryList = await this.PractitionerBlockchainHelper.getRegistryList(address);
             practitionerRegistryList = await this.PractitionerIPFSHelper.getIPFSDataOfRegistryList(practitionerRegistryList);
-    
+
             return practitionerRegistryList;
         } catch (error) {
             throw new CustomError(
@@ -32,10 +32,10 @@ class PractitionerRepositoryImpl extends PractitionerRepositoryInterface {
     async getPractitionerById(practitioner_id) {
         try {
             const address = this.PractitionerAddressHelper.getAddress(practitioner_id);
-    
+
             var practitionerRegistry = await this.PractitionerBlockchainHelper.getRegistry(address);
             practitionerRegistry = await this.PractitionerIPFSHelper.getIPFSDataOfRegistry(practitionerRegistry.data);
-    
+
             return practitionerRegistry;
         } catch (error) {
             throw new CustomError(
@@ -57,15 +57,15 @@ class PractitionerRepositoryImpl extends PractitionerRepositoryInterface {
     async createPractitioner(identifier, payload) {
         try {
             payload['practitioner_id'] = identifier;
-    
+
             // Send to IPFS
             payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
-    
+
             // Send to Blockchain
             const address = this.PractitionerAddressHelper.getAddress(identifier);
             payload['permissions'] = [Constants.PERMISSION_READ, Constants.PERMISSION_WRITE];
             payload['action'] = Constants.ACTION_CREATE;
-    
+
             return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
         } catch (error) {
             throw new CustomError(
@@ -78,14 +78,14 @@ class PractitionerRepositoryImpl extends PractitionerRepositoryInterface {
     async updatePractitioner(identifier, payload) {
         try {
             payload['practitioner_id'] = identifier;
-    
+
             // Send to IPFS
             payload = await this.PractitionerIPFSHelper.sentToIPFS(identifier, payload);
-    
+
             // Send to Blockchain
             const address = this.PractitionerAddressHelper.getAddress(identifier);
             payload['action'] = Constants.ACTION_UPDATE;
-    
+
             return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
         } catch (error) {
             throw new CustomError(
@@ -100,17 +100,17 @@ class PractitionerRepositoryImpl extends PractitionerRepositoryInterface {
             var payload = {};
             payload['practitioner_id'] = identifier;
             payload['action'] = Constants.ACTION_DELETE;
-    
+
             const address = this.PractitionerAddressHelper.getAddress(identifier);
             var registry = await this.PractitionerBlockchainHelper.getRegistry(address);
-    
+
             if (registry.error) {
                 return registry;
             }
-    
+
             registry = registry.data;
             await this.PractitionerIPFSHelper.ipfsClient.rm(registry.ipfs_hash);
-    
+
             return await this.PractitionerBlockchainHelper.wrap_and_send(payload, [address]);
         } catch (error) {
             throw new CustomError(
