@@ -30,7 +30,7 @@ class NotificationHelper {
 
             return {
                 id: notification.id,
-                userId: notification.user_id,
+                user_id: notification.user_id,
                 practitioner_name: practitioner.name_id,
                 register_id: notification.register_id,
                 register_type: notification.register_type,
@@ -61,7 +61,7 @@ class NotificationHelper {
 
             return {
                 id: notification.id,
-                userId: notification.user_id,
+                user_id: notification.user_id,
                 patient_name: patient.name_id,
                 message: notification.message,
                 created_at: notification.created_at,

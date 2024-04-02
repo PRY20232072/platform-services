@@ -143,8 +143,8 @@ class ConsentClient {
 
             // create notification to practitioner
             await this.ConsentHelper.createNotificationToPractitioner(
-                current_user.id,
                 payload['practitioner_id'],
+                current_user.id,
                 Constants.PATIENT_HAS_APPROVED_CONSENT_TO_REGISTER + payload['register_id']
             );
 
@@ -174,8 +174,8 @@ class ConsentClient {
 
             // create notification to practitioner
             await this.ConsentHelper.createNotificationToPractitioner(
-                current_user.id,
                 payload['practitioner_id'],
+                current_user.id,
                 Constants.PATIENT_HAS_REVOKED_CONSENT_TO_REGISTER + payload['register_id']
             );
 
