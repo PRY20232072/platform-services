@@ -3,6 +3,7 @@ const { Constants } = require('../Constants');
 const axios = require('axios');
 const { ResponseObject } = require('../ResponseObject');
 const { CustomError } = require('../errors/CustomError');
+const { response } = require('express');
 
 class InfuraIPFSClient {
     constructor() {
@@ -41,6 +42,47 @@ class InfuraIPFSClient {
             console.log(error);
             throw new CustomError(
                 Constants.ERROR_ADDING_TO_IPFS,
+                error.message,
+            );
+        }
+    }
+
+    async addFile(file) {
+        try {
+            var fd = new FormData();
+            fd.append('file', file.buffer, file.originalname);
+            const res = await this.instance.post('/add', fd);
+            return new ResponseObject(res.data.Hash);
+
+            // buffer to blob
+            // const blob = new Blob([file.buffer], { type: file.mimetype });
+            // const fd = new FormData();
+            // fd.append('file', blob, file.originalname);
+            // const res = await this.instance.post('/add', fd);
+            // return new ResponseObject(res.data.Hash);
+        }
+        catch (error) {
+            console.log(error);
+            throw new CustomError(
+                Constants.ERROR_ADDING_TO_IPFS,
+                error.message,
+            );
+        }
+    }
+
+    async getFile(hash) {
+        try {
+            const res = await this.instance.post('/cat', {}, {
+                params: {
+                    arg: hash
+                },
+                responseType: 'arraybuffer'
+            });
+            return new ResponseObject(res.data);
+        } catch (error) {
+            console.log(error);
+            throw new CustomError(
+                Constants.ERROR_RETRIEVING_FROM_IPFS,
                 error.message,
             );
         }

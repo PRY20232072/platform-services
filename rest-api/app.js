@@ -7,6 +7,7 @@ var patientRouter = require('./routes/patientRouter');
 var practitionerRouter = require('./routes/practitionerRouter');
 var consentRouter = require('./routes/consentRouter');
 var notificationRouter = require('./routes/notificationRouter');
+var filesRouter = require('./routes/filesRouter');
 const authMiddleware = require('./routes/middlewares/authMiddleware');
 const errorHandlerMiddleware = require('./routes/middlewares/errorHandlerMiddleware');
 require('dotenv').config();
@@ -14,6 +15,7 @@ require('dotenv').config();
 var app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(morgan('dev'));
 
@@ -34,5 +36,6 @@ app.use("/Practitioner", practitionerRouter);
 app.use("/Consent", consentRouter);
 app.use("/FamilyHistory", familyHistoryRouter);
 app.use("/Notification", notificationRouter);
+app.use("/Files", filesRouter);
 
 app.use(errorHandlerMiddleware);

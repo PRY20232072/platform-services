@@ -27,6 +27,31 @@ class IPFSClientStrategy {
         }
     }
 
+    async addFile(file) {
+        // Add the file to IPFS
+        try {
+            const response = await this.client.addFile(file);
+
+            // Encrypt the IPFS hash before returning it
+            // const encryptedIpfsHash = CryptoHelper.encrypt(response.data);
+
+            // Return the encrypted IPFS hash
+            // response.setData(encryptedIpfsHash);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getFile(hash) {
+        try {
+            const response = await this.client.getFile(hash);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async cat(hash) {
         // Decrypt the IPFS hash before retrieving the data
         // hash = CryptoHelper.decrypt(hash);
