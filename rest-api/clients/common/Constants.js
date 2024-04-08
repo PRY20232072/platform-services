@@ -88,6 +88,8 @@ class Constants {
     static ERROR_CREATING_NOTIFICATION_IN_DATABASE = 'Error creating notification in database';
     static ERROR_UPDATING_NOTIFICATION_IN_DATABASE = 'Error updating notification in database';
     static ERROR_DELETING_NOTIFICATION_IN_DATABASE = 'Error deleting notification in database';
+    static ERROR_UPLOADING_FILE = 'Error uploading file to IPFS';
+    static ERROR_FETCHING_FILE_FROM_IPFS = 'Error fetching file from IPFS';
     static IPFS_HASH_NOT_FOUND = 'The IPFS hash is not found';
     static ABSTRACT_METHOD_ERROR_MSG = 'Abstract method must be implemented';
 
@@ -105,6 +107,8 @@ class Constants {
     static CONSENT_REVOKE_SUCCESSFULLY = 'Consent revoked successfully';
     static PATIENT_HAS_APPROVED_CONSENT_TO_REGISTER = 'Patient has approved the consent for register: ';
     static PATIENT_HAS_REVOKED_CONSENT_TO_REGISTER = 'Patient has revoked the consent for register: ';
+    static FILE_UPLOADED_SUCCESSFULLY = 'File uploaded successfully';
+    static FILE_ALREADY_EXISTS = 'The file already exists';
 
     // Crypto
     static CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY;

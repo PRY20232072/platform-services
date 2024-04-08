@@ -16,7 +16,10 @@ var app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+    //https://stackoverflow.com/questions/64614350/how-to-set-custom-headers-on-express-and-receive-it-on-axios
+    exposedHeaders: ["file-type"]
+}));
 app.use(morgan('dev'));
 
 var port = process.env.PORT || 80;

@@ -1,3 +1,5 @@
+const { Constants } = require("../../common/Constants");
+const { CustomError } = require("../../common/errors/CustomError");
 const { CommonIPFSHelper } = require("../../common/helpers/CommonIPFSHelper");
 
 class FilesIPFSHelper extends CommonIPFSHelper {
@@ -10,7 +12,7 @@ class FilesIPFSHelper extends CommonIPFSHelper {
             const response = await this.ipfsClient.addFile(file);
             return response;
         } catch (error) {
-            throw error;
+            throw new CustomError(Constants.ERROR_UPLOADING_FILE, error.message);
         }
     }
 
@@ -19,7 +21,7 @@ class FilesIPFSHelper extends CommonIPFSHelper {
             const response = await this.ipfsClient.getFile(hash);
             return response;
         } catch (error) {
-            throw error;
+            throw new CustomError(Constants.ERROR_FETCHING_FILE_FROM_IPFS, error.message);
         }
     }
 }

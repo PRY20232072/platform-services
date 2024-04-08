@@ -52,14 +52,7 @@ class InfuraIPFSClient {
             var fd = new FormData();
             fd.append('file', file.buffer, file.originalname);
             const res = await this.instance.post('/add', fd);
-            return new ResponseObject(res.data.Hash);
-
-            // buffer to blob
-            // const blob = new Blob([file.buffer], { type: file.mimetype });
-            // const fd = new FormData();
-            // fd.append('file', blob, file.originalname);
-            // const res = await this.instance.post('/add', fd);
-            // return new ResponseObject(res.data.Hash);
+            return res.data.Hash;
         }
         catch (error) {
             console.log(error);

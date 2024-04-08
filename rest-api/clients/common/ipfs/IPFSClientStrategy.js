@@ -31,12 +31,6 @@ class IPFSClientStrategy {
         // Add the file to IPFS
         try {
             const response = await this.client.addFile(file);
-
-            // Encrypt the IPFS hash before returning it
-            // const encryptedIpfsHash = CryptoHelper.encrypt(response.data);
-
-            // Return the encrypted IPFS hash
-            // response.setData(encryptedIpfsHash);
             return response;
         } catch (error) {
             throw error;
@@ -54,7 +48,6 @@ class IPFSClientStrategy {
 
     async cat(hash) {
         // Decrypt the IPFS hash before retrieving the data
-        // hash = CryptoHelper.decrypt(hash);
 
         try {
             const response = await this.client.cat(hash);
@@ -74,7 +67,7 @@ class IPFSClientStrategy {
         // Decrypt the IPFS hash before removing it
         try {
             hash = CryptoHelper.decrypt(hash);
-    
+
             return await this.client.rm(hash);
         } catch (error) {
             throw error;
