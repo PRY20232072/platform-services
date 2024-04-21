@@ -8,7 +8,7 @@ const { FamilyHistoryRepositoryImpl } = require('../family/implementations/Famil
 const { ResponseObject } = require('../common/ResponseObject');
 
 class FilesClient {
-    constructor() { 
+    constructor() {
         this.FilesIPFSHelper = new FilesIPFSHelper();
         this.ConsentValidatorHelper = new ConsentValidatorHelper();
         this.AllergyRepository = new AllergyRepositoryImpl();
@@ -20,7 +20,7 @@ class FilesClient {
             if (current_user.role === Constants.PATIENT) {
                 throw new UnauthorizedPatientError();
             }
-            
+
             // Validate access
             const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(payload.register_id, current_user, Constants.PERMISSION_READ, payload.register_type);
 
