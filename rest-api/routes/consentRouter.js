@@ -7,30 +7,11 @@ const { asyncErrorHandler } = require('./utils/asyncErrorHandler');
 
 const client = new ConsentClient();
 
-router.get('/register/:register_id', asyncErrorHandler(async function (req, res) {
-    const register_id = req.params.register_id;
-    const current_user = req.current_user;
-
-    const response = await client.getConsentByRegisterId(register_id, current_user);
-
-    res.send(response);
-}));
-
 router.get('/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
     const practitioner_id = req.params.practitioner_id;
     const current_user = req.current_user;
 
-    const response = await client.getConsentByPractitionerId(practitioner_id, current_user);
-
-    res.send(response);
-}));
-
-router.get('/register/:register_id/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
-    const register_id = req.params.register_id;
-    const practitioner_id = req.params.practitioner_id;
-    const current_user = req.current_user;
-
-    const response = await client.getConsentByRegisterIdAndPractitionerId(register_id, practitioner_id, current_user);
+    const response = await client.getConsentByUserId(practitioner_id, current_user);
 
     res.send(response);
 }));
@@ -70,7 +51,7 @@ router.post('/', checkSchema(CreateConsentValidatorSchema), asyncErrorHandler(as
     res.send(response);
 }));
 
-router.put('/register/:register_id/practitioner/:practitioner_id', checkSchema(ApproveConsentValidatorSchema), asyncErrorHandler(async function (req, res) {
+router.put('/patient/:patient_id/practitioner/:practitioner_id', checkSchema(ApproveConsentValidatorSchema), asyncErrorHandler(async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -79,21 +60,29 @@ router.put('/register/:register_id/practitioner/:practitioner_id', checkSchema(A
         });
     }
 
-    const register_id = req.params.register_id;
+    const patient_id = req.params.patient_id;
     const practitioner_id = req.params.practitioner_id;
     const current_user = req.current_user;
 
-    const response = await client.approveConsent(register_id, practitioner_id, current_user);
+    const response = await client.approveConsent(patient_id, practitioner_id, current_user);
 
     res.send(response);
 }));
 
-router.delete('/register/:register_id/practitioner/:practitioner_id', asyncErrorHandler(async function (req, res) {
-    const register_id = req.params.register_id;
+router.delete('/patient/:patient_id/practitioner/:practitioner_id', checkSchema(ApproveConsentValidatorSchema), asyncErrorHandler(async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            error: true,
+            errors: errors.array()
+        });
+    }   
+
+    const patient_id = req.params.patient_id;
     const practitioner_id = req.params.practitioner_id;
     const current_user = req.current_user;
 
-    const response = await client.revokeConsent(register_id, practitioner_id, current_user);
+    const response = await client.revokeConsent(patient_id, practitioner_id, current_user);
 
     res.send(response);
 }));

@@ -16,24 +16,24 @@ class ConsentAddressHelper extends CommonAddressHelper {
         return pref + this.TP_CODE + addr;
     }
 
-    getAddresses(register_id, practitioner_id) {
-        var registerPractitionerAddr = this.getRegisterPractitionerAddress(register_id, practitioner_id);
-        var practitionerRegisterAddr = this.getPractitionerRegisterAddress(practitioner_id, register_id);
-        return [registerPractitionerAddr, practitionerRegisterAddr];
+    getAddresses(patient_id, practitioner_id) {
+        var patientPractitionerAddr = this.getPatientPractitionerAddress(patient_id, practitioner_id);
+        var practitionerpatientAddr = this.getPractitionerPatientAddress(practitioner_id, patient_id);
+        return [patientPractitionerAddr, practitionerpatientAddr];
     }
 
-    getRegisterPractitionerAddress(register_id, practitioner_id) {
+    getPatientPractitionerAddress(patient_id, practitioner_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
-        var registerAddr = this.hash(register_id).substring(0, 22);
+        var patientAddr = this.hash(patient_id).substring(0, 22);
         var practitioner = this.hash(practitioner_id).substring(0, 40);
-        return pref + this.TP_CODE + registerAddr + practitioner;
+        return pref + this.TP_CODE + patientAddr + practitioner;
     }
 
-    getPractitionerRegisterAddress(practitioner_id, register_id) {
+    getPractitionerPatientAddress(practitioner_id, patient_id) {
         var pref = this.hash(this.TP_NAME).substring(0, 6);
         var practitionerAddr = this.hash(practitioner_id).substring(0, 22);
-        var registerAddr = this.hash(register_id).substring(0, 40);
-        return pref + this.TP_CODE + practitionerAddr + registerAddr;
+        var patientAddr = this.hash(patient_id).substring(0, 40);
+        return pref + this.TP_CODE + practitionerAddr + patientAddr;
     }
 }
 

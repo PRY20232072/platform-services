@@ -5,13 +5,13 @@ const CreateConsentValidatorSchema = {
             errorMessage: 'payload is required',
         }
     },
-    'payload.register_id': {
+    'payload.patient_id': {
         in: ['body'],
         exists: {
-            errorMessage: 'register_id is required',
+            errorMessage: 'patient_id is required',
         },
         notEmpty: {
-            errorMessage: 'register_id can not be empty'
+            errorMessage: 'patient_id can not be empty'
         }
     },
     'payload.practitioner_id': {
@@ -23,26 +23,28 @@ const CreateConsentValidatorSchema = {
             errorMessage: 'practitioner_id can not be empty'
         }
     },
-    'payload.register_type': {
-        in: ['body'],
+}
+
+const ApproveConsentValidatorSchema = {
+    patient_id: {
+        in: ['params', 'query'],
         exists: {
-            errorMessage: 'register_type is required',
-        },
-        isIn: {
-            options: [['ALLERGY', 'FAMILY_HISTORY']]
-        },
-        errorMessage: "Register type is not valid",
-        notEmpty: {
-            errorMessage: 'register_type can not be empty'
+            errorMessage: "patient_id is required"
+        }
+    },
+    practitioner_id: {
+        in: ['params', 'query'],
+        exists: {
+            errorMessage: "Practitioner id is required"
         }
     }
 }
 
-const ApproveConsentValidatorSchema = {
-    register_id: {
+const RevokeConsentValidatorSchema = {
+    patient_id: {
         in: ['params', 'query'],
         exists: {
-            errorMessage: "register_id is required"
+            errorMessage: "patient_id is required"
         }
     },
     practitioner_id: {
@@ -55,5 +57,6 @@ const ApproveConsentValidatorSchema = {
 
 module.exports = {
     CreateConsentValidatorSchema,
-    ApproveConsentValidatorSchema
+    ApproveConsentValidatorSchema,
+    RevokeConsentValidatorSchema
 }

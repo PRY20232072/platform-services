@@ -29,11 +29,11 @@ class ConsentHelper {
                 practitioner = practitioner.data;
 
                 return {
-                    id: consent.register_id + consent.practitioner_id,
-                    register_id: consent.register_id,
-                    register_type: consent.register_type,
+                    id: consent.patient_id + consent.practitioner_id,
+                    patient_id: consent.patient_id,
                     practitioner_id: consent.practitioner_id,
                     practitioner_name: practitioner.name_id,
+                    state: consent.state,
                 }
             }));
         } catch (error) {
