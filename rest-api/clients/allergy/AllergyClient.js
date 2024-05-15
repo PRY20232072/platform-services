@@ -12,39 +12,22 @@ class AllergyClient {
         this.AllergyRepository = new AllergyRepositoryImpl();
     }
 
-    async getAllergyList(current_user) {
+    async getAllergyById(allergy_id, patient_id, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
-            const registryList = await this.AllergyRepository.getAllergyList();
-
-            if (registryList.data == undefined) {
-                return registryList;
-            }
-
-            return this.AllergyHelper.transformRegistryList(registryList);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getAllergyById(allergy_id, current_user) {
-        try {
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(allergy_id, current_user, Constants.PERMISSION_READ, Constants.ALLERGY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
+            const response = await this.AllergyRepository.getAllergyById(allergy_id);
+            const registry = response.data[0];
+            if (!registry || registry.patient_id !== patient_id) {
+                if (current_user.role === Constants.PRACTITIONER) {
                     throw new UnauthorizedPractitionerError();
+                } else {
+                    throw new UnauthorizedPatientError();
                 }
             }
 
-            const registryList = await this.AllergyRepository.getAllergyById(allergy_id);
-
-            return registryList;
+            response.data = registry;
+            return response;
         } catch (error) {
             throw error;
         }
@@ -52,32 +35,11 @@ class AllergyClient {
 
     async getAllergyListByPatientId(patient_id, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             const registryList = await this.AllergyRepository.getAllergyListByPatientId(patient_id);
 
             return this.AllergyHelper.transformRegistryList(registryList);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getAllergyByIdAndPatientId(allergy_id, patient_id, current_user) {
-        try {
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(allergy_id, current_user, Constants.PERMISSION_READ, Constants.ALLERGY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
-            }
-            const registryList = await this.AllergyRepository.getAllergyByIdAndPatientId(allergy_id, patient_id);
-
-            return registryList;
         } catch (error) {
             throw error;
         }
@@ -88,6 +50,9 @@ class AllergyClient {
             if (current_user.role === Constants.PATIENT) {
                 throw new UnauthorizedPatientError();
             }
+
+            const patient_id = payload.patient_id;
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             const createdResponse = await this.AllergyRepository.createAllergy(allergy_id, payload);
 
@@ -104,15 +69,8 @@ class AllergyClient {
                 throw new UnauthorizedPatientError();
             }
 
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(allergy_id, current_user, Constants.PERMISSION_WRITE, Constants.ALLERGY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
-            }
+            const patient_id = payload.patient_id;
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             const updatedResponse = await this.AllergyRepository.updateAllergy(allergy_id, payload);
 
@@ -124,15 +82,11 @@ class AllergyClient {
 
     async deleteAllergy(allergy_id, patient_id, current_user) {
         try {
-            var accessControlResponse = await this.ConsentValidatorHelper.validateAccess(allergy_id, current_user, Constants.PERMISSION_DELETE, Constants.ALLERGY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
+            if (current_user.role === Constants.PRACTITIONER) {
+                throw new UnauthorizedPractitionerError();
             }
+
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             const deletedResponse = await this.AllergyRepository.deleteAllergy(allergy_id, patient_id);
 
