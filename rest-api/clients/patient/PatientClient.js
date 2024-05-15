@@ -3,11 +3,13 @@ const { UnauthorizedPatientError } = require('../common/errors/UnauthorizedPatie
 const { UnauthorizedPractitionerError } = require('../common/errors/UnauthorizedPractitionerError');
 const { PatientHelper } = require('./helpers/PatientHelper');
 const { PatientRepositoryImpl } = require('./implementations/PatientRepositoryImpl');
+const { ConsentValidatorHelper } = require("../common/helpers/ConsentValidatorHelper");
 
 class PatientClient {
     constructor() {
         this.PatientHelper = new PatientHelper();
         this.PatientRepository = new PatientRepositoryImpl();
+        this.ConsentValidatorHelper = new ConsentValidatorHelper();
     }
 
     async getPatientList(current_user) {
@@ -26,9 +28,7 @@ class PatientClient {
 
     async getPatientById(patient_id, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
     
             const patientRegistry = await this.PatientRepository.getPatientById(patient_id);
     
@@ -58,14 +58,8 @@ class PatientClient {
 
     async updatePatient(identifier, payload, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT && current_user.id !== identifier) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, identifier);
 
-            if (current_user.role == Constants.PRACTITIONER) {
-                throw new UnauthorizedPractitionerError();
-            }
-    
             const updateResponse = await this.PatientRepository.updatePatient(identifier, payload);
     
             return updateResponse;
