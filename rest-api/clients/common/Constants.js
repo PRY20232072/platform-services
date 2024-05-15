@@ -26,6 +26,11 @@ class Constants {
     static FAMILY_HISTORY_REGISTRY_TP_CODE = '05';
     static FAMILY_HISTORY_REGISTRY_TP_VERSION = '1.0';
 
+    //MEDICAL ATTENTION REGISTRY
+    static ATTENTION_REGISTRY_TP_NAME = 'attention-processor';
+    static ATTENTION_REGISTRY_TP_CODE = '06';
+    static ATTENTION_REGISTRY_TP_VERSION = '1.0';
+
     // REGISTRY TYPES
     static ALLERGY = 'ALLERGY';
     static FAMILY_HISTORY = 'FAMILY_HISTORY';

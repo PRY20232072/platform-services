@@ -37,6 +37,13 @@ services:
       - validator
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
+  attention-tp:
+    image: sebastianbran/attention-processor:latest
+    container_name: attention-tp
+    depends_on:
+      - validator
+    entrypoint: python3 -u main.py -vv -C tcp://validator:4004
+
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:chime
     container_name: sawtooth-settings-tp
