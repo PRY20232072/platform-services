@@ -116,6 +116,14 @@ items:
               - -c
               - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
 
+          - name: attention-tp
+            image: sebastianbran/attention-processor:latest
+            command: 
+              - bash
+            args:
+              - -c
+              - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
           - name: sawtooth-validator
             image: hyperledger/sawtooth-validator:chime
             ports:
@@ -294,6 +302,14 @@ items:
             args:
               - -c
               - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+          
+          - name: attention-tp
+            image: sebastianbran/attention-processor:latest
+            command: 
+              - bash
+            args:
+              - -c
+              - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
 
           - name: sawtooth-validator
             image: hyperledger/sawtooth-validator:chime
@@ -457,6 +473,14 @@ items:
 
           - name: practitioner-tp
             image: sebastianbran/practitioner-processor:latest
+            command: 
+              - bash
+            args:
+              - -c
+              - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+          - name: attention-tp
+            image: sebastianbran/attention-processor:latest
             command: 
               - bash
             args:
@@ -627,6 +651,14 @@ items:
 
           - name: practitioner-tp
             image: sebastianbran/practitioner-processor:latest
+            command: 
+              - bash
+            args:
+              - -c
+              - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
+          - name: attention-tp
+            image: sebastianbran/attention-processor:latest
             command: 
               - bash
             args:
@@ -804,6 +836,14 @@ items:
               - -c
               - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
 
+          - name: attention-tp
+            image: sebastianbran/attention-processor:latest
+            command: 
+              - bash
+            args:
+              - -c
+              - "python3 -u main.py -vv -C tcp://$HOSTNAME:4004"
+
           - name: sawtooth-validator
             image: hyperledger/sawtooth-validator:chime
             ports:
@@ -876,3 +916,42 @@ items:
         protocol: TCP
         port: 8800
         targetPort: 8800
+
+---
+# Deployment para la aplicación Node.js (for development)
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nodejs-app
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: nodejs-app
+#   template:
+#     metadata:
+#       labels:
+#         app: nodejs-app
+#     spec:
+#       containers:
+#       - name: nodejs-app
+#         image: sebastianbran/platform-rest-api-test:latest  # Reemplazar con tu imagen real
+#         ports:
+#         - containerPort: 80
+#         env:
+#         - name: SAWTOOTH_REST_API_URL
+#           value: http://$(SAWTOOTH_0_SERVICE_HOST):8008
+        
+---
+# Service para exponer la aplicación Node.js (for development)
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nodejs-app-service
+# spec:
+#   type: LoadBalancer
+#   selector:
+#     app: nodejs-app
+#   ports:
+#    - port: 80
+#      targetPort: 80
