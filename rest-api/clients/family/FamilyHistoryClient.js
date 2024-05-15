@@ -3,6 +3,7 @@ const { UnauthorizedPatientError } = require('../common/errors/UnauthorizedPatie
 const { FamilyHistoryHelper } = require('./helpers/FamilyHistoryHelper');
 const { ConsentValidatorHelper } = require("../common/helpers/ConsentValidatorHelper");
 const { FamilyHistoryRepositoryImpl } = require('./implementations/FamilyHistoryRepositoryImpl');
+const { UnauthorizedPractitionerError } = require('../common/errors/UnauthorizedPractitionerError');
 
 class FamilyHistoryClient {
     constructor() {
@@ -11,39 +12,22 @@ class FamilyHistoryClient {
         this.FamilyHistoryRepository = new FamilyHistoryRepositoryImpl();
     }
 
-    async getFamilyHistoryList(current_user) {
+    async getFamilyHistoryById(familyHistory_id, patient_id, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
-            const registryList = await this.FamilyHistoryRepository.getFamilyHistoryList();
-
-            if (registryList.data == undefined) {
-                return registryList;
-            }
-
-            return this.FamilyHistoryHelper.transformRegistryList(registryList);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getFamilyHistoryById(familyHistory_id, current_user) {
-        try {
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
+            const response = await this.FamilyHistoryRepository.getFamilyHistoryById(familyHistory_id);
+            const registry = response.data[0];
+            if (!registry || registry.patient_id !== patient_id) {
+                if (current_user.role === Constants.PRACTITIONER) {
                     throw new UnauthorizedPractitionerError();
+                } else {
+                    throw new UnauthorizedPatientError();
                 }
             }
 
-            const registryList = await this.FamilyHistoryRepository.getFamilyHistoryById(familyHistory_id);
-
-            return registryList;
+            response.data = registry;
+            return response;
         } catch (error) {
             throw error;
         }
@@ -51,37 +35,11 @@ class FamilyHistoryClient {
 
     async getFamilyHistoryByPatientId(patient_id, current_user) {
         try {
-            if (current_user.role === Constants.PATIENT && current_user.id !== patient_id) {
-                throw new UnauthorizedPatientError();
-            }
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             const registryList = await this.FamilyHistoryRepository.getFamilyHistoryListByPatientId(patient_id);
 
-            if (registryList.error || registryList.data == undefined) {
-                return registryList;
-            }
-
             return this.FamilyHistoryHelper.transformRegistryList(registryList);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getFamilyHistoryByIdAndPatient(familyHistory_id, patient_id, current_user) {
-        try {
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_READ, Constants.FAMILY_HISTORY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
-            }
-
-            const registryList = await this.FamilyHistoryRepository.getFamilyHistoryByIdAndPatientId(familyHistory_id, patient_id);
-
-            return registryList;
         } catch (error) {
             throw error;
         }
@@ -92,6 +50,9 @@ class FamilyHistoryClient {
             if (current_user.role === Constants.PATIENT) {
                 throw new UnauthorizedPatientError();
             }
+
+            const patient_id = payload.patient_id;
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             return await this.FamilyHistoryRepository.createFamilyHistory(familyHistory_id, payload);
         } catch (error) {
@@ -105,15 +66,8 @@ class FamilyHistoryClient {
                 throw new UnauthorizedPatientError();
             }
 
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_WRITE, Constants.FAMILY_HISTORY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
-            }
+            const patient_id = payload.patient_id;
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             return await this.FamilyHistoryRepository.updateFamilyHistory(familyHistory_id, payload);
         } catch (error) {
@@ -123,15 +77,11 @@ class FamilyHistoryClient {
 
     async deleteFamilyHistory(familyHistory_id, patient_id, current_user) {
         try {
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(familyHistory_id, current_user, Constants.PERMISSION_DELETE, Constants.FAMILY_HISTORY);
-
-            if (!accessControlResponse) {
-                if (current_user.role === Constants.PATIENT) {
-                    throw new UnauthorizedPatientError();
-                } else {
-                    throw new UnauthorizedPractitionerError();
-                }
+            if (current_user.role === Constants.PRACTITIONER) {
+                throw new UnauthorizedPractitionerError();
             }
+
+            await this.ConsentValidatorHelper.validateAccess(current_user, patient_id);
 
             return await this.FamilyHistoryRepository.deleteFamilyHistory(familyHistory_id, patient_id);
         } catch (error) {
