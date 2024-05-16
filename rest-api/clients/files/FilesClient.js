@@ -5,6 +5,7 @@ const { UnauthorizedPatientError } = require('../common/errors/UnauthorizedPatie
 const { UnauthorizedPractitionerError } = require('../common/errors/UnauthorizedPractitionerError');
 const { AllergyRepositoryImpl } = require('../allergy/implementations/AllergyRepositoryImpl');
 const { FamilyHistoryRepositoryImpl } = require('../family/implementations/FamilyHistoryRepositoryImpl');
+const { PatientRepositoryImpl } = require('../patient/implementations/PatientRepositoryImpl');
 const { ResponseObject } = require('../common/ResponseObject');
 
 class FilesClient {
@@ -13,6 +14,7 @@ class FilesClient {
         this.ConsentValidatorHelper = new ConsentValidatorHelper();
         this.AllergyRepository = new AllergyRepositoryImpl();
         this.FamilyHistoryRepository = new FamilyHistoryRepositoryImpl();
+        this.PatientRepository = new PatientRepositoryImpl();
     }
 
     async uploadFile(file, payload, current_user) {
@@ -22,36 +24,27 @@ class FilesClient {
             }
 
             // Validate access
-            const accessControlResponse = await this.ConsentValidatorHelper.validateAccess(payload.register_id, current_user, Constants.PERMISSION_READ, payload.register_type);
+            await this.ConsentValidatorHelper.validateAccess(current_user, payload.patient_id);
 
-            if (!accessControlResponse) {
-                throw new UnauthorizedPractitionerError();
-            }
-
+            // Upload the file to IPFS
             const hash = await this.FilesIPFSHelper.uploadFile(file);
 
-            let register = null;
+            // Get patient
+            const patient = await this.PatientRepository.getPatientById(payload.patient_id);
 
-            // Get the register
-            if (payload.register_type === Constants.ALLERGY) {
-                register = (await this.AllergyRepository.getAllergyById(payload.register_id)).data[0];
-            } else {
-                register = (await this.FamilyHistoryRepository.getFamilyHistoryById(payload.register_id)).data[0];
-            }
-
-            // If the register does not have files, create an empty array
-            if (register.files === undefined || register.files === null) {
-                register.files = [];
+            // If the patient does not have files, create an empty array
+            if (patient.files === undefined || patient.files === null) {
+                patient.files = [];
             } else {
                 // Check if the file already exists
-                const fileExists = register.files.find(file => file.hash === hash);
+                const fileExists = patient.files.find(file => file.hash === hash);
                 if (fileExists) {
                     return new ResponseObject(Constants.FILE_ALREADY_EXISTS);
                 }
             }
 
-            // Add the new file to the register
-            register.files.push({
+            // Add the new file to the patient
+            patient.files.push({
                 hash: hash,
                 file_name: payload.file_name,
                 file_type: payload.file_type,
@@ -60,12 +53,8 @@ class FilesClient {
                 practitioner_name: current_user.name
             });
 
-            // Update the register
-            if (payload.register_type === Constants.ALLERGY) {
-                await this.AllergyRepository.updateAllergy(payload.register_id, register);
-            } else {
-                await this.FamilyHistoryRepository.updateFamilyHistory(payload.register_id, register);
-            }
+            // Update the patient
+            await this.PatientRepository.updatePatient(payload.patient_id, patient);
 
             return new ResponseObject(Constants.FILE_UPLOADED_SUCCESSFULLY);
         } catch (error) {

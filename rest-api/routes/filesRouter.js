@@ -20,14 +20,12 @@ router.post('/upload', upload.single('file'), asyncErrorHandler(async function (
     const created_date = req.query.created_date;
     const file_name = req.query.file_name;
     const file_type = req.query.file_type;
-    const register_id = req.query.register_id;
-    const register_type = req.query.register_type;
+    const patient_id = req.query.patient_id;
     const payload = {
         created_date: created_date,
         file_name: file_name,
         file_type: file_type,
-        register_id: register_id,
-        register_type: register_type
+        patient_id: patient_id
     };
     const current_user = req.current_user;
 
