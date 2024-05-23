@@ -110,7 +110,8 @@ class Constants {
     static NOTIFICATION_NOT_FOUND = 'Notification not found';
     static CONSENT_CREATED_SUCCESSFULLY = 'Consent created successfully';
     static CONSENT_REVOKE_SUCCESSFULLY = 'Consent revoked successfully';
-    static PATIENT_APPROVED_EHR_ACCESS = 'Patient approved EHR access: ';
+    static PATIENT_APPROVED_EHR_ACCESS = 'Acceso al EHR aprobado por el paciente: ';
+    static PATIENT_REVOKED_EHR_ACCESS = 'Acceso al EHR revocado por el paciente: ';
     static PATIENT_HAS_APPROVED_CONSENT_TO_REGISTER = 'Patient has approved the consent for register: ';
     static PATIENT_HAS_REVOKED_CONSENT_TO_REGISTER = 'Patient has revoked the consent for register: ';
     static FILE_UPLOADED_SUCCESSFULLY = 'File uploaded successfully';

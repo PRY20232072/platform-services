@@ -93,9 +93,8 @@ class ConsentClient {
             await this.ConsentHelper.createNotificationToPractitioner(
                 practitioner_id,
                 patient_id,
-                Constants.PATIENT_APPROVED_EHR_ACCESS + current_user.name
+                Constants.PATIENT_APPROVED_EHR_ACCESS + current_user.name + '. Correo: '+ current_user.email,
             );
-
             return new ResponseObject(Constants.CONSENT_CREATED_SUCCESSFULLY);
         } catch (error) {
             throw new CustomError(
@@ -124,7 +123,7 @@ class ConsentClient {
             await this.ConsentHelper.createNotificationToPractitioner(
                 practitioner_id,
                 patient_id,
-                Constants.PATIENT_APPROVED_EHR_ACCESS + current_user.name
+                Constants.PATIENT_REVOKED_EHR_ACCESS + current_user.name + '. Correo: '+current_user.email
             );
 
             return new ResponseObject(Constants.CONSENT_REVOKE_SUCCESSFULLY);

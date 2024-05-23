@@ -26,15 +26,8 @@ router.get('/patient/:patient_id', asyncErrorHandler(async function (req, res) {
     res.send(response);
 }));
 
-router.post('/', checkSchema(CreateAllergyValidatorSchema), asyncErrorHandler(async function (req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            error: true,
-            errors: errors.array()
-        });
-    }
-
+router.post('/', asyncErrorHandler(async function (req, res) {
+    
     const identifier = req.body.identifier;
     const payload = req.body.payload;
     const current_user = req.current_user;
@@ -44,14 +37,8 @@ router.post('/', checkSchema(CreateAllergyValidatorSchema), asyncErrorHandler(as
     res.send(response);
 }));
 
-router.put('/:identifier', checkSchema(UpdateAllergyValidatorSchema), asyncErrorHandler(async function (req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            error: true,
-            errors: errors.array()
-        });
-    }
+router.put('/:identifier' , asyncErrorHandler(async function (req, res) {
+     
 
     const identifier = req.params.identifier;
     const payload = req.body.payload;

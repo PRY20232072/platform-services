@@ -9,7 +9,8 @@ function authMiddleware(req, res, next) {
                 const current_user = {
                     id: decodedToken.oid,
                     role: decodedToken.extension_UserRole,
-                    name: decodedToken.given_name + ' ' + decodedToken.family_name
+                    name: decodedToken.given_name,
+                    email: decodedToken.emails[0],
                 }
 
                 req.decodedToken = decodedToken;
