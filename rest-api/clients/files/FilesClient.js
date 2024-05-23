@@ -30,7 +30,8 @@ class FilesClient {
             const hash = await this.FilesIPFSHelper.uploadFile(file);
 
             // Get patient
-            const patient = await this.PatientRepository.getPatientById(payload.patient_id);
+            const getPatientResponse = await this.PatientRepository.getPatientById(payload.patient_id);
+            const patient = getPatientResponse.data;
 
             // If the patient does not have files, create an empty array
             if (patient.files === undefined || patient.files === null) {
