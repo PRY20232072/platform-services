@@ -17,7 +17,7 @@ services:
     entrypoint: python3 -u main.py -vv -C tcp://validator:4004
 
   consent-tp:
-    image: sebastianbran/consent-processor:latest
+    image: sebastianbran/consent-processor:v2
     container_name: consent-tp
     depends_on:
       - validator
