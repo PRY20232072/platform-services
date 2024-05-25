@@ -17,6 +17,7 @@ class AttentionHelper {
                     typeOfAttention: registry.typeOfAttention,
                     nameOfConsultation: registry.nameOfConsultation,
                     practitioner_name: practitioner.name_id,
+                    practitioner_cmp: practitioner.cmpCode,
                     recorded_date: registry.recorded_date,
                 }
             }));

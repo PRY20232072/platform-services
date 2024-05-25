@@ -24,6 +24,15 @@ const CreatePatientValidatorSchema = {
             errorMessage: 'name_id can not be empty'
         }
     },
+    'payload.last_name': {
+        in: ['body'],
+        exists: {
+            errorMessage: "last_name is required"
+        },
+        notEmpty: {
+            errorMessage: 'last_name can not be empty'
+        }
+    },
     'payload.gender': {
         in: ['body'],
         errorMessage: "gender is not valid",
@@ -144,15 +153,7 @@ const CreatePatientValidatorSchema = {
             errorMessage: 'province can not be empty'
         }
     },
-    'payload.address.postal_code': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'postal_code is required',
-        },
-        notEmpty: {
-            errorMessage: 'postal_code can not be empty'
-        }
-    },
+  
 }
 
 const UpdatePatientValidatorSchema = {
@@ -175,6 +176,15 @@ const UpdatePatientValidatorSchema = {
         },
         notEmpty: {
             errorMessage: 'name_id can not be empty'
+        }
+    },
+    'payload.last_name': {
+        in: ['body'],
+        exists: {
+            errorMessage: "last_name is required"
+        },
+        notEmpty: {
+            errorMessage: 'last_name can not be empty'
         }
     },
     'payload.gender': {
@@ -297,15 +307,7 @@ const UpdatePatientValidatorSchema = {
             errorMessage: 'province can not be empty'
         }
     },
-    'payload.address.postal_code': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'postal_code is required',
-        },
-        notEmpty: {
-            errorMessage: 'postal_code can not be empty'
-        }
-    },
+     
 }
 // END PATIENTS VALIDATOR SCHEMAS
 

@@ -21,6 +21,24 @@ const CreatePractitionerValidatorSchema = {
             errorMessage: 'name_id can not be empty'
         }
     },
+    'payload.last_name': {
+        in: ['body'],
+        exists: {
+            errorMessage: "last_name is required"
+        },
+        notEmpty: {
+            errorMessage: 'last_name can not be empty'
+        }
+    },
+    'payload.cmpCode': {
+        in: ['body'],
+        exists: {
+            errorMessage: "cmpCode is required"
+        },
+        notEmpty: {
+            errorMessage: 'cmpCode can not be empty'
+        }
+    },
     'payload.gender': {
         in: ['body'],
         exists: {
@@ -134,15 +152,8 @@ const CreatePractitionerValidatorSchema = {
             errorMessage: 'province can not be empty'
         }
     },
-    'payload.address.postal_code': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'Postal code is required',
-        },
-        notEmpty: {
-            errorMessage: 'postal_code can not be empty'
-        }
-    },
+
+
     // 'payload.email': {
     //     in: ['body'],
     //     exists: {
@@ -174,6 +185,24 @@ const UpdatePractitionerValidatorSchema = {
             errorMessage: 'name_id can not be empty'
         }
     },
+    'payload.last_name': {
+        in: ['body'],
+        exists: {
+            errorMessage: "last_name is required"
+        },
+        notEmpty: {
+            errorMessage: 'last_name can not be empty'
+        }
+    },
+    'payload.cmpCode': {
+        in: ['body'],
+        exists: {
+            errorMessage: "cmpCode is required"
+        },
+        notEmpty: {
+            errorMessage: 'cmpCode can not be empty'
+        }
+    },
     'payload.gender': {
         in: ['body'],
         exists: {
@@ -287,15 +316,7 @@ const UpdatePractitionerValidatorSchema = {
             errorMessage: 'province can not be empty'
         }
     },
-    'payload.address.postal_code': {
-        in: ['body'],
-        exists: {
-            errorMessage: 'Postal code is required',
-        },
-        notEmpty: {
-            errorMessage: 'postal_code can not be empty'
-        }
-    },
+
     // 'payload.email': {
     //     in: ['body'],
     //     exists: {

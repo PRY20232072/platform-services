@@ -4,9 +4,9 @@ class FamilyHistoryHelper {
             return {
                 familyHistory_id: registry.familyHistory_id,
                 name: registry.name,
-                recorded_date: registry.recorded_date,
-                notes: registry.notes,
+                relativeBirthdate: registry.relativeBirthdate,
                 relationship: registry.relationship,
+                clinical_status: registry.clinical_status,
             }
         });
 

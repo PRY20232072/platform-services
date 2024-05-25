@@ -5,6 +5,7 @@ class PatientHelper {
                 patient_id: patient.patient_id,
                 name_id: patient.name_id,
                 telephone: patient.telephone,
+                dni: patient.dni,
             }
         });
 
