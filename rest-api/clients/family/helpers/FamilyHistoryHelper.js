@@ -7,6 +7,7 @@ class FamilyHistoryHelper {
                 relativeBirthdate: registry.relativeBirthdate,
                 relationship: registry.relationship,
                 clinical_status: registry.clinical_status,
+                recorded_date: registry.recorded_date,
             }
         });
 
